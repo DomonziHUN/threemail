@@ -116,7 +116,7 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full font-bold">
-              <Link href="/admin">
+              <Link href="/6admin">
                 Tovább az Admin Vezérlőpultra →
               </Link>
             </Button>
