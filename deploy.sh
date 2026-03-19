@@ -15,6 +15,6 @@ echo "🏗️ Next.js alkalmazás buildelése..."
 npm run build
 
 echo "🔄 PM2 folyamat újraindítása..."
-pm2 reload threemail-bank || pm2 start ecosystem.config.js
+pm2 reload threemail-bank --update-env || pm2 start ecosystem.config.js
 
 echo "✅ Kész! Az alkalmazás frissítve lett."
