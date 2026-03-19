@@ -34,12 +34,26 @@ model User {
   referrals        User[]    @relation("UserReferrals")
   role             String    @default("USER")
   kycStatus        String    @default("PENDING")
+  kycDocument      KycDocument?
   cards            Card[]
   transactions     Transaction[]
   referralEntries  Referral[] @relation("ReferralReferrer")
   referredEntries  Referral[] @relation("ReferralReferred")
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+}
+
+model KycDocument {
+  id          String    @id @default(cuid())
+  userId      String    @unique
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  frontIdUrl  String
+  backIdUrl   String
+  selfieUrl   String
+  adminNote   String?
+  status      String    @default("PENDING")
+  submittedAt DateTime  @default(now())
+  reviewedAt  DateTime?
 }
 
 model Card {

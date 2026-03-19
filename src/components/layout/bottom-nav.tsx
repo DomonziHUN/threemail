@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, CreditCard, Users2, Repeat2 } from "lucide-react";
+import { Home, CreditCard, Users2, Repeat2, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Főoldal", icon: Home },
   { href: "/cards", label: "Kártyák", icon: CreditCard },
   { href: "/referrals", label: "Partnerek", icon: Users2 },
-  { href: "/payments", label: "Fizetések", icon: Repeat2 },
+  { href: "/kyc", label: "Hitelesítés", icon: ShieldCheck },
 ];
 
 export function BottomNav() {

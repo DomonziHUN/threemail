@@ -23,6 +23,17 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
       },
     });
 
+    if (kycStatus !== undefined) {
+      await prisma.kycDocument.updateMany({
+        where: { userId: id },
+        data: { 
+          status: kycStatus, 
+          adminNote: body.adminNote || null,
+          reviewedAt: new Date()
+        }
+      });
+    }
+
     return NextResponse.json(updatedUser);
   } catch (error) {
     if ((error as Error).message === "NOT_AUTHENTICATED" || (error as Error).message === "NOT_AUTHORIZED") {

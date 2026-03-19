@@ -18,6 +18,10 @@ export function UsersTable() {
   const [editForm, setEditForm] = useState<any>({});
   const [isSaving, setIsSaving] = useState(false);
 
+  // KYC Bírálathoz
+  const [kycUser, setKycUser] = useState<any>(null);
+  const [kycRejectReason, setKycRejectReason] = useState("");
+
   const fetchUsers = async () => {
     try {
       const res = await fetch("/api/admin/users");
@@ -69,6 +73,37 @@ export function UsersTable() {
     }
   };
 
+  const handleKycStatus = async (status: "APPROVED" | "REJECTED") => {
+    if (status === "REJECTED" && !kycRejectReason) {
+      toast.error("Elutasítás esetén kérlek adj meg indoklást!");
+      return;
+    }
+    
+    setIsSaving(true);
+    try {
+      const res = await fetch(`/api/admin/users/${kycUser.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          kycStatus: status,
+          adminNote: status === "REJECTED" ? kycRejectReason : null 
+        }),
+      });
+      if (res.ok) {
+        toast.success(`KYC sikeresen ${status === "APPROVED" ? "jóváhagyva" : "elutasítva"}!`);
+        setKycUser(null);
+        setKycRejectReason("");
+        fetchUsers();
+      } else {
+        toast.error("Hiba a KYC mentésekor.");
+      }
+    } catch {
+      toast.error("Kommunikációs hiba.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const filteredUsers = users.filter((u) => 
     u.fullName.toLowerCase().includes(search.toLowerCase()) || 
     u.email.toLowerCase().includes(search.toLowerCase())
@@ -110,9 +145,16 @@ export function UsersTable() {
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">{formatDate(new Date(user.createdAt))}</td>
                 <td className="px-4 py-3 text-right">
-                  <Button variant="outline" size="sm" onClick={() => handleEditClick(user)}>
-                    Szerkesztés
-                  </Button>
+                  <div className="flex items-center justify-end gap-2">
+                    {user.kycDocument && user.kycStatus === "PENDING" && (
+                      <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white" size="sm" onClick={() => setKycUser(user)}>
+                        KYC Bírálat
+                      </Button>
+                    )}
+                    <Button variant="outline" size="sm" onClick={() => handleEditClick(user)}>
+                      Szerkesztés
+                    </Button>
+                  </div>
                 </td>
               </tr>
             ))}
@@ -179,6 +221,81 @@ export function UsersTable() {
                 <Button type="submit" disabled={isSaving}>{isSaving ? "Mentés..." : "Mentés és Frissítés"}</Button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* KYC Döntnök Modal Óriási Képekkel */}
+      {kycUser && kycUser.kycDocument && (
+        <div className="fixed inset-0 bg-background/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
+          <div className="bg-card w-full max-w-6xl rounded-3xl shadow-2xl border overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="px-6 py-4 border-b flex justify-between items-center bg-muted/30">
+              <div>
+                <h3 className="font-bold text-xl">KYC Bírálat: {kycUser.fullName}</h3>
+                <p className="text-sm text-muted-foreground">{kycUser.email}</p>
+              </div>
+              <Button variant="ghost" onClick={() => setKycUser(null)}>Bezárás</Button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                {/* 1. Előlap */}
+                <div className="space-y-2">
+                  <h4 className="font-bold text-primary">Személyi Előlap</h4>
+                  <div className="rounded-xl overflow-hidden border-2 border-primary/20 aspect-[4/3] bg-black">
+                    <img src={kycUser.kycDocument.frontIdUrl} alt="Előlap" className="w-full h-full object-contain" />
+                  </div>
+                </div>
+
+                {/* 2. Hátlap */}
+                <div className="space-y-2">
+                  <h4 className="font-bold text-primary">Személyi Hátlap</h4>
+                  <div className="rounded-xl overflow-hidden border-2 border-primary/20 aspect-[4/3] bg-black">
+                    <img src={kycUser.kycDocument.backIdUrl} alt="Hátlap" className="w-full h-full object-contain" />
+                  </div>
+                </div>
+
+                {/* 3. Szelfi */}
+                <div className="space-y-2">
+                  <h4 className="font-bold text-accent">Szelfi Kamera</h4>
+                  <div className="rounded-xl overflow-hidden border-2 border-accent/50 aspect-[4/3] bg-black relative">
+                    <img src={kycUser.kycDocument.selfieUrl} alt="Szelfi" className="w-full h-full object-contain" />
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <div className="p-6 border-t bg-muted/10 grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-red-500">Újra bekérés indoklása (Csak elutasításnál)</label>
+                <Input 
+                  placeholder="Pl. Túl homályos a szelfi, vagy a fénykép nem egyezik..." 
+                  value={kycRejectReason}
+                  onChange={(e) => setKycRejectReason(e.target.value)}
+                  className="border-red-500/30 focus-visible:ring-red-500"
+                />
+              </div>
+              <div className="flex gap-4">
+                <Button 
+                  onClick={() => handleKycStatus("REJECTED")} 
+                  disabled={isSaving} 
+                  variant="destructive" 
+                  className="w-1/2 h-12 font-bold text-lg"
+                >
+                  {isSaving ? "Kérem várjon..." : "Elutasítás ❌"}
+                </Button>
+                <Button 
+                  onClick={() => handleKycStatus("APPROVED")} 
+                  disabled={isSaving} 
+                  className="w-1/2 h-12 font-bold text-lg bg-green-500 hover:bg-green-600 text-white"
+                >
+                  {isSaving ? "Kérem várjon..." : "Jóváhagyás ✅"}
+                </Button>
+              </div>
+            </div>
+
           </div>
         </div>
       )}

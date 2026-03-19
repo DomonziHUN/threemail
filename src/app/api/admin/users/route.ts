@@ -10,6 +10,7 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
       include: {
         cards: true,
+        kycDocument: true,
         _count: {
           select: { transactions: true, referrals: true },
         },
