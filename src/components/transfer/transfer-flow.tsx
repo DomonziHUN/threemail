@@ -17,8 +17,60 @@ import { toast } from "sonner";
 // --- Pénznemek listája ---
 type Currency = { code: string; name: string; flag: string };
 
+// Az adott devizához tartozó IBAN példa (placeholder)
+const CURRENCY_IBAN_PLACEHOLDER: Record<string, string> = {
+  AED: "AE07 0331 2345 6789 0123 456",
+  ALL: "AL47 2121 1009 0000 0002 3569 8741",
+  ARS: "IBAN szám...",
+  AUD: "IBAN szám...",
+  AZN: "AZ21 NABZ 0000 0000 1370 1000 1944",
+  BAM: "BA39 1290 0794 0102 8494",
+  BGN: "BG80 BNBG 9661 1020 3456 78",
+  CAD: "IBAN szám...",
+  CHF: "CH56 0483 5012 3456 7800 9",
+  CNY: "IBAN szám...",
+  CZK: "CZ65 0800 0000 1920 0014 5399",
+  DKK: "DK50 0040 0440 1162 43",
+  EGP: "EG38 0019 0005 0000 0000 2631 8000 02",
+  EUR: "DE89 3704 0044 0532 0130 00",
+  GBP: "GB29 NWBK 6016 1331 9268 19",
+  GEL: "GE29 NB00 0000 0101 9049 17",
+  HKD: "IBAN szám...",
+  HRK: "HR12 1001 0051 8630 0016 0",
+  HUF: "HU42 1177 3016 1111 1018 0000 0000",
+  IDR: "IBAN szám...",
+  ILS: "IL62 0108 0000 0009 9999 999",
+  INR: "IBAN szám...",
+  ISK: "IS14 0159 2600 7654 5510 7303 39",
+  JPY: "IBAN szám...",
+  KZT: "KZ86 125K ZT50 0410 0100",
+  MDL: "MD24 AG00 0225 1000 1310 4168",
+  MKD: "MK07 2501 2000 0058 984",
+  MXN: "IBAN szám...",
+  MYR: "IBAN szám...",
+  NOK: "NO93 8601 1117 947",
+  NZD: "IBAN szám...",
+  PHP: "IBAN szám...",
+  PLN: "PL61 1090 1014 0000 0712 1981 2874",
+  QAR: "QA58 DOHB 0000 1234 5678 90AB CDEF G",
+  RON: "RO49 AAAA 1B31 0075 9384 0000",
+  RSD: "RS35 2600 0560 1001 6113 79",
+  SAR: "SA03 8000 0000 6080 1016 7519",
+  SEK: "SE45 5000 0000 0583 9825 7466",
+  SGD: "IBAN szám...",
+  THB: "IBAN szám...",
+  TRY: "TR33 0006 1005 1978 6457 8413 26",
+  UAH: "UA21 3223 1300 0002 6007 2335 6600 1",
+  USD: "IBAN szám...",
+  XOF: "SN12 K001 0152 0000 2519 7909 300",
+  ZAR: "IBAN szám...",
+};
+
 const RECENT_CURRENCIES: Currency[] = [
   { code: "HUF", name: "magyar forint", flag: "🇭🇺" },
+  { code: "EUR", name: "euró", flag: "🇪🇺" },
+  { code: "USD", name: "amerikai dollár", flag: "🇺🇸" },
+  { code: "GBP", name: "brit font sterling", flag: "🇬🇧" },
 ];
 
 const ALL_CURRENCIES: Currency[] = [
@@ -26,9 +78,47 @@ const ALL_CURRENCIES: Currency[] = [
   { code: "ALL", name: "albán lek", flag: "🇦🇱" },
   { code: "ARS", name: "argentin peso", flag: "🇦🇷" },
   { code: "AUD", name: "ausztrál dollár", flag: "🇦🇺" },
+  { code: "AZN", name: "azerbajdzsáni manat", flag: "🇦🇿" },
   { code: "BAM", name: "bosnyák konvertibilis márka", flag: "🇧🇦" },
+  { code: "BGN", name: "bolgár leva", flag: "🇧🇬" },
+  { code: "CAD", name: "kanadai dollár", flag: "🇨🇦" },
+  { code: "CHF", name: "svájci frank", flag: "🇨🇭" },
+  { code: "CNY", name: "kínai jüan", flag: "🇨🇳" },
+  { code: "CZK", name: "cseh korona", flag: "🇨🇿" },
+  { code: "DKK", name: "dán korona", flag: "🇩🇰" },
+  { code: "EGP", name: "egyiptomi font", flag: "🇪🇬" },
   { code: "EUR", name: "euró", flag: "🇪🇺" },
+  { code: "GBP", name: "brit font sterling", flag: "🇬🇧" },
+  { code: "GEL", name: "grúz lari", flag: "🇬🇪" },
+  { code: "HKD", name: "hongkongi dollár", flag: "🇭🇰" },
+  { code: "HRK", name: "horvát kuna", flag: "🇭🇷" },
+  { code: "HUF", name: "magyar forint", flag: "🇭🇺" },
+  { code: "IDR", name: "indonéz rúpia", flag: "🇮🇩" },
+  { code: "ILS", name: "izraeli sékel", flag: "🇮🇱" },
+  { code: "INR", name: "indiai rúpia", flag: "🇮🇳" },
+  { code: "ISK", name: "izlandi korona", flag: "🇮🇸" },
+  { code: "JPY", name: "japán jen", flag: "🇯🇵" },
+  { code: "KZT", name: "kazah tenge", flag: "🇰🇿" },
+  { code: "MDL", name: "moldovai lej", flag: "🇲🇩" },
+  { code: "MKD", name: "észak-macedón dénár", flag: "🇲🇰" },
+  { code: "MXN", name: "mexikói peso", flag: "🇲🇽" },
+  { code: "MYR", name: "maláj ringgit", flag: "🇲🇾" },
+  { code: "NOK", name: "norvég korona", flag: "🇳🇴" },
+  { code: "NZD", name: "új-zélandi dollár", flag: "🇳🇿" },
+  { code: "PHP", name: "fülöp-szigeteki pesó", flag: "🇵🇭" },
+  { code: "PLN", name: "lengyel zloty", flag: "🇵🇱" },
+  { code: "QAR", name: "katari riyal", flag: "🇶🇦" },
+  { code: "RON", name: "román lej", flag: "🇷🇴" },
+  { code: "RSD", name: "szerb dinár", flag: "🇷🇸" },
+  { code: "SAR", name: "szaúdi riyal", flag: "🇸🇦" },
+  { code: "SEK", name: "svéd korona", flag: "🇸🇪" },
+  { code: "SGD", name: "szingapúri dollár", flag: "🇸🇬" },
+  { code: "THB", name: "thai baht", flag: "🇹🇭" },
+  { code: "TRY", name: "török líra", flag: "🇹🇷" },
+  { code: "UAH", name: "ukrán hrivnya", flag: "🇺🇦" },
   { code: "USD", name: "amerikai dollár", flag: "🇺🇸" },
+  { code: "XOF", name: "nyugat-afrikai CFA frank", flag: "🌍" },
+  { code: "ZAR", name: "dél-afrikai rand", flag: "🇿🇦" },
 ];
 
 function formatHuf(n: number) {
@@ -289,7 +379,7 @@ export function TransferFlow() {
               </label>
               <Input
                 type="text"
-                placeholder="Kis Kari"
+                placeholder="Minta Felhasználó"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className="h-14 rounded-xl border-muted-foreground/30 focus-visible:ring-primary/50 text-base"
@@ -301,7 +391,11 @@ export function TransferFlow() {
               <label className="text-sm font-bold text-foreground pl-1">Bankszámlaszám</label>
               <Input
                 type="text"
-                placeholder={tab === "LOCAL" ? "12345678-12345678-12345678" : "HU..."}
+                placeholder={
+                  tab === "LOCAL"
+                    ? "12345678-12345678-12345678"
+                    : (selectedCurrency ? (CURRENCY_IBAN_PLACEHOLDER[selectedCurrency.code] ?? "IBAN szám...") : "IBAN szám...")
+                }
                 value={accountNumber}
                 onChange={(e) => { setAccountNumber(e.target.value); setHasError(false); }}
                 className={`h-14 rounded-xl text-base transition-colors ${
