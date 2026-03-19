@@ -4,6 +4,7 @@ import { BalanceDisplay } from "@/components/dashboard/balance-display";
 import { QuickActions } from "@/components/dashboard/quick-actions";
 import { AccountCard } from "@/components/dashboard/account-card";
 import { TransactionList } from "@/components/dashboard/transaction-list";
+import { TransferCalculator } from "@/components/dashboard/transfer-calculator";
 
 export const metadata = {
   title: "Dashboard | ThreeMail Bank",
@@ -30,6 +31,9 @@ export default async function DashboardPage() {
       <QuickActions />
       <AccountCard balance={balance} />
       <TransactionList transactions={transactions} />
+      <div className="pt-2">
+        <TransferCalculator />
+      </div>
     </div>
   );
 }
