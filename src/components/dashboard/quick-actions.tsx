@@ -8,13 +8,12 @@ export function QuickActions() {
       <Button
         asChild
         variant="outline"
-        className="flex-shrink-0 rounded-full px-5 py-2.5 h-auto"
-        disabled
+        className="flex-shrink-0 rounded-full px-5 py-2.5 h-auto text-primary border-primary hover:bg-primary/10"
       >
-        <div className="flex items-center gap-2">
+        <Link href="/transfer" className="flex items-center gap-2">
           <ArrowUpRight className="h-4 w-4" />
           <span>Utalás</span>
-        </div>
+        </Link>
       </Button>
       <Button
         asChild
