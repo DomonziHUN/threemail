@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import { ArrowDownUp, Info, ChevronDown } from "lucide-react";
 import { format, subDays } from "date-fns";
 import {
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   YAxis,
   ResponsiveContainer,
 } from "recharts";
@@ -127,25 +127,32 @@ export function TransferCalculator() {
       <div className="bg-[#f0ede6] dark:bg-card border border-border/50 rounded-3xl p-5 shadow-sm">
         
         {/* Realtime Chart */}
-        <div className="mb-4 h-32 relative">
+        <div className="mb-4 h-36 relative">
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={chartData} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+              <AreaChart data={chartData} margin={{ top: 15, right: 0, left: 0, bottom: 25 }}>
+                <defs>
+                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#1B4D2E" stopOpacity={0.2} />
+                    <stop offset="95%" stopColor="#1B4D2E" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
                 <YAxis 
                   domain={domain} 
-                  hide={true} // Elrejtjük az Y tengelyt a letisztult dizájn miatt, vagy tehetünk min/max feliratot manuálisan
+                  hide={true}
                 />
-                <Line 
+                <Area 
                   type="monotone" 
                   dataKey="value" 
                   stroke="#1B4D2E" 
+                  fillOpacity={1}
+                  fill="url(#colorValue)"
                   strokeWidth={2} 
-                  dot={false}
                   activeDot={{ r: 4, fill: "#1B4D2E", stroke: "white" }}
                   isAnimationActive={true}
                   animationDuration={800}
                 />
-              </LineChart>
+              </AreaChart>
             </ResponsiveContainer>
           ) : (
              <div className="h-full w-full flex items-center justify-center font-medium text-muted-foreground animate-pulse">
@@ -153,19 +160,19 @@ export function TransferCalculator() {
              </div>
           )}
           
-          {/* Chart feliratok (opcionális Y érték megjelenítés a széleken) */}
+          {/* Chart feliratok */}
           {chartData.length > 0 && (
             <>
-              <div className="absolute top-0 right-0 text-[10px] text-muted-foreground font-medium">
-                {(maxRate).toFixed(1)}
+              <div className="absolute top-0 right-1 text-[10px] text-muted-foreground font-medium">
+                {maxRate.toLocaleString('hu-HU', { maximumFractionDigits: 4 })}
               </div>
-              <div className="absolute bottom-6 right-0 text-[10px] text-muted-foreground font-medium">
-                {(minRate).toFixed(1)}
+              <div className="absolute bottom-6 right-1 text-[10px] text-muted-foreground font-medium">
+                {minRate.toLocaleString('hu-HU', { maximumFractionDigits: 4 })}
               </div>
             </>
           )}
 
-          <div className="flex justify-between text-xs text-muted-foreground mt-2 px-1 absolute bottom-0 w-full">
+          <div className="flex justify-between text-xs text-muted-foreground px-1 absolute bottom-0 w-full mb-1">
             <span>30 napja</span>
             <span className="flex items-center gap-1">
               <span className="relative flex h-2 w-2">
