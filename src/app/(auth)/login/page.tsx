@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LoginForm } from "@/components/auth/login-form";
 
 export const metadata = {
-  title: "Bejelentkezés | ThreeMail Bank",
+  title: "Bejelentkezés | ThreeMail",
 };
 
 export default function LoginPage() {
@@ -11,7 +11,7 @@ export default function LoginPage() {
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-semibold">Üdv újra!</h1>
         <p className="text-muted-foreground text-sm">
-          Lépj be, hogy kezeld az egyenleged és a kártyáidat.
+          Készen állsz, a bankolásra?.
         </p>
       </div>
       <LoginForm />

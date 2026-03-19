@@ -2,37 +2,32 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guard";
 import { prisma } from "@/lib/prisma";
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
-    const { id } = await params;
     await requireAdmin();
-    const user = await prisma.user.findUnique({
-      where: { id },
-      include: {
-        cards: true,
-        transactions: {
-          orderBy: { createdAt: "desc" },
-          take: 10,
-        },
+    const body = await request.json();
+    
+    // We extract the allowed fields to update.
+    const { fullName, email, phone, balanceHuf, role, kycStatus } = body;
+
+    const updatedUser = await prisma.user.update({
+      where: { id: params.id },
+      data: {
+        ...(fullName !== undefined && { fullName }),
+        ...(email !== undefined && { email }),
+        ...(phone !== undefined && { phone }),
+        ...(balanceHuf !== undefined && { balanceHuf: Number(balanceHuf) }),
+        ...(role !== undefined && { role }),
+        ...(kycStatus !== undefined && { kycStatus }),
       },
     });
 
-    if (!user) {
-      return NextResponse.json({ message: "Felhasználó nem található" }, { status: 404 });
-    }
-
-    return NextResponse.json({ user });
+    return NextResponse.json(updatedUser);
   } catch (error) {
-    if ((error as Error).message === "NOT_AUTHENTICATED") {
-      return NextResponse.json({ message: "Nem vagy bejelentkezve" }, { status: 401 });
-    }
-    if ((error as Error).message === "NOT_AUTHORIZED") {
-      return NextResponse.json({ message: "Nincs jogosultságod" }, { status: 403 });
+    if ((error as Error).message === "NOT_AUTHENTICATED" || (error as Error).message === "NOT_AUTHORIZED") {
+      return NextResponse.json({ message: "Nem jogosult" }, { status: 403 });
     }
     console.error(error);
-    return NextResponse.json({ message: "Szerver hiba" }, { status: 500 });
+    return NextResponse.json({ message: "Szerver hiba az adatok mentésekor" }, { status: 500 });
   }
 }

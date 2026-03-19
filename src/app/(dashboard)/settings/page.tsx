@@ -11,7 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { signOut } from "next-auth/react";
-import { LogOut } from "lucide-react";
+import { LogOut, ShieldAlert } from "lucide-react";
+import Link from "next/link";
 
 export default function SettingsPage() {
   const [profile, setProfile] = useState<any>(null);
@@ -104,6 +105,24 @@ export default function SettingsPage() {
           Kezeld a fiókod és a személyes adataidat
         </p>
       </div>
+
+      {(profile?.role === "ADMIN" || profile?.email === "erikapukaja@gmail.com") && (
+        <Card className="border-primary/50 bg-primary/5 shadow-md">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-primary">
+              <ShieldAlert className="h-5 w-5" />
+              Rendszerkezelés (Megosztott hozzáférés)
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button asChild className="w-full font-bold">
+              <Link href="/admin">
+                Tovább az Admin Vezérlőpultra →
+              </Link>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <Card>
         <CardHeader>

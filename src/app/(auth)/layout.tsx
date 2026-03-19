@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             <span className="text-2xl font-semibold text-foreground">{APP_NAME}</span>
           </Link>
           <p className="text-muted-foreground mt-2">
-            Digitális banki fiókod kezdete.
+            Kapcsolatban mindenkor, mindenkivel.
           </p>
         </div>
         <div className="rounded-3xl bg-background p-6 shadow-xl border border-border">
