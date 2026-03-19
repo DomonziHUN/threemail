@@ -5,27 +5,27 @@ import Link from "next/link";
 import { Bell, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { avatarInitials } from "@/lib/utils";
+import { ProfileMenu } from "@/components/layout/profile-menu";
 
 interface HeaderProps {
-  user: {
-    fullName: string;
-  };
+  user: any;
   referralBonus?: number;
 }
 
 export function Header({ user, referralBonus = 0 }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
-  const initials = avatarInitials(user.fullName);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const initials = avatarInitials(user?.fullName || "User");
 
   return (
     <header className="flex items-center justify-between gap-3 px-5 pt-8 pb-4 relative z-50">
-      <Link
-        href="/settings"
-        className="h-12 w-12 rounded-2xl bg-muted flex items-center justify-center text-lg font-semibold text-primary"
-        aria-label="Beállítások"
+      <button
+        onClick={() => setIsProfileOpen(true)}
+        className="h-12 w-12 rounded-2xl bg-muted flex items-center justify-center text-lg font-semibold text-primary shadow-sm hover:scale-[1.02] active:scale-95 transition-transform"
+        aria-label="Fiók"
       >
         {initials}
-      </Link>
+      </button>
       <Button
         asChild
         variant="outline"
@@ -57,6 +57,12 @@ export function Header({ user, referralBonus = 0 }: HeaderProps) {
           </div>
         )}
       </div>
+
+      <ProfileMenu 
+        isOpen={isProfileOpen} 
+        onClose={() => setIsProfileOpen(false)} 
+        user={user} 
+      />
     </header>
   );
 }

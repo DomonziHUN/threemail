@@ -12,7 +12,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
 
   return (
     <div className="mx-auto w-full flex min-h-screen max-w-md flex-col bg-background shadow-2xl xl:border-x border-border/40">
-      <Header user={{ fullName: session.user.fullName }} />
+      <Header user={session.user as any} />
       <main className="flex-1 px-5 pb-24 overflow-x-hidden">{children}</main>
       <BottomNav />
     </div>
