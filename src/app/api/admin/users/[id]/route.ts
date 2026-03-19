@@ -2,16 +2,17 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guard";
 import { prisma } from "@/lib/prisma";
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, context: { params: Promise<{ id: string }> }) {
   try {
     await requireAdmin();
+    const { id } = await context.params;
     const body = await request.json();
     
     // We extract the allowed fields to update.
     const { fullName, email, phone, balanceHuf, role, kycStatus } = body;
 
     const updatedUser = await prisma.user.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         ...(fullName !== undefined && { fullName }),
         ...(email !== undefined && { email }),
