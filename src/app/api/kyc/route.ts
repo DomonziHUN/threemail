@@ -35,8 +35,8 @@ export async function POST(request: Request) {
       
       await fs.writeFile(filePath, buffer);
       
-      // A publikusan (vagyis az API-n keresztül biztonságosan) elérhető URL
-      return `/api/uploads/kyc/${fileName}`;
+      // A publikusan elérhető URL routering
+      return `/uploads/kyc/${fileName}`;
     };
 
     // Párhuzamosan elmentjük a 3 képet a lemezre

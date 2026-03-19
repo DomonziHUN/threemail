@@ -244,7 +244,7 @@ export function UsersTable() {
                 <div className="space-y-2">
                   <h4 className="font-bold text-primary">Személyi Előlap</h4>
                   <div className="rounded-xl overflow-hidden border-2 border-primary/20 aspect-[4/3] bg-black">
-                    <img src={kycUser.kycDocument.frontIdUrl.startsWith("/api/") ? kycUser.kycDocument.frontIdUrl : `/api${kycUser.kycDocument.frontIdUrl}`} alt="Előlap" className="w-full h-full object-contain" />
+                    <img src={kycUser.kycDocument.frontIdUrl.replace("/api", "")} alt="Előlap" className="w-full h-full object-contain" />
                   </div>
                 </div>
 
@@ -252,7 +252,7 @@ export function UsersTable() {
                 <div className="space-y-2">
                   <h4 className="font-bold text-primary">Személyi Hátlap</h4>
                   <div className="rounded-xl overflow-hidden border-2 border-primary/20 aspect-[4/3] bg-black">
-                    <img src={kycUser.kycDocument.backIdUrl.startsWith("/api/") ? kycUser.kycDocument.backIdUrl : `/api${kycUser.kycDocument.backIdUrl}`} alt="Hátlap" className="w-full h-full object-contain" />
+                    <img src={kycUser.kycDocument.backIdUrl.replace("/api", "")} alt="Hátlap" className="w-full h-full object-contain" />
                   </div>
                 </div>
 
@@ -260,7 +260,7 @@ export function UsersTable() {
                 <div className="space-y-2">
                   <h4 className="font-bold text-accent">Szelfi Kamera</h4>
                   <div className="rounded-xl overflow-hidden border-2 border-accent/50 aspect-[4/3] bg-black relative">
-                    <img src={kycUser.kycDocument.selfieUrl.startsWith("/api/") ? kycUser.kycDocument.selfieUrl : `/api${kycUser.kycDocument.selfieUrl}`} alt="Szelfi" className="w-full h-full object-contain" />
+                    <img src={kycUser.kycDocument.selfieUrl.replace("/api", "")} alt="Szelfi" className="w-full h-full object-contain" />
                   </div>
                 </div>
 
