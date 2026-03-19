@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Role: USER | ADMIN
+// CardStatus: ACTIVE | FROZEN | TERMINATED
+// TransactionType: DEPOSIT | WITHDRAWAL | CARD_PAYMENT | TRANSFER_IN | TRANSFER_OUT
+// TransactionStatus: PENDING | COMPLETED | FAILED
+// ReferralStatus: REGISTERED | ACTIVATED
+
+model User {
+  id               String    @id @default(cuid())
+  email            String    @unique
+  passwordHash     String
+  fullName         String
+  phone            String?
+  country          String?
+  city             String?
+  street           String?
+  zipCode          String?
+  balanceHuf       Int       @default(0)
+  referralCode     String    @unique
+  paymentReference String    @unique
+  referredById     String?
+  referredBy       User?     @relation("UserReferrals", fields: [referredById], references: [id])
+  referrals        User[]    @relation("UserReferrals")
+  role             String    @default("USER")
+  kycStatus        String    @default("PENDING")
+  cards            Card[]
+  transactions     Transaction[]
+  referralEntries  Referral[] @relation("ReferralReferrer")
+  referredEntries  Referral[] @relation("ReferralReferred")
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+}
+
+model Card {
+  id             String     @id @default(cuid())
+  userId         String
+  user           User       @relation(fields: [userId], references: [id])
+  cardNumber     String
+  last4          String
+  expiryMonth    Int
+  expiryYear     Int
+  cvv            String
+  pin            String
+  status         String     @default("ACTIVE")
+  cardType       String     @default("VIRTUAL")
+  color          String     @default("green")
+  onlinePurchase Boolean    @default(true)
+  contactless    Boolean    @default(true)
+  atmWithdrawal  Boolean    @default(true)
+  dailyLimit     Int        @default(500000)
+  monthlyLimit   Int        @default(2000000)
+  transactions   Transaction[]
+  createdAt      DateTime   @default(now())
+}
+
+model Transaction {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  type        String
+  amount      Int
+  currency    String   @default("HUF")
+  description String
+  reference   String?
+  status      String   @default("PENDING")
+  cardId      String?
+  card        Card?    @relation(fields: [cardId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model Referral {
+  id          String   @id @default(cuid())
+  referrerId  String
+  referredId  String
+  referrer    User     @relation("ReferralReferrer", fields: [referrerId], references: [id])
+  referred    User     @relation("ReferralReferred", fields: [referredId], references: [id])
+  bonusAmount Int      @default(0)
+  status      String   @default("REGISTERED")
+  createdAt   DateTime @default(now())
+}

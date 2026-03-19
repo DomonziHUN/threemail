@@ -1,0 +1,9 @@
+export const BANK_ACCOUNT_NUMBER = "HU56 12600016-14505535-21850103";
+export const BANK_BENEFICIARY_NAME = "Three Mail";
+export const REFERRAL_CODE_PREFIX = "TM-";
+export const PAYMENT_REF_PREFIX = "TM-USR-";
+export const CARD_BRAND = "VISA";
+export const DEFAULT_DAILY_LIMIT = 500_000;
+export const DEFAULT_MONTHLY_LIMIT = 2_000_000;
+export const APP_NAME = "ThreeMail";
+export const INVITE_URL_BASE = "https://threemail.fun/register";
