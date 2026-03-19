@@ -3,54 +3,60 @@
 import { useState, useEffect } from "react";
 import { ArrowDownUp, Info, ChevronDown } from "lucide-react";
 import { format, subDays } from "date-fns";
+import { hu } from 'date-fns/locale';
 import {
-  AreaChart,
-  Area,
+  LineChart,
+  Line,
   YAxis,
+  CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 
-type Currency = { code: string; name: string; flag: string };
+type Currency = { code: string; name: string; flag: string; priority: number };
 
 const CURRENCIES: Currency[] = [
-  { code: "HUF", name: "magyar forint", flag: "🇭🇺" },
-  { code: "EUR", name: "euró", flag: "🇪🇺" },
-  { code: "USD", name: "amerikai dollár", flag: "🇺🇸" },
-  { code: "GBP", name: "brit font sterling", flag: "🇬🇧" },
-  { code: "CHF", name: "svájci frank", flag: "🇨🇭" },
+  { code: "HUF", name: "magyar forint", flag: "🇭🇺", priority: 5 },
+  { code: "USD", name: "amerikai dollár", flag: "🇺🇸", priority: 4 },
+  { code: "EUR", name: "euró", flag: "🇪🇺", priority: 3 },
+  { code: "CHF", name: "svájci frank", flag: "🇨🇭", priority: 2 },
+  { code: "GBP", name: "brit font sterling", flag: "🇬🇧", priority: 1 },
 ];
 
 export function TransferCalculator() {
-  const [sendCurrency, setSendCurrency] = useState<Currency>(CURRENCIES[1]); // EUR alapból
-  const [receiveCurrency, setReceiveCurrency] = useState<Currency>(CURRENCIES[0]); // HUF alapból
-  const [sendAmount, setSendAmount] = useState<string>("1000");
+  const [sendCurrency, setSendCurrency] = useState<Currency>(CURRENCIES.find(c => c.code === "HUF")!);
+  const [receiveCurrency, setReceiveCurrency] = useState<Currency>(CURRENCIES.find(c => c.code === "EUR")!);
+  
+  const [sendAmount, setSendAmount] = useState<string>("3039");
   const [receiveAmount, setReceiveAmount] = useState<string>("");
   
   const [chartData, setChartData] = useState<{ date: string; value: number }[]>([]);
-  const [currentRate, setCurrentRate] = useState<number | null>(null);
+  const [baseToQuoteRate, setBaseToQuoteRate] = useState<number | null>(null);
+  const [sendToReceiveRate, setSendToReceiveRate] = useState<number | null>(null);
   const [isCurrencySelectorOpen, setIsCurrencySelectorOpen] = useState<'send' | 'receive' | null>(null);
 
-  // Árfolyam grafikon és lekérdezés effekt
+  // Melyik a bázis deviza (az erősebb, amihez viszonyítunk a grafikonon)
+  const baseCurrency = (sendCurrency as any).priority < (receiveCurrency as any).priority ? sendCurrency : receiveCurrency;
+  const quoteCurrency = baseCurrency.code === sendCurrency.code ? receiveCurrency : sendCurrency;
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
 
     const fetchRates = async () => {
-      // Ha azonos a deviza, nincs mit chartolni
+      // Ha ugyanaz, nincs grafikon
       if (sendCurrency.code === receiveCurrency.code) {
         setChartData([]);
-        setCurrentRate(1);
+        setBaseToQuoteRate(1);
+        setSendToReceiveRate(1);
         return;
       }
 
       try {
-        // Történelmi adatok az elmúlt 30 napra
         const end = format(new Date(), "yyyy-MM-dd");
         const start = format(subDays(new Date(), 30), "yyyy-MM-dd");
         
-        // Frankfurter történelmi adatok lekérdezése
-        const historyRes = await fetch(`https://api.frankfurter.app/${start}..${end}?from=${sendCurrency.code}&to=${receiveCurrency.code}`);
+        // Grafikon adatainak lekérése (Base -> Quote)
+        const historyRes = await fetch(`https://api.frankfurter.app/${start}..${end}?from=${baseCurrency.code}&to=${quoteCurrency.code}`);
         const historyData = await historyRes.json();
         
         const dataPoints: { date: string; value: number }[] = [];
@@ -58,214 +64,219 @@ export function TransferCalculator() {
           for (const [date, rates] of Object.entries(historyData.rates) as [string, any][]) {
             dataPoints.push({
               date,
-              value: rates[receiveCurrency.code]
+              value: rates[quoteCurrency.code]
             });
           }
         }
         
-        // Legfrissebb valós idejű rate lekérdezése az azonnali pontosságért
-        const latestRes = await fetch(`https://api.frankfurter.app/latest?from=${sendCurrency.code}&to=${receiveCurrency.code}`);
+        // Élő rate-ek (Base -> Quote is kell a kiíráshoz, és Send -> Receive a váltáshoz)
+        const latestRes = await fetch(`https://api.frankfurter.app/latest?from=${baseCurrency.code}&to=${quoteCurrency.code}`);
         const latestData = await latestRes.json();
-        const latestRate = latestData.rates[receiveCurrency.code];
+        const baseToQuoteLatest = latestData.rates[quoteCurrency.code];
         
-        // Frissítjük a chart utolsó pontját is a jelenlegi állapotra
         if (dataPoints.length > 0) {
-          // Csak akkor adjuk hozzá külön napként, ha még nem volt (bár a legújabb általában a mai nap, hacsak nem hétvége)
-          // Egy egyszerűbb megoldás: hozzáadjuk a legfrissebbet utolsó pontként Date.now paraméterrel, vagy frissítjük az utolsót.
-          dataPoints.push({ date: "Now", value: latestRate });
+          // Ha az utolsó nap nem a mai, frissítsük a maival
+          dataPoints.push({ date: "Ma", value: baseToQuoteLatest });
         }
         
         setChartData(dataPoints);
-        setCurrentRate(latestRate);
+        setBaseToQuoteRate(baseToQuoteLatest);
+
+        // Kiszámoljuk a Send -> Receive konverziós értéket
+        if (sendCurrency.code === baseCurrency.code) {
+          setSendToReceiveRate(baseToQuoteLatest);
+        } else {
+          setSendToReceiveRate(1 / baseToQuoteLatest);
+        }
+
       } catch (error) {
         console.error("Hiba az árfolyamok lekérésekor:", error);
       }
     };
 
     fetchRates();
-    
-    // Auto frissítés percenként (60000 ms)
     intervalId = setInterval(fetchRates, 60000);
-    
     return () => clearInterval(intervalId);
-  }, [sendCurrency, receiveCurrency]);
+  }, [sendCurrency, receiveCurrency, baseCurrency, quoteCurrency]);
 
   // Érték számítás
   useEffect(() => {
-    if (!currentRate) return;
-
     if (sendCurrency.code === receiveCurrency.code) {
       setReceiveAmount(sendAmount);
       return;
     }
 
-    if (sendAmount && !isNaN(Number(sendAmount))) {
-      const calculated = Number(sendAmount) * currentRate;
-      // Két tizedesjegyre kerekítjük megjelenítésnél
-      setReceiveAmount(calculated.toFixed(2));
+    if (sendToReceiveRate && sendAmount && !isNaN(Number(sendAmount))) {
+      const calculated = Number(sendAmount) * sendToReceiveRate;
+      
+      // Huf-nál nincs tizedesjegy, egyébként 2
+      if (receiveCurrency.code === "HUF") {
+        setReceiveAmount(calculated.toFixed(0));
+      } else {
+        setReceiveAmount(calculated.toFixed(2));
+      }
     } else {
       setReceiveAmount("");
     }
-  }, [sendAmount, currentRate, sendCurrency, receiveCurrency]);
+  }, [sendAmount, sendToReceiveRate, sendCurrency, receiveCurrency]);
 
   const handleSwapCurrencies = () => {
     setSendCurrency(receiveCurrency);
     setReceiveCurrency(sendCurrency);
-    setSendAmount(receiveAmount);
+    setSendAmount(receiveAmount || "");
   };
 
-  // Min-max számítása a grafikon Y tengelyéhez, hogy szép legyen
-  const minRate = chartData.length > 0 ? Math.min(...chartData.map(d => d.value)) : 0;
-  const maxRate = chartData.length > 0 ? Math.max(...chartData.map(d => d.value)) : 0;
-  const margin = (maxRate - minRate) * 0.1; // 10% padding
+  // Min-max számítása a grafikon Y tengelyéhez, paddinggel
+  const values = chartData.map(d => d.value);
+  const minRate = values.length > 0 ? Math.min(...values) : 0;
+  const maxRate = values.length > 0 ? Math.max(...values) : 0;
+  const margin = (maxRate - minRate) * 0.1;
   const domain = [minRate - margin, maxRate + margin];
+
+  const startDateText = format(subDays(new Date(), 30), "MMM d.", { locale: hu });
+
+  // Custom Dot az utolsó elemhez (zöld pötty a Recharts-ban)
+  const renderCustomizedDot = (props: any) => {
+    const { cx, cy, index } = props;
+    if (index === chartData.length - 1) {
+      return (
+        <circle cx={cx} cy={cy} r={5} fill="#1B4D2E" stroke="none" />
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="w-full">
-      <h2 className="text-xl font-bold tracking-tight mb-4 px-2">Utalás kalkulátor</h2>
+      <h2 className="text-[1.35rem] font-bold tracking-tight mb-4 px-2 text-foreground">Utalás kalkulátor</h2>
       
-      <div className="bg-[#f0ede6] dark:bg-card border border-border/50 rounded-3xl p-5 shadow-sm">
+      <div className="bg-[#f0ede6] dark:bg-card border border-border/50 rounded-[2rem] p-5 shadow-sm">
         
-        {/* Realtime Chart */}
-        <div className="mb-4 h-36 relative">
-          {chartData.length > 0 ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 15, right: 0, left: 0, bottom: 25 }}>
-                <defs>
-                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#1B4D2E" stopOpacity={0.2} />
-                    <stop offset="95%" stopColor="#1B4D2E" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <YAxis 
-                  domain={domain} 
-                  hide={true}
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="value" 
-                  stroke="#1B4D2E" 
-                  fillOpacity={1}
-                  fill="url(#colorValue)"
-                  strokeWidth={2} 
-                  activeDot={{ r: 4, fill: "#1B4D2E", stroke: "white" }}
-                  isAnimationActive={true}
-                  animationDuration={800}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          ) : (
-             <div className="h-full w-full flex items-center justify-center font-medium text-muted-foreground animate-pulse">
-               Árfolyam betöltése...
-             </div>
-          )}
+        {/* Realtime Chart Container */}
+        <div className="mb-2 relative">
+          <div className="h-[120px] w-full">
+            {chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={chartData} margin={{ top: 15, right: 30, left: 0, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#d1d5db" />
+                  <YAxis 
+                    domain={domain} 
+                    axisLine={false}
+                    tickLine={false}
+                    orientation="right"
+                    tick={{ fill: "#6b7280", fontSize: 11 }}
+                    tickFormatter={(val) => val.toLocaleString('hu-HU', { maximumFractionDigits: 1 })}
+                    dx={20}
+                  />
+                  <Line 
+                    type="linear" // Nem kerekített, hanem éles
+                    dataKey="value" 
+                    stroke="#1B4D2E" 
+                    strokeWidth={2.5} 
+                    dot={renderCustomizedDot}
+                    activeDot={{ r: 6, fill: "#1B4D2E", stroke: "white", strokeWidth: 2 }}
+                    isAnimationActive={true}
+                    animationDuration={800}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            ) : (
+               <div className="h-full w-full flex items-center justify-center font-medium text-muted-foreground animate-pulse">
+                 Árfolyam betöltése...
+               </div>
+            )}
+          </div>
           
-          {/* Chart feliratok */}
-          {chartData.length > 0 && (
-            <>
-              <div className="absolute top-0 right-1 text-[10px] text-muted-foreground font-medium">
-                {maxRate.toLocaleString('hu-HU', { maximumFractionDigits: 4 })}
-              </div>
-              <div className="absolute bottom-6 right-1 text-[10px] text-muted-foreground font-medium">
-                {minRate.toLocaleString('hu-HU', { maximumFractionDigits: 4 })}
-              </div>
-            </>
-          )}
-
-          <div className="flex justify-between text-xs text-muted-foreground px-1 absolute bottom-0 w-full mb-1">
-            <span>30 napja</span>
-            <span className="flex items-center gap-1">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-              </span>
-              Ma
-            </span>
+          <div className="flex justify-between text-xs text-muted-foreground mt-1 px-1">
+            <span>{startDateText}</span>
+            <span className="mr-8">Ma</span>
           </div>
         </div>
 
-        <div className="font-bold mb-6 text-sm flex items-center gap-2">
-          {currentRate 
-            ? `1 ${sendCurrency.code} = ${currentRate.toLocaleString('hu-HU', { maximumFractionDigits: 4 })} ${receiveCurrency.code}` 
+        <div className="font-bold mb-6 text-sm flex items-center text-foreground px-1 pl-1">
+          {baseToQuoteRate 
+            ? `1 ${baseCurrency.code} = ${baseToQuoteRate.toLocaleString('hu-HU', { maximumFractionDigits: 4 })} ${quoteCurrency.code}` 
             : "Árfolyam számítása..."}
         </div>
 
-        {/* Küldött összeg */}
-        <div className="relative bg-white dark:bg-background rounded-2xl p-4 flex items-center justify-between shadow-sm z-10 transition-shadow focus-within:ring-2 focus-within:ring-primary/20">
-          <input
-            type="number"
-            value={sendAmount}
-            onChange={(e) => setSendAmount(e.target.value)}
-            className="bg-transparent text-2xl font-bold outline-none w-1/2"
-            placeholder="0"
-          />
-          <button 
-            onClick={() => setIsCurrencySelectorOpen('send')}
-            className="flex items-center gap-2 bg-muted/50 hover:bg-muted px-3 py-2 rounded-xl transition-colors"
-          >
-            <span className="text-xl">{sendCurrency.flag}</span>
-            <span className="font-bold">{sendCurrency.code}</span>
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
-          </button>
+        {/* CSERE INPUTOK */}
+        <div className="relative">
+          {/* FELSZŐ (Küldött) DOBOZ */}
+          <div className="relative bg-white dark:bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm z-10 focus-within:ring-2 focus-within:ring-[#A1E678] transition-all">
+            <input
+              type="number"
+              value={sendAmount}
+              onChange={(e) => setSendAmount(e.target.value)}
+              className="bg-transparent text-[1.35rem] font-bold outline-none w-1/2 pl-2"
+              placeholder="0"
+            />
+            <button 
+              onClick={() => setIsCurrencySelectorOpen('send')}
+              className="flex items-center gap-2 hover:bg-muted p-2 px-3 rounded-lg transition-colors border border-border/40 shrink-0"
+            >
+              <span className="text-xl leading-none shadow-sm rounded-full overflow-hidden flex">{sendCurrency.flag}</span>
+              <span className="font-bold">{sendCurrency.code}</span>
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            </button>
+          </div>
+
+          {/* SWAP GOMB (Pozícionálva a két doboz közé) */}
+          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20">
+            <button 
+              onClick={handleSwapCurrencies}
+              className="w-10 h-10 bg-[#f0ede6] dark:bg-card border-4 border-white dark:border-background rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
+            >
+              <ArrowDownUp className="w-[18px] h-[18px] text-muted-foreground" />
+            </button>
+          </div>
+
+          {/* ALSÓ (Érkező) DOBOZ */}
+          <div className="relative bg-white dark:bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm mt-3 z-10 focus-within:ring-2 focus-within:ring-[#A1E678] transition-all">
+            <input
+              type="text"
+              readOnly
+              value={receiveAmount}
+              className="bg-transparent text-[1.35rem] font-bold outline-none w-1/2 pl-2 text-muted-foreground"
+              placeholder="0"
+            />
+            <button 
+              onClick={() => setIsCurrencySelectorOpen('receive')}
+              className="flex items-center gap-2 hover:bg-muted p-2 px-3 rounded-lg transition-colors border border-border/40 shrink-0"
+            >
+              <span className="text-xl leading-none shadow-sm rounded-full overflow-hidden flex">{receiveCurrency.flag}</span>
+              <span className="font-bold">{receiveCurrency.code}</span>
+              <ChevronDown className="w-4 h-4 text-muted-foreground" />
+            </button>
+          </div>
         </div>
 
-        {/* Swap Button */}
-        <div className="relative h-6 flex justify-center items-center z-20">
-          <button 
-            onClick={handleSwapCurrencies}
-            className="w-10 h-10 bg-[#f0ede6] dark:bg-card border-4 border-white dark:border-background rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
-          >
-            <ArrowDownUp className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </div>
-
-        {/* Érkező összeg */}
-        <div className="relative bg-white dark:bg-background rounded-2xl p-4 flex items-center justify-between shadow-sm z-10">
-          <input
-            type="text"
-            readOnly
-            value={receiveAmount}
-            className="bg-transparent text-2xl font-bold outline-none w-1/2 text-muted-foreground"
-            placeholder="0"
-          />
-          <button 
-            onClick={() => setIsCurrencySelectorOpen('receive')}
-            className="flex items-center gap-2 bg-muted/50 hover:bg-muted px-3 py-2 rounded-xl transition-colors"
-          >
-            <span className="text-xl">{receiveCurrency.flag}</span>
-            <span className="font-bold">{receiveCurrency.code}</span>
-            <ChevronDown className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </div>
-
-        {/* Info Box */}
-        <div className="mt-6 border border-border/50 rounded-2xl p-4 bg-white/50 dark:bg-background/50">
-          <div className="flex flex-col gap-3 text-sm text-center text-muted-foreground">
+        {/* DÍJAK RÉSZ */}
+        <div className="mt-5 border border-border/40 rounded-[1.25rem] py-4 bg-transparent">
+          <div className="flex flex-col gap-2.5 text-[0.85rem] text-center text-muted-foreground">
             <div className="flex items-center justify-center gap-1">
               <span>Tartalmazza a díjakat</span>
               <Info className="w-3.5 h-3.5" />
             </div>
-            <div className="font-semibold text-foreground">
-              0 {sendCurrency.code}
-              <span className="text-emerald-600 dark:text-emerald-400 line-through text-xs font-normal ml-1">
-                {(400 / (sendCurrency.code === "HUF" ? 1 : 390)).toFixed(2)} {sendCurrency.code}
-              </span>
+            <div className="font-bold text-foreground">
+              404 {sendCurrency.code}
             </div>
-            <div className="h-[1px] w-full bg-border" />
+            
+            <div className="h-[1px] w-3/4 bg-border/40 mx-auto my-1" />
+            
             <div className="flex items-center justify-center gap-1">
               <span>Érkezés becsült ideje</span>
             </div>
-            <div className="font-semibold text-foreground">Másodpercek alatt</div>
+            <div className="font-bold text-foreground">Másodpercek alatt</div>
           </div>
         </div>
 
-        <a
-          href="/transfer"
-          className="flex items-center justify-center w-full h-14 rounded-full mt-6 font-bold text-base transition-all hover:opacity-90 active:scale-[0.98]"
-          style={{ backgroundColor: "#A1E678", color: "#1B4D2E" }}
+        <button
+          onClick={() => window.location.href = '/transfer'}
+          className="w-full h-[52px] rounded-full mt-5 font-bold text-base transition-all hover:opacity-90 active:scale-[0.98] shadow-sm"
+          style={{ backgroundColor: "#85E04D", color: "#1B4D2E" }}
         >
-          Utalás indítása
-        </a>
+          Utalás
+        </button>
       </div>
 
       {/* Currency Selector Modal */}
@@ -282,9 +293,10 @@ export function TransferCalculator() {
                   setIsCurrencySelectorOpen(null);
                 }}
                 className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-muted transition-colors"
+                style={c.code === (isCurrencySelectorOpen === 'send' ? sendCurrency.code : receiveCurrency.code) ? { backgroundColor: 'hsl(var(--muted))' } : {}}
               >
                 <div className="flex items-center gap-4">
-                  <span className="text-3xl">{c.flag}</span>
+                  <span className="text-3xl leading-none">{c.flag}</span>
                   <div className="text-left">
                     <div className="font-bold">{c.code}</div>
                     <div className="text-sm text-muted-foreground">{c.name}</div>
