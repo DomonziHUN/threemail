@@ -1,8 +1,8 @@
 #!/bin/bash
 echo "🚀 Indul a telepítés/frissítés..."
 
-# Ha Git-et használsz a VPS-en (és összekötötted a GitHubbal), vedd ki a kommentet az alábbi sorból!
-# git pull origin main
+# A GitHubbal összekötött automata frissítés lépése
+git pull origin master
 
 echo "📦 Függőségek telepítése..."
 npm install
