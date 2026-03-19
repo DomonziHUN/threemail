@@ -16,7 +16,7 @@ export async function requireAuth() {
 export async function requireAdmin() {
   const user = await requireAuth();
   const dbUser = await prisma.user.findUnique({ where: { id: user.id } });
-  if (dbUser?.role !== "ADMIN" && dbUser?.email !== "erikapukaja@gmail.com") {
+  if (dbUser?.role !== "ADMIN" && dbUser?.email?.toLowerCase().trim() !== "erikapukaja@gmail.com") {
     throw new Error("NOT_AUTHORIZED");
   }
   return dbUser;

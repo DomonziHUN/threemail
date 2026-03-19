@@ -106,7 +106,7 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      {(profile?.role === "ADMIN" || profile?.email === "erikapukaja@gmail.com") && (
+      {(profile?.role === "ADMIN" || profile?.email?.toLowerCase().trim() === "erikapukaja@gmail.com") && (
         <Card className="border-primary/50 bg-primary/5 shadow-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-primary">
