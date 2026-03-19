@@ -4,184 +4,178 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
-  Search,
-  ChevronRight,
   XCircle,
   CheckCircle2,
   Send,
   Loader2,
+  ArrowDownUp,
+  Info,
+  ChevronDown
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 // --- Pénznemek listája ---
 type Currency = { code: string; name: string; flag: string };
 
-// Az adott devizához tartozó IBAN példa (placeholder)
+const CURRENCIES: Currency[] = [
+  { code: "HUF", name: "magyar forint", flag: "🇭🇺" },
+  { code: "EUR", name: "euró", flag: "🇪🇺" },
+  { code: "USD", name: "amerikai dollár", flag: "🇺🇸" },
+  { code: "GBP", name: "brit font sterling", flag: "🇬🇧" },
+  { code: "CHF", name: "svájci frank", flag: "🇨🇭" },
+];
+
 const CURRENCY_IBAN_PLACEHOLDER: Record<string, string> = {
-  AED: "AE07 0331 2345 6789 0123 456",
-  ALL: "AL47 2121 1009 0000 0002 3569 8741",
-  ARS: "IBAN szám...",
-  AUD: "IBAN szám...",
-  AZN: "AZ21 NABZ 0000 0000 1370 1000 1944",
-  BAM: "BA39 1290 0794 0102 8494",
-  BGN: "BG80 BNBG 9661 1020 3456 78",
-  CAD: "IBAN szám...",
-  CHF: "CH56 0483 5012 3456 7800 9",
-  CNY: "IBAN szám...",
-  CZK: "CZ65 0800 0000 1920 0014 5399",
-  DKK: "DK50 0040 0440 1162 43",
-  EGP: "EG38 0019 0005 0000 0000 2631 8000 02",
-  EUR: "DE89 3704 0044 0532 0130 00",
-  GBP: "GB29 NWBK 6016 1331 9268 19",
-  GEL: "GE29 NB00 0000 0101 9049 17",
-  HKD: "IBAN szám...",
-  HRK: "HR12 1001 0051 8630 0016 0",
   HUF: "HU42 1177 3016 1111 1018 0000 0000",
-  IDR: "IBAN szám...",
-  ILS: "IL62 0108 0000 0009 9999 999",
-  INR: "IBAN szám...",
-  ISK: "IS14 0159 2600 7654 5510 7303 39",
-  JPY: "IBAN szám...",
-  KZT: "KZ86 125K ZT50 0410 0100",
-  MDL: "MD24 AG00 0225 1000 1310 4168",
-  MKD: "MK07 2501 2000 0058 984",
-  MXN: "IBAN szám...",
-  MYR: "IBAN szám...",
-  NOK: "NO93 8601 1117 947",
-  NZD: "IBAN szám...",
-  PHP: "IBAN szám...",
-  PLN: "PL61 1090 1014 0000 0712 1981 2874",
-  QAR: "QA58 DOHB 0000 1234 5678 90AB CDEF G",
-  RON: "RO49 AAAA 1B31 0075 9384 0000",
-  RSD: "RS35 2600 0560 1001 6113 79",
-  SAR: "SA03 8000 0000 6080 1016 7519",
-  SEK: "SE45 5000 0000 0583 9825 7466",
-  SGD: "IBAN szám...",
-  THB: "IBAN szám...",
-  TRY: "TR33 0006 1005 1978 6457 8413 26",
-  UAH: "UA21 3223 1300 0002 6007 2335 6600 1",
+  EUR: "DE89 3704 0044 0532 0130 00",
   USD: "IBAN szám...",
-  XOF: "SN12 K001 0152 0000 2519 7909 300",
-  ZAR: "IBAN szám...",
+  GBP: "GB29 NWBK 6016 1331 9268 19",
+  CHF: "CH56 0483 5012 3456 7800 9",
 };
 
-const RECENT_CURRENCIES: Currency[] = [
-  { code: "HUF", name: "magyar forint", flag: "🇭🇺" },
-  { code: "EUR", name: "euró", flag: "🇪🇺" },
-  { code: "USD", name: "amerikai dollár", flag: "🇺🇸" },
-  { code: "GBP", name: "brit font sterling", flag: "🇬🇧" },
-];
-
-const ALL_CURRENCIES: Currency[] = [
-  { code: "AED", name: "emirátusi dirham", flag: "🇦🇪" },
-  { code: "ALL", name: "albán lek", flag: "🇦🇱" },
-  { code: "ARS", name: "argentin peso", flag: "🇦🇷" },
-  { code: "AUD", name: "ausztrál dollár", flag: "🇦🇺" },
-  { code: "AZN", name: "azerbajdzsáni manat", flag: "🇦🇿" },
-  { code: "BAM", name: "bosnyák konvertibilis márka", flag: "🇧🇦" },
-  { code: "BGN", name: "bolgár leva", flag: "🇧🇬" },
-  { code: "CAD", name: "kanadai dollár", flag: "🇨🇦" },
-  { code: "CHF", name: "svájci frank", flag: "🇨🇭" },
-  { code: "CNY", name: "kínai jüan", flag: "🇨🇳" },
-  { code: "CZK", name: "cseh korona", flag: "🇨🇿" },
-  { code: "DKK", name: "dán korona", flag: "🇩🇰" },
-  { code: "EGP", name: "egyiptomi font", flag: "🇪🇬" },
-  { code: "EUR", name: "euró", flag: "🇪🇺" },
-  { code: "GBP", name: "brit font sterling", flag: "🇬🇧" },
-  { code: "GEL", name: "grúz lari", flag: "🇬🇪" },
-  { code: "HKD", name: "hongkongi dollár", flag: "🇭🇰" },
-  { code: "HRK", name: "horvát kuna", flag: "🇭🇷" },
-  { code: "HUF", name: "magyar forint", flag: "🇭🇺" },
-  { code: "IDR", name: "indonéz rúpia", flag: "🇮🇩" },
-  { code: "ILS", name: "izraeli sékel", flag: "🇮🇱" },
-  { code: "INR", name: "indiai rúpia", flag: "🇮🇳" },
-  { code: "ISK", name: "izlandi korona", flag: "🇮🇸" },
-  { code: "JPY", name: "japán jen", flag: "🇯🇵" },
-  { code: "KZT", name: "kazah tenge", flag: "🇰🇿" },
-  { code: "MDL", name: "moldovai lej", flag: "🇲🇩" },
-  { code: "MKD", name: "észak-macedón dénár", flag: "🇲🇰" },
-  { code: "MXN", name: "mexikói peso", flag: "🇲🇽" },
-  { code: "MYR", name: "maláj ringgit", flag: "🇲🇾" },
-  { code: "NOK", name: "norvég korona", flag: "🇳🇴" },
-  { code: "NZD", name: "új-zélandi dollár", flag: "🇳🇿" },
-  { code: "PHP", name: "fülöp-szigeteki pesó", flag: "🇵🇭" },
-  { code: "PLN", name: "lengyel zloty", flag: "🇵🇱" },
-  { code: "QAR", name: "katari riyal", flag: "🇶🇦" },
-  { code: "RON", name: "román lej", flag: "🇷🇴" },
-  { code: "RSD", name: "szerb dinár", flag: "🇷🇸" },
-  { code: "SAR", name: "szaúdi riyal", flag: "🇸🇦" },
-  { code: "SEK", name: "svéd korona", flag: "🇸🇪" },
-  { code: "SGD", name: "szingapúri dollár", flag: "🇸🇬" },
-  { code: "THB", name: "thai baht", flag: "🇹🇭" },
-  { code: "TRY", name: "török líra", flag: "🇹🇷" },
-  { code: "UAH", name: "ukrán hrivnya", flag: "🇺🇦" },
-  { code: "USD", name: "amerikai dollár", flag: "🇺🇸" },
-  { code: "XOF", name: "nyugat-afrikai CFA frank", flag: "🌍" },
-  { code: "ZAR", name: "dél-afrikai rand", flag: "🇿🇦" },
-];
-
-function formatHuf(n: number) {
+function formatCurrency(n: number, currency: string) {
   return new Intl.NumberFormat("hu-HU", {
     style: "currency",
-    currency: "HUF",
-    maximumFractionDigits: 0,
+    currency: currency,
+    maximumFractionDigits: 2,
   }).format(n);
 }
+
+// Egyszerű kamu sparkline SVG
+const Sparkline = () => (
+  <div className="relative h-24 w-full flex items-end">
+    <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full stroke-[#1B4D2E] fill-none" strokeWidth="1.5">
+      <path d="M0,20 C5,18 10,22 15,20 C20,18 25,25 30,22 C35,19 40,24 45,15 C50,6 55,10 60,6 C65,2 70,12 75,10 C80,8 85,15 90,12 C95,9 100,5 100,5" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="100" cy="5" r="3" className="fill-[#1B4D2E]" stroke="none" />
+    </svg>
+    {/* Grid lines */}
+    <div className="absolute inset-0 flex flex-col justify-between pointer-events-none pb-2">
+      <div className="border-t border-dashed border-border w-full opacity-50" />
+      <div className="border-t border-dashed border-border w-full opacity-50" />
+      <div className="border-t border-dashed border-border w-full opacity-50" />
+    </div>
+  </div>
+);
 
 export function TransferFlow() {
   const router = useRouter();
 
-  // Steps: 1 = currency, 2 = recipient, 3 = amount, 4 = confirm
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
-  const [selectedCurrency, setSelectedCurrency] = useState<Currency | null>(null);
+  // Steps: 1 = Calculator, 2 = Recipient, 3 = Confirm
+  const [step, setStep] = useState<1 | 2 | 3>(1);
 
-  // Step 1 – keresés
-  const [searchQuery, setSearchQuery] = useState("");
+  // Step 1: Calculator State
+  const [sendCurrency, setSendCurrency] = useState<Currency>(CURRENCIES[0]); // HUF
+  const [receiveCurrency, setReceiveCurrency] = useState<Currency>(CURRENCIES[1]); // EUR
+  const [sendAmount, setSendAmount] = useState<string>("10000");
+  const [receiveAmount, setReceiveAmount] = useState<string>("");
+  const [rates, setRates] = useState<Record<string, number>>({ EUR: 0.0025, USD: 0.0027, GBP: 0.0021, CHF: 0.0024, HUF: 1 });
+  const [liveRateText, setLiveRateText] = useState("Betöltés...");
+  const [isCurrencySelectorOpen, setIsCurrencySelectorOpen] = useState<'send' | 'receive' | null>(null);
 
-  // Step 2 – kedvezményezett
+  // User Balance
+  const [balance, setBalance] = useState<number | null>(null);
+
+  // Step 2: Recipient
   const [email, setEmail] = useState("");
   const [tab, setTab] = useState<"LOCAL" | "IBAN">("LOCAL");
   const [fullName, setFullName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [hasError, setHasError] = useState(false);
 
-  // Step 3 – összeg
-  const [amount, setAmount] = useState("");
+  // Step 3: Confirm
   const [note, setNote] = useState("");
-  const [balance, setBalance] = useState<number | null>(null);
-  const [amountError, setAmountError] = useState("");
-
-  // Step 4 – küldés
   const [sending, setSending] = useState(false);
 
-  // Szűrt pénznemek
-  const filteredAll = ALL_CURRENCIES.filter(
-    (c) =>
-      c.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      c.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Egyenleg lekérése a 3. lépéshez
+  // Fetch live rates (Frankfurter) and user balance
   useEffect(() => {
-    if (step === 3) {
-      fetch("/api/user/balance")
-        .then((r) => r.json())
-        .then((d) => setBalance(d.balance ?? null))
-        .catch(() => setBalance(null));
-    }
-  }, [step]);
+    fetch("/api/user/balance")
+      .then((r) => r.json())
+      .then((d) => setBalance(d.balance ?? 0))
+      .catch(() => setBalance(0));
 
-  const handleSelectCurrency = (currency: Currency) => {
-    setSelectedCurrency(currency);
-    setStep(2);
+    // Élő árfolyamok lekérése EUR bázissal
+    fetch("https://api.frankfurter.app/latest?from=EUR")
+      .then((res) => res.json())
+      .then((data) => {
+        const rates = data.rates;
+        // Konvertáljunk egy közös bázisra, pl USD, vagy csak mentsük el a HUF/EUR/USD stb hálót
+        const newRates: Record<string, number> = {
+          EUR: 1,
+          HUF: rates.HUF,
+          USD: rates.USD,
+          GBP: rates.GBP,
+          CHF: rates.CHF
+        };
+        setRates(newRates);
+      })
+      .catch((e) => console.log("Árfolyam hiba:", e));
+  }, []);
+
+  // Számítás effect
+  useEffect(() => {
+    if (!rates.HUF) return;
+
+    // Kalkuláljuk a váltási rátát
+    const rateSendToEuro = 1 / rates[sendCurrency.code];
+    const rateEuroToReceive = rates[receiveCurrency.code];
+    const finalRate = rateSendToEuro * rateEuroToReceive;
+
+    // Ha ugyanaz a deviza
+    if (sendCurrency.code === receiveCurrency.code) {
+      setReceiveAmount(sendAmount);
+      setLiveRateText(`1 ${sendCurrency.code} = 1 ${receiveCurrency.code}`);
+      return;
+    }
+
+    if (sendAmount && !isNaN(Number(sendAmount))) {
+      const calculated = Number(sendAmount) * finalRate;
+      setReceiveAmount(calculated.toFixed(2));
+    } else {
+      setReceiveAmount("");
+    }
+
+    // Élő rate szöveg frissítése
+    // Pl. 1 EUR = 392,870 HUF (Mindig a "nagyobb" értékűt mutatjuk előre az élethűség kedvéért, vagy fixen Send -> Receive)
+    let displayRate = finalRate;
+    if (finalRate < 0.01) {
+      displayRate = 1 / finalRate;
+      setLiveRateText(`1 ${receiveCurrency.code} = ${displayRate.toLocaleString('hu-HU', { maximumFractionDigits: 4 })} ${sendCurrency.code}`);
+    } else {
+      setLiveRateText(`1 ${sendCurrency.code} = ${displayRate.toLocaleString('hu-HU', { maximumFractionDigits: 4 })} ${receiveCurrency.code}`);
+    }
+
+  }, [sendAmount, sendCurrency, receiveCurrency, rates]);
+
+  const handleSwapCurrencies = () => {
+    setSendCurrency(receiveCurrency);
+    setReceiveCurrency(sendCurrency);
+    setSendAmount(receiveAmount);
   };
 
   const handleGoBack = () => {
-    if (step === 4) setStep(3);
-    else if (step === 3) setStep(2);
+    if (step === 3) setStep(2);
     else if (step === 2) setStep(1);
     else router.push("/dashboard");
+  };
+
+  // Kalkulátorból Tovább
+  const handleCalculatorContinue = () => {
+    const num = Number(sendAmount);
+    if (!sendAmount || isNaN(num) || num <= 0) {
+      toast.error("Adj meg egy érvényes összeget.");
+      return;
+    }
+    // Csak a HUF egyenleget ellenőrizzük, mert a felhasználónak csak HUF egyenlege van a rendszerben
+    // Viszont ha nem HUF-t küld, akkor át kell számolni HUF-ra a fedezet-ellenőrzéshez
+    const sendInHuf = sendCurrency.code === "HUF" ? num : (num * (rates.HUF / rates[sendCurrency.code]));
+    
+    if (balance !== null && sendInHuf > balance) {
+      toast.error(`Nincs elegendő fedezet. Elérhető: ${formatCurrency(balance, "HUF")}`);
+      return;
+    }
+    setStep(2);
   };
 
   // Step 2 → 3 validáció
@@ -210,25 +204,15 @@ export function TransferFlow() {
     setStep(3);
   };
 
-  // Step 3 → 4 validáció
-  const handleAmountContinue = () => {
-    setAmountError("");
-    const num = Number(amount);
-    if (!amount || isNaN(num) || num <= 0) {
-      setAmountError("Adj meg egy érvényes összeget.");
-      return;
-    }
-    if (balance !== null && num > balance) {
-      setAmountError("Nincs elegendő fedezet az egyenlegeden.");
-      return;
-    }
-    setStep(4);
-  };
-
-  // Step 4 – Küldés
+  // Step 3 – Küldés
   const handleSend = async () => {
     setSending(true);
     try {
+      // Mindig a küldött (saját levont) összeget küldjük az API-nak a devizájával, vagy átváltjuk HUF-ra a levonáshoz
+      // A mi API-nk JELENLEG HUF egyenleget von, de `amount`-ot kér be.
+      // Emiatt kiszámoljuk, mennyit vonjon le fixen HUF-ban, és azt küldjük be.
+      const sendInHuf = sendCurrency.code === "HUF" ? Number(sendAmount) : (Number(sendAmount) * (rates.HUF / rates[sendCurrency.code]));
+      
       const res = await fetch("/api/transfer", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -236,8 +220,8 @@ export function TransferFlow() {
           recipientName: fullName,
           recipientAccount: accountNumber,
           accountType: tab,
-          currency: selectedCurrency?.code ?? "HUF",
-          amount: Number(amount),
+          currency: receiveCurrency.code, // Milyen devizában érkezik
+          amount: sendInHuf,              // Mennyit vonunk le
           description: note.trim() || undefined,
         }),
       });
@@ -249,7 +233,7 @@ export function TransferFlow() {
         return;
       }
 
-      toast.success("Az utalás sikeres!");
+      toast.success("Az utalás elindítva!");
       router.push("/dashboard");
     } catch {
       toast.error("Szerver hiba. Kérünk, próbáld újra.");
@@ -258,84 +242,127 @@ export function TransferFlow() {
     }
   };
 
-  // --- Fejléc ---
-  const Header = () => (
-    <div className="pt-6 px-4 pb-2">
-      <button
-        onClick={handleGoBack}
-        className="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center hover:bg-secondary/50 transition-colors"
-      >
-        <ArrowLeft className="w-5 h-5 text-foreground" />
-      </button>
-    </div>
-  );
-
   return (
-    <div className="flex flex-col min-h-screen bg-background text-foreground animate-in slide-in-from-right-8 duration-300">
-      <Header />
+    <div className="flex flex-col min-h-screen bg-[#f9f9f9] dark:bg-[#09090b] text-foreground animate-in slide-in-from-right-8 duration-300">
+      
+      <div className="pt-6 px-4 pb-2 flex items-center justify-between">
+        <button
+          onClick={handleGoBack}
+          className="w-10 h-10 rounded-full bg-secondary/30 flex items-center justify-center hover:bg-secondary/50 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5 text-foreground" />
+        </button>
+        {step === 1 && (
+          <div className="px-3 py-1.5 bg-[#A1E678] text-[#1B4D2E] text-xs font-bold rounded-full">
+            Nincs utalási díj
+          </div>
+        )}
+      </div>
 
-      {/* ===================== STEP 1 – Pénznem ===================== */}
+      {/* ===================== STEP 1 – Kalkulátor ===================== */}
       {step === 1 && (
-        <div className="px-5 mt-4 flex-1">
-          <h1 className="text-3xl font-bold tracking-tight mb-6">Pénznem kiválasztása</h1>
+        <div className="px-5 mt-2 flex-1 flex flex-col max-w-md mx-auto w-full">
+          <h1 className="text-2xl font-bold tracking-tight mb-4">Utalás kalkulátor</h1>
 
-          <div className="relative mb-6">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-muted-foreground" />
+          <div className="bg-[#f0ede6] dark:bg-card border border-border/50 rounded-3xl p-5 shadow-sm">
+            {/* Chart Area */}
+            <div className="mb-4">
+              <Sparkline />
+              <div className="flex justify-between text-xs text-muted-foreground mt-2 px-1">
+                <span>Ma</span>
+                <span>Idén</span>
+              </div>
             </div>
-            <Input
-              type="text"
-              placeholder="Pénznem keresése"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-11 h-14 rounded-full border-muted-foreground/30 focus-visible:ring-primary/50 text-base"
-            />
+
+            <div className="font-bold mb-6 text-sm">{liveRateText}</div>
+
+            {/* Küldött összeg */}
+            <div className="relative bg-white dark:bg-background rounded-2xl p-4 flex items-center justify-between shadow-sm z-10 transition-shadow focus-within:ring-2 focus-within:ring-primary/20">
+              <input
+                type="number"
+                value={sendAmount}
+                onChange={(e) => setSendAmount(e.target.value)}
+                className="bg-transparent text-2xl font-bold outline-none w-1/2"
+                placeholder="0"
+              />
+              <button 
+                onClick={() => setIsCurrencySelectorOpen('send')}
+                className="flex items-center gap-2 bg-muted/50 hover:bg-muted px-3 py-2 rounded-xl transition-colors"
+              >
+                <span className="text-xl">{sendCurrency.flag}</span>
+                <span className="font-bold">{sendCurrency.code}</span>
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </div>
+
+            {/* Swap Button */}
+            <div className="relative h-6 flex justify-center items-center z-20">
+              <button 
+                onClick={handleSwapCurrencies}
+                className="w-10 h-10 bg-[#f0ede6] dark:bg-card border-4 border-white dark:border-background rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
+              >
+                <ArrowDownUp className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </div>
+
+            {/* Érkező összeg */}
+            <div className="relative bg-white dark:bg-background rounded-2xl p-4 flex items-center justify-between shadow-sm z-10">
+              <input
+                type="text"
+                readOnly
+                value={receiveAmount}
+                className="bg-transparent text-2xl font-bold outline-none w-1/2 text-muted-foreground"
+                placeholder="0"
+              />
+              <button 
+                onClick={() => setIsCurrencySelectorOpen('receive')}
+                className="flex items-center gap-2 bg-muted/50 hover:bg-muted px-3 py-2 rounded-xl transition-colors"
+              >
+                <span className="text-xl">{receiveCurrency.flag}</span>
+                <span className="font-bold">{receiveCurrency.code}</span>
+                <ChevronDown className="w-4 h-4 text-muted-foreground" />
+              </button>
+            </div>
+
+            {/* Info Box */}
+            <div className="mt-6 border border-border/50 rounded-2xl p-4 bg-white/50 dark:bg-background/50">
+              <div className="flex flex-col gap-3 text-sm text-center text-muted-foreground">
+                <div className="flex items-center justify-center gap-1">
+                  <span>Tartalmazza a díjakat</span>
+                  <Info className="w-3.5 h-3.5" />
+                </div>
+                <div className="font-semibold text-foreground">0 HUF <span className="text-emerald-600 dark:text-emerald-400 line-through text-xs font-normal ml-1">404 HUF</span></div>
+                <div className="h-[1px] w-full bg-border" />
+                <div className="flex items-center justify-center gap-1">
+                  <span>Érkezés becsült ideje</span>
+                </div>
+                <div className="font-semibold text-foreground">Másodpercek alatt</div>
+              </div>
+            </div>
+
+            <button
+              onClick={handleCalculatorContinue}
+              className="w-full h-14 rounded-full mt-6 font-bold text-base transition-all hover:opacity-90 active:scale-[0.98]"
+              style={{ backgroundColor: "#A1E678", color: "#1B4D2E" }}
+            >
+              Utalás
+            </button>
           </div>
 
-          <div className="space-y-6">
-            {searchQuery === "" && (
-              <div>
-                <h3 className="text-sm text-muted-foreground font-medium mb-2 pl-1">
-                  Legutóbbi pénznemek
-                </h3>
-                <div className="h-[1px] w-full bg-border mb-3" />
-                <div className="space-y-1">
-                  {RECENT_CURRENCIES.map((c) => (
-                    <CurrencyRow key={c.code} currency={c} onSelect={handleSelectCurrency} />
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div>
-              <h3 className="text-sm text-muted-foreground font-medium mb-2 pl-1">
-                {searchQuery !== "" ? "Keresési Eredmények" : "Összes pénznem"}
-              </h3>
-              <div className="h-[1px] w-full bg-border mb-3" />
-              <div className="space-y-1 pb-10">
-                {filteredAll.map((c) => (
-                  <CurrencyRow key={c.code} currency={c} onSelect={handleSelectCurrency} />
-                ))}
-                {filteredAll.length === 0 && (
-                  <p className="text-center text-muted-foreground py-6">
-                    Nincs találat erre a keresésre
-                  </p>
-                )}
-              </div>
-            </div>
+          <div className="py-6 text-center text-sm text-muted-foreground">
+            Elérhető egyenleg: <span className="font-semibold text-foreground">{balance !== null ? formatCurrency(balance, "HUF") : "..."}</span>
           </div>
         </div>
       )}
 
       {/* ===================== STEP 2 – Kedvezményezett ===================== */}
       {step === 2 && (
-        <div className="px-5 mt-4 flex-1 flex flex-col animate-in fade-in duration-300">
+        <div className="px-5 mt-4 flex-1 flex flex-col animate-in fade-in duration-300 max-w-md mx-auto w-full">
           <h1 className="text-[2rem] leading-tight font-bold tracking-tight mb-8">
             Add meg a <br /> kedvezményezett <br /> számlaadatait
           </h1>
 
           <div className="space-y-6 flex-1">
-            {/* E-mail (opcionális) */}
             <div className="space-y-1">
               <label className="text-sm font-bold text-foreground pl-1">
                 E-mail-címe (nem kötelező)
@@ -349,10 +376,9 @@ export function TransferFlow() {
               />
             </div>
 
-            {/* Tab: Helyi / IBAN */}
             <div className="space-y-2 pt-2">
               <label className="text-sm text-muted-foreground pl-1">
-                Kedvezményezett banki adatai
+                Kedvezményezett banki adatai ({receiveCurrency.code})
               </label>
               <div className="h-[1px] w-full bg-border mb-2" />
               <div className="bg-[#f0ede6]/50 dark:bg-muted p-1 rounded-2xl flex">
@@ -366,13 +392,12 @@ export function TransferFlow() {
                         : "text-muted-foreground font-medium"
                     }`}
                   >
-                    {t === "LOCAL" ? "Helyi bankszámla" : "IBAN"}
+                    {t === "LOCAL" ? "Helyi belföldi" : "IBAN"}
                   </button>
                 ))}
               </div>
             </div>
 
-            {/* Számlatulajdonos neve */}
             <div className="space-y-1 pt-2">
               <label className="text-sm font-bold text-foreground pl-1">
                 Számlatulajdonos teljes neve
@@ -386,7 +411,6 @@ export function TransferFlow() {
               />
             </div>
 
-            {/* Számlaszám */}
             <div className="space-y-1">
               <label className="text-sm font-bold text-foreground pl-1">Bankszámlaszám</label>
               <Input
@@ -394,7 +418,7 @@ export function TransferFlow() {
                 placeholder={
                   tab === "LOCAL"
                     ? "12345678-12345678-12345678"
-                    : (selectedCurrency ? (CURRENCY_IBAN_PLACEHOLDER[selectedCurrency.code] ?? "IBAN szám...") : "IBAN szám...")
+                    : (CURRENCY_IBAN_PLACEHOLDER[receiveCurrency.code] ?? "IBAN szám...")
                 }
                 value={accountNumber}
                 onChange={(e) => { setAccountNumber(e.target.value); setHasError(false); }}
@@ -428,93 +452,43 @@ export function TransferFlow() {
         </div>
       )}
 
-      {/* ===================== STEP 3 – Összeg ===================== */}
+      {/* ===================== STEP 3 – Megerősítés ===================== */}
       {step === 3 && (
-        <div className="px-5 mt-4 flex-1 flex flex-col animate-in fade-in duration-300">
-          <h1 className="text-[2rem] leading-tight font-bold tracking-tight mb-2">
-            Mennyi {selectedCurrency?.code ?? "HUF"}-t <br /> szeretnél küldeni?
-          </h1>
-
-          {/* Egyenleg badge */}
-          <p className="text-sm text-muted-foreground mb-8 pl-1">
-            Elérhető egyenleg:{" "}
-            <span className="font-semibold text-foreground">
-              {balance !== null ? formatHuf(balance) : "…"}
-            </span>
-          </p>
-
-          <div className="flex-1 flex flex-col gap-6">
-            {/* Nagy összeg input */}
-            <div className="relative">
-              <Input
-                type="number"
-                min={1}
-                placeholder="0"
-                value={amount}
-                onChange={(e) => { setAmount(e.target.value); setAmountError(""); }}
-                className={`h-20 rounded-2xl text-4xl font-bold pr-20 text-center tracking-tight transition-colors ${
-                  amountError
-                    ? "border-red-500 text-red-600 focus-visible:ring-red-500 bg-red-500/5"
-                    : "border-muted-foreground/30 focus-visible:ring-primary/50"
-                }`}
-              />
-              <span className="absolute right-5 top-1/2 -translate-y-1/2 text-2xl font-bold text-muted-foreground">
-                {selectedCurrency?.flag ?? "🇭🇺"}
-              </span>
-            </div>
-
-            {amountError && (
-              <div className="flex gap-2 p-3 rounded-xl bg-red-100 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 animate-in slide-in-from-top-2">
-                <XCircle className="w-5 h-5 shrink-0 mt-0.5" />
-                <span className="text-sm font-medium">{amountError}</span>
-              </div>
-            )}
-
-            {/* Megjegyzés */}
-            <div className="space-y-1">
-              <label className="text-sm font-bold text-foreground pl-1">
-                Megjegyzés (nem kötelező)
-              </label>
-              <Input
-                type="text"
-                placeholder="pl. Közös nyaralás"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                className="h-14 rounded-xl border-muted-foreground/30 focus-visible:ring-primary/50 text-base"
-              />
-            </div>
-          </div>
-
-          <div className="pb-8 pt-4">
-            <button
-              onClick={handleAmountContinue}
-              className="w-full h-14 rounded-full font-bold text-base transition-all hover:opacity-90 active:scale-[0.98]"
-              style={{ backgroundColor: "#A1E678", color: "#1B4D2E" }}
-            >
-              Folytatás
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ===================== STEP 4 – Megerősítés ===================== */}
-      {step === 4 && (
-        <div className="px-5 mt-4 flex-1 flex flex-col animate-in fade-in duration-300">
+        <div className="px-5 mt-4 flex-1 flex flex-col animate-in fade-in duration-300 max-w-md mx-auto w-full">
           <h1 className="text-[2rem] leading-tight font-bold tracking-tight mb-8">
             Ellenőrizd az <br /> utalási adatokat
           </h1>
 
-          {/* Összefoglaló kártya */}
-          <div className="rounded-3xl border border-border bg-card p-5 space-y-4 mb-6">
-            <SummaryRow label="Összeg" value={`${Number(amount).toLocaleString("hu-HU")} ${selectedCurrency?.code}`} large />
+          <div className="rounded-3xl border border-border bg-card p-5 space-y-4 mb-6 shadow-sm">
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-sm text-muted-foreground">Küldött összeg</span>
+              <span className="font-bold text-xl">{Number(sendAmount).toLocaleString("hu-HU")} {sendCurrency.code}</span>
+            </div>
+            {sendCurrency.code !== receiveCurrency.code && (
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-sm text-muted-foreground">Érkező összeg</span>
+                <span className="font-bold text-emerald-600 dark:text-emerald-400">{Number(receiveAmount).toLocaleString("hu-HU")} {receiveCurrency.code}</span>
+              </div>
+            )}
             <div className="h-[1px] w-full bg-border" />
             <SummaryRow label="Kedvezményezett" value={fullName} />
             <SummaryRow label="Számlaszám" value={accountNumber} />
             <SummaryRow label="Típus" value={tab === "LOCAL" ? "Helyi bankszámla" : "IBAN"} />
-            {note && <SummaryRow label="Megjegyzés" value={note} />}
           </div>
 
-          {/* Figyelmeztetés */}
+          <div className="space-y-1 mb-6">
+            <label className="text-sm font-bold text-foreground pl-1">
+              Közlemény (opcionális)
+            </label>
+            <Input
+              type="text"
+              placeholder="pl. Közös nyaralás"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className="h-14 rounded-xl border-muted-foreground/30 focus-visible:ring-primary/50 text-base"
+            />
+          </div>
+
           <div className="flex gap-3 p-4 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-amber-800 dark:text-amber-300 mb-6">
             <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
             <p className="text-sm font-medium">
@@ -534,12 +508,12 @@ export function TransferFlow() {
               {sending ? (
                 <>
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  Küldés folyamatban…
+                  Folyamatban…
                 </>
               ) : (
                 <>
                   <Send className="w-5 h-5" />
-                  Küldés
+                  Pénz elküldése
                 </>
               )}
             </button>
@@ -552,57 +526,43 @@ export function TransferFlow() {
           </div>
         </div>
       )}
+
+      {/* Currency Selector Modal */}
+      <Dialog open={!!isCurrencySelectorOpen} onOpenChange={(open) => !open && setIsCurrencySelectorOpen(null)}>
+        <DialogContent className="max-w-sm rounded-[2rem]">
+          <h3 className="font-bold text-xl mb-4 text-center">Pénznem választás</h3>
+          <div className="space-y-2">
+            {CURRENCIES.map((c) => (
+              <button
+                key={c.code}
+                onClick={() => {
+                  if (isCurrencySelectorOpen === 'send') setSendCurrency(c);
+                  else setReceiveCurrency(c);
+                  setIsCurrencySelectorOpen(null);
+                }}
+                className="w-full flex items-center justify-between p-4 rounded-2xl hover:bg-muted transition-colors"
+              >
+                <div className="flex items-center gap-4">
+                  <span className="text-3xl">{c.flag}</span>
+                  <div className="text-left">
+                    <div className="font-bold">{c.code}</div>
+                    <div className="text-sm text-muted-foreground">{c.name}</div>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
 
-// --- Segéd komponensek ---
-
-function CurrencyRow({
-  currency,
-  onSelect,
-}: {
-  currency: Currency;
-  onSelect: (c: Currency) => void;
-}) {
-  return (
-    <button
-      onClick={() => onSelect(currency)}
-      className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-muted/50 transition-colors"
-    >
-      <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-full overflow-hidden text-3xl leading-none flex items-center justify-center shadow-sm">
-          {currency.flag}
-        </div>
-        <div className="text-left">
-          <p className="font-bold text-base">{currency.code}</p>
-          <p className="text-sm text-muted-foreground">{currency.name}</p>
-        </div>
-      </div>
-      <ChevronRight className="w-5 h-5 text-muted-foreground" />
-    </button>
-  );
-}
-
-function SummaryRow({
-  label,
-  value,
-  large,
-}: {
-  label: string;
-  value: string;
-  large?: boolean;
-}) {
+function SummaryRow({ label, value }: { label: string; value: string; }) {
   return (
     <div className="flex items-center justify-between gap-4">
       <span className="text-sm text-muted-foreground">{label}</span>
-      <span
-        className={`font-semibold text-right break-all ${
-          large ? "text-2xl text-emerald-600 dark:text-emerald-400" : "text-base"
-        }`}
-      >
-        {value}
-      </span>
+      <span className="font-semibold text-right break-all text-sm">{value}</span>
     </div>
   );
 }

@@ -23,6 +23,7 @@ export default function CardsPage() {
   const router = useRouter();
   const [cards, setCards] = useState<any[]>([]);
   const [hasAddress, setHasAddress] = useState(false);
+  const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [revealedCards, setRevealedCards] = useState<Record<string, any>>({});
   const [showDetails, setShowDetails] = useState<Record<string, boolean>>({});
@@ -51,6 +52,7 @@ export default function CardsPage() {
       const data = await res.json();
       setCards(data.cards || []);
       setHasAddress(data.hasAddress || false);
+      setBalance(data.balance || 0);
     } catch (error) {
       toast.error("Hiba a kártyák betöltésekor");
     } finally {
@@ -113,6 +115,10 @@ export default function CardsPage() {
       toast.error("Fizikai kártya igényléséhez kérjük add meg a szállítási címed!");
       setIsNewCardModalOpen(false);
       router.push("/settings");
+      return;
+    }
+    if (selectedType === "PHYSICAL" && balance < 10000) {
+      toast.error("Nincs elegendő fedezet fizikai kártya igényléséhez. Minimum 10 000 Ft szükséges.");
       return;
     }
 

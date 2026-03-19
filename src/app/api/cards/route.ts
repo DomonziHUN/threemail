@@ -10,9 +10,10 @@ export async function GET() {
     
     const dbUser = await prisma.user.findUnique({
       where: { id: user.id },
-      select: { country: true, city: true, street: true, zipCode: true }
+      select: { country: true, city: true, street: true, zipCode: true, balanceHuf: true }
     });
     const hasAddress = !!(dbUser?.country && dbUser?.city && dbUser?.street && dbUser?.zipCode);
+    const balance = dbUser?.balanceHuf || 0;
 
     const cards = await prisma.card.findMany({
       where: { userId: user.id },
@@ -25,7 +26,7 @@ export async function GET() {
       },
     });
 
-    return NextResponse.json({ cards, hasAddress });
+    return NextResponse.json({ cards, hasAddress, balance });
   } catch (error) {
     if ((error as Error).message === "NOT_AUTHENTICATED") {
       return NextResponse.json({ message: "Nem vagy bejelentkezve" }, { status: 401 });
@@ -61,6 +62,13 @@ export async function POST(request: Request) {
         status: { not: "TERMINATED" },
       }
     });
+
+    if (cardType === "PHYSICAL") {
+      const dbUser = await prisma.user.findUnique({ where: { id: user.id }, select: { balanceHuf: true } });
+      if (!dbUser || dbUser.balanceHuf < 10000) {
+        return NextResponse.json({ message: "Nincs elegendő fedezet fizikai kártya igényléséhez. Minimum 10 000 Ft szükséges." }, { status: 400 });
+      }
+    }
 
     if (activeCardsCount >= 3) {
       return NextResponse.json({ message: "Maximum 3 aktív kártyád lehet!" }, { status: 400 });
