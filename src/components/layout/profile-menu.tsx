@@ -136,13 +136,18 @@ export function ProfileMenu({ isOpen, onClose, user }: ProfileMenuProps) {
               href="/referrals"
               onClick={onClose}
             />
-            <MenuItem icon={<Info />} title="Felhasználási feltételek" />
             <MenuItem 
-              icon={<Star />} 
-              title="Értékelj minket" 
-              subtitle="Értékelj minket a Play Store-ban" 
+              icon={<Info />} 
+              title="Felhasználási feltételek" 
+              href="/terms-of-use"
+              onClick={onClose}
             />
-            <MenuItem icon={<XCircle />} title="Fiók bezárása" />
+            <MenuItem 
+              icon={<XCircle />} 
+              title="Fiók bezárása" 
+              href="/close-account"
+              onClick={onClose}
+            />
             <MenuItem 
               icon={<LogOut className="transform rotate-180" />} 
               title="Kijelentkezés" 

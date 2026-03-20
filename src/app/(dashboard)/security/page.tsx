@@ -327,12 +327,6 @@ export default function SecurityPage() {
             ))
           )}
 
-          {sessions.length > 1 && (
-            <Button variant="destructive" className="w-full mt-4" onClick={terminateAllSessions}>
-              <Trash2 className="w-4 h-4 mr-2" />
-              Minden más munkamenet megszakítása
-            </Button>
-          )}
         </CardContent>
       </Card>
 
@@ -471,33 +465,6 @@ export default function SecurityPage() {
               </Link>
             </Button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Veszélyzóna */}
-      <Card className="border-destructive/50">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-destructive/10 rounded-full flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-destructive" />
-            </div>
-            <div>
-              <CardTitle className="text-destructive">Veszélyzóna</CardTitle>
-              <CardDescription>Visszafordíthatatlan műveletek</CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Button variant="outline" className="w-full justify-start text-destructive hover:text-destructive" asChild>
-            <Link href="/settings">
-              <Key className="w-4 h-4 mr-2" />
-              Jelszó megváltoztatása
-            </Link>
-          </Button>
-          <Button variant="outline" className="w-full justify-start text-destructive hover:text-destructive">
-            <Trash2 className="w-4 h-4 mr-2" />
-            Fiók törlése
-          </Button>
         </CardContent>
       </Card>
     </div>
