@@ -39,6 +39,7 @@ model User {
   transactions     Transaction[]
   referralEntries  Referral[] @relation("ReferralReferrer")
   referredEntries  Referral[] @relation("ReferralReferred")
+  notifications    Notification[]
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 }
@@ -102,4 +103,15 @@ model Referral {
   bonusAmount Int      @default(0)
   status      String   @default("REGISTERED")
   createdAt   DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  category  String   @default("INFO")
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
 }
