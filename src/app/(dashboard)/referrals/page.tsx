@@ -112,6 +112,67 @@ export default function ReferralsPage() {
         </Card>
       )}
 
+      <Card className="bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Gift className="h-5 w-5 text-primary" />
+            Hogyan működik a meghívási bónusz?
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <h3 className="font-semibold text-sm mb-2 flex items-center gap-2">
+              <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs">1</span>
+              Küldd el a meghívó linket
+            </h3>
+            <p className="text-sm text-muted-foreground ml-8">
+              Oszd meg a meghívó linkedet vagy kódodat ismerőseiddel
+            </p>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-sm mb-2 flex items-center gap-2">
+              <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs">2</span>
+              A meghívottnak teljesítenie kell 4 lépést
+            </h3>
+            <div className="ml-8 space-y-2 text-sm text-muted-foreground">
+              <div className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span><strong>Feltölti az egyenlegét 20.000 Ft-tal (50 EUR)</strong></span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span><strong>Rendel egy ingyenes Fizikai kártyát</strong></span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span><strong>Elvégzi a KYC azonosítást</strong></span>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span><strong>Vásárol 1 alkalommal</strong> a virtuális vagy fizikai kártyájával</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold text-sm mb-2 flex items-center gap-2">
+              <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs">3</span>
+              Mindketten megkapjátok a bónuszt!
+            </h3>
+            <p className="text-sm text-muted-foreground ml-8">
+              Ha a meghívott teljesítette mind a 4 lépést, <strong>mindketten kaptok 20.000 Ft (50 EUR) bónuszt</strong> az egyenlegetekre!
+            </p>
+          </div>
+
+          <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 mt-4">
+            <p className="text-xs text-muted-foreground">
+              <strong>Fontos:</strong> Maximum 10 ismerőst hívhatsz meg. A bónusz automatikusan jóváírásra kerül, amikor a meghívott teljesítette az összes feltételt.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="space-y-3">
         <CopyField label="Meghívókód" value={data.referralCode} />
         <CopyField label="Meghívó link" value={data.inviteUrl} />
