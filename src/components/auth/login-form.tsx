@@ -10,21 +10,30 @@ import { loginSchema } from "@/lib/validations";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { BiometricLogin } from "@/components/auth/biometric-login";
 
 export function LoginForm() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [formError, setFormError] = useState<string | null>(null);
+  const [email, setEmail] = useState("");
   const {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
+  });
+
+  // Watch email field for biometric login
+  const emailValue = watch("email");
+  useState(() => {
+    setEmail(emailValue);
   });
 
   const onSubmit = handleSubmit((values) => {
@@ -64,6 +73,19 @@ export function LoginForm() {
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending ? "Bejelentkezés..." : "Bejelentkezés"}
       </Button>
+
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-background px-2 text-muted-foreground">
+            Vagy
+          </span>
+        </div>
+      </div>
+
+      <BiometricLogin email={emailValue} />
     </form>
   );
 }

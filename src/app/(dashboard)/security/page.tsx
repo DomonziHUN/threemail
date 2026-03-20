@@ -22,6 +22,7 @@ import {
   AlertTriangle
 } from "lucide-react";
 import Link from "next/link";
+import { BiometricSetup } from "@/components/security/biometric-setup";
 
 interface SecuritySettings {
   twoFactorEnabled: boolean;
@@ -273,16 +274,10 @@ export default function SecurityPage() {
             </div>
           )}
 
-          <div className="flex items-center justify-between pt-2">
-            <div className="flex-1">
-              <Label htmlFor="biometric" className="font-semibold">Biometrikus hitelesítés</Label>
-              <p className="text-sm text-muted-foreground mt-1">
-                Ujjlenyomat vagy arcfelismerés használata
-              </p>
-            </div>
-            <Switch
-              checked={settings.biometricEnabled}
-              onCheckedChange={(checked) => updateSetting("biometricEnabled", checked)}
+          <div className="pt-4">
+            <BiometricSetup
+              isEnabled={settings.biometricEnabled}
+              onSuccess={fetchSecuritySettings}
             />
           </div>
         </CardContent>
