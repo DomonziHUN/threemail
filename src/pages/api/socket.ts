@@ -43,11 +43,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     console.log("Initializing Socket.IO server...");
     const io = new IOServer(socket.server, {
       path: "/api/socket",
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       cors: {
         origin: "*",
         methods: ["GET", "POST"],
+        credentials: true,
       },
+      allowEIO3: true,
     });
     socket.server.io = io;
 

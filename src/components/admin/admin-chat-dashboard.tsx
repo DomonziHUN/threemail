@@ -45,7 +45,9 @@ export function AdminChatDashboard({ adminId, adminName }: AdminChatDashboardPro
   useEffect(() => {
     const newSocket = io({
       path: "/api/socket",
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
+      reconnection: true,
+      upgrade: true,
     });
 
     newSocket.on("connect", () => {

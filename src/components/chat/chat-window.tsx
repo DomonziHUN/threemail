@@ -40,10 +40,11 @@ export function ChatWindow({ user, topic }: ChatWindowProps) {
     console.log("Initializing Socket.IO client...");
     const socket = io({
       path: "/api/socket",
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
+      upgrade: true,
     });
 
     socketRef.current = socket;
