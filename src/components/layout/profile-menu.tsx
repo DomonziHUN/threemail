@@ -71,9 +71,24 @@ export function ProfileMenu({ isOpen, onClose, user }: ProfileMenuProps) {
         <div className="px-5 space-y-8">
           
           <MenuSection title="A fiókod">
-            <MenuItem icon={<Bell />} title="Beérkezett üzenetek" />
-            <MenuItem icon={<HelpCircle />} title="Segítség" />
-            <MenuItem icon={<FileText />} title="Kivonatok és kimutatások" />
+            <MenuItem
+              icon={<Bell />}
+              title="Beérkezett üzenetek"
+              href="/inbox"
+              onClick={onClose}
+            />
+            <MenuItem
+              icon={<HelpCircle />}
+              title="Segítség"
+              href="/help"
+              onClick={onClose}
+            />
+            <MenuItem
+              icon={<FileText />}
+              title="Kivonatok és kimutatások"
+              href="/statements"
+              onClick={onClose}
+            />
           </MenuSection>
 
           <MenuSection title="Beállítások">
