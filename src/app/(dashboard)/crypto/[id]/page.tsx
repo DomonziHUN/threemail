@@ -47,7 +47,7 @@ export default function CryptoDetailPage() {
       const [pricesRes, holdingsRes, balanceRes] = await Promise.all([
         fetch("/api/crypto/prices"),
         fetch("/api/crypto/holdings"),
-        fetch("/api/balance"),
+        fetch("/api/user/balance"),
       ]);
 
       if (pricesRes.ok) {
