@@ -1,0 +1,55 @@
+{
+  "common": {
+    "welcome": "Willkommen",
+    "login": "Anmelden",
+    "register": "Registrieren",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "confirmPassword": "Passwort bestätigen",
+    "fullName": "Vollständiger Name",
+    "submit": "Absenden",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "back": "Zurück",
+    "continue": "Fortfahren",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg"
+  },
+  "auth": {
+    "welcomeBack": "Willkommen zurück!",
+    "readyToBanking": "Bereit zum Banking?",
+    "dontHaveAccount": "Noch kein Konto?",
+    "registerNow": "Jetzt registrieren",
+    "alreadyHaveAccount": "Bereits ein Konto?",
+    "loginHere": "Hier anmelden",
+    "createAccount": "Konto erstellen",
+    "joinThreeMail": "Tritt der ThreeMail Bank bei",
+    "referralCode": "Empfehlungscode (optional)",
+    "passwordRequirements": "Mindestens 8 Zeichen, Groß- und Kleinbuchstaben und Zahl",
+    "loggingIn": "Anmeldung...",
+    "creatingAccount": "Konto wird erstellt...",
+    "invalidCredentials": "Ungültige E-Mail oder Passwort",
+    "accountCreated": "Konto erfolgreich erstellt!"
+  },
+  "dashboard": {
+    "balance": "Guthaben",
+    "totalBalance": "Gesamtguthaben",
+    "transactions": "Transaktionen",
+    "cards": "Karten",
+    "settings": "Einstellungen",
+    "security": "Sicherheit",
+    "help": "Hilfe",
+    "logout": "Abmelden"
+  },
+  "settings": {
+    "personalInfo": "Persönliche Informationen",
+    "appearance": "Erscheinungsbild",
+    "language": "Sprache",
+    "theme": "Thema",
+    "notifications": "Benachrichtigungen",
+    "privacy": "Datenschutz"
+  }
+}

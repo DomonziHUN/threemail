@@ -1,0 +1,55 @@
+{
+  "common": {
+    "welcome": "Welcome",
+    "login": "Login",
+    "register": "Register",
+    "email": "Email address",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "fullName": "Full name",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "continue": "Continue",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back!",
+    "readyToBanking": "Ready for banking?",
+    "dontHaveAccount": "Don't have an account yet?",
+    "registerNow": "Register now",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginHere": "Login here",
+    "createAccount": "Create account",
+    "joinThreeMail": "Join ThreeMail Bank",
+    "referralCode": "Referral code (optional)",
+    "passwordRequirements": "At least 8 characters, uppercase, lowercase and number",
+    "loggingIn": "Logging in...",
+    "creatingAccount": "Creating account...",
+    "invalidCredentials": "Invalid email or password",
+    "accountCreated": "Account successfully created!"
+  },
+  "dashboard": {
+    "balance": "Balance",
+    "totalBalance": "Total balance",
+    "transactions": "Transactions",
+    "cards": "Cards",
+    "settings": "Settings",
+    "security": "Security",
+    "help": "Help",
+    "logout": "Logout"
+  },
+  "settings": {
+    "personalInfo": "Personal information",
+    "appearance": "Appearance",
+    "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "privacy": "Privacy"
+  }
+}

@@ -10,9 +10,11 @@ import { loginSchema } from "@/lib/validations";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function LoginForm() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [isPending, startTransition] = useTransition();
   const [formError, setFormError] = useState<string | null>(null);
   const {
@@ -114,12 +116,12 @@ export function LoginForm() {
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
       <div className="space-y-2">
-        <Label htmlFor="email">E-mail cím</Label>
-        <Input id="email" type="email" placeholder="anna@pelda.hu" {...register("email")} />
+        <Label htmlFor="email">{t.common.email}</Label>
+        <Input id="email" type="email" placeholder="anna@example.com" {...register("email")} />
         {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="password">Jelszó</Label>
+        <Label htmlFor="password">{t.common.password}</Label>
         <Input id="password" type="password" {...register("password")} />
         {errors.password && (
           <p className="text-sm text-destructive">{errors.password.message}</p>
@@ -127,7 +129,7 @@ export function LoginForm() {
       </div>
       {formError && <p className="text-sm text-destructive">{formError}</p>}
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Bejelentkezés..." : "Bejelentkezés"}
+        {isPending ? t.auth.loggingIn : t.common.login}
       </Button>
     </form>
   );

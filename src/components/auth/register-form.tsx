@@ -10,9 +10,11 @@ import { Button } from "@/components/ui/button";
 import { useTransition, useState } from "react";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function RegisterForm() {
   const router = useRouter();
+  const { t } = useLanguage();
   const searchParams = useSearchParams();
   const urlRefCode = searchParams?.get("ref") || "";
   const [isPending, startTransition] = useTransition();
@@ -59,32 +61,32 @@ export function RegisterForm() {
   return (
     <form className="space-y-4" onSubmit={onSubmit}>
       <div className="space-y-2">
-        <Label htmlFor="fullName">Teljes név</Label>
-        <Input id="fullName" placeholder="Kiss Anna" {...register("fullName")} />
+        <Label htmlFor="fullName">{t.common.fullName}</Label>
+        <Input id="fullName" placeholder="Anna Smith" {...register("fullName")} />
         {errors.fullName && (
           <p className="text-sm text-destructive">{errors.fullName.message}</p>
         )}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="email">E-mail cím</Label>
-        <Input id="email" type="email" placeholder="anna@pelda.hu" {...register("email")} />
+        <Label htmlFor="email">{t.common.email}</Label>
+        <Input id="email" type="email" placeholder="anna@example.com" {...register("email")} />
         {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="phone">Telefonszám</Label>
+        <Label htmlFor="phone">Phone</Label>
         <Input id="phone" placeholder="+36 30 123 4567" {...register("phone")} />
         {errors.phone && <p className="text-sm text-destructive">{errors.phone.message}</p>}
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="password">Jelszó</Label>
+          <Label htmlFor="password">{t.common.password}</Label>
           <Input id="password" type="password" {...register("password")} />
           {errors.password && (
             <p className="text-sm text-destructive">{errors.password.message}</p>
           )}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="confirmPassword">Jelszó megerősítése</Label>
+          <Label htmlFor="confirmPassword">{t.common.confirmPassword}</Label>
           <Input id="confirmPassword" type="password" {...register("confirmPassword")} />
           {errors.confirmPassword && (
             <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
@@ -92,7 +94,7 @@ export function RegisterForm() {
         </div>
       </div>
       <div className="space-y-2">
-        <Label htmlFor="referralCode">Meghívókód {urlRefCode ? "(Automatikusan kitöltve)" : "(opcionális)"}</Label>
+        <Label htmlFor="referralCode">{t.auth.referralCode}</Label>
         <Input 
           id="referralCode" 
           placeholder="TM-XXXXXX" 
@@ -106,7 +108,7 @@ export function RegisterForm() {
       </div>
       {formError && <p className="text-sm text-destructive">{formError}</p>}
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? "Regisztráció..." : "Regisztráció"}
+        {isPending ? t.auth.creatingAccount : t.common.register}
       </Button>
     </form>
   );

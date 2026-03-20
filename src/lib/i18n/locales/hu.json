@@ -1,0 +1,55 @@
+{
+  "common": {
+    "welcome": "Üdvözlünk",
+    "login": "Bejelentkezés",
+    "register": "Regisztráció",
+    "email": "E-mail cím",
+    "password": "Jelszó",
+    "confirmPassword": "Jelszó megerősítése",
+    "fullName": "Teljes név",
+    "submit": "Küldés",
+    "cancel": "Mégse",
+    "save": "Mentés",
+    "delete": "Törlés",
+    "edit": "Szerkesztés",
+    "back": "Vissza",
+    "continue": "Folytatás",
+    "loading": "Betöltés...",
+    "error": "Hiba",
+    "success": "Siker"
+  },
+  "auth": {
+    "welcomeBack": "Üdv újra!",
+    "readyToBanking": "Készen állsz, a bankolásra?",
+    "dontHaveAccount": "Nincs még fiókod?",
+    "registerNow": "Regisztrálj most",
+    "alreadyHaveAccount": "Van már fiókod?",
+    "loginHere": "Jelentkezz be itt",
+    "createAccount": "Fiók létrehozása",
+    "joinThreeMail": "Csatlakozz a ThreeMail Bankhoz",
+    "referralCode": "Ajánlási kód (opcionális)",
+    "passwordRequirements": "Legalább 8 karakter, nagybetű, kisbetű és szám",
+    "loggingIn": "Bejelentkezés...",
+    "creatingAccount": "Fiók létrehozása...",
+    "invalidCredentials": "Helytelen e-mail vagy jelszó",
+    "accountCreated": "Fiók sikeresen létrehozva!"
+  },
+  "dashboard": {
+    "balance": "Egyenleg",
+    "totalBalance": "Teljes egyenleg",
+    "transactions": "Tranzakciók",
+    "cards": "Kártyák",
+    "settings": "Beállítások",
+    "security": "Biztonság",
+    "help": "Segítség",
+    "logout": "Kijelentkezés"
+  },
+  "settings": {
+    "personalInfo": "Személyes adatok",
+    "appearance": "Megjelenés",
+    "language": "Nyelv",
+    "theme": "Téma",
+    "notifications": "Értesítések",
+    "privacy": "Adatvédelem"
+  }
+}

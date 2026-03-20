@@ -27,7 +27,8 @@ export default function AppearancePage() {
   const handleSave = () => {
     localStorage.setItem("language", language);
     localStorage.setItem("fontSize", fontSize);
-    toast.success("Beállítások sikeresen mentve!");
+    // Trigger page reload to apply language change
+    window.location.reload();
   };
 
   if (!mounted) {

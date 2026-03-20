@@ -1,0 +1,55 @@
+{
+  "common": {
+    "welcome": "Bienvenue",
+    "login": "Connexion",
+    "register": "S'inscrire",
+    "email": "Adresse e-mail",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "fullName": "Nom complet",
+    "submit": "Soumettre",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "back": "Retour",
+    "continue": "Continuer",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès"
+  },
+  "auth": {
+    "welcomeBack": "Bon retour !",
+    "readyToBanking": "Prêt pour les opérations bancaires ?",
+    "dontHaveAccount": "Vous n'avez pas encore de compte ?",
+    "registerNow": "S'inscrire maintenant",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?",
+    "loginHere": "Connectez-vous ici",
+    "createAccount": "Créer un compte",
+    "joinThreeMail": "Rejoignez ThreeMail Bank",
+    "referralCode": "Code de parrainage (optionnel)",
+    "passwordRequirements": "Au moins 8 caractères, majuscule, minuscule et chiffre",
+    "loggingIn": "Connexion en cours...",
+    "creatingAccount": "Création du compte...",
+    "invalidCredentials": "E-mail ou mot de passe invalide",
+    "accountCreated": "Compte créé avec succès !"
+  },
+  "dashboard": {
+    "balance": "Solde",
+    "totalBalance": "Solde total",
+    "transactions": "Transactions",
+    "cards": "Cartes",
+    "settings": "Paramètres",
+    "security": "Sécurité",
+    "help": "Aide",
+    "logout": "Déconnexion"
+  },
+  "settings": {
+    "personalInfo": "Informations personnelles",
+    "appearance": "Apparence",
+    "language": "Langue",
+    "theme": "Thème",
+    "notifications": "Notifications",
+    "privacy": "Confidentialité"
+  }
+}
