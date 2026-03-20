@@ -150,7 +150,7 @@ export function TransferCalculator() {
     <div className="w-full">
       <h2 className="text-[1.35rem] font-bold tracking-tight mb-4 px-2 text-foreground">Utalás kalkulátor</h2>
       
-      <div className="bg-[#f0ede6] dark:bg-card border border-border/50 rounded-[2rem] p-5 shadow-sm">
+      <div className="bg-card border border-border/50 rounded-[2rem] p-5 shadow-sm">
         
         {/* Realtime Chart Container */}
         <div className="mb-2 relative">
@@ -224,7 +224,7 @@ export function TransferCalculator() {
           <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20">
             <button 
               onClick={handleSwapCurrencies}
-              className="w-10 h-10 bg-[#f0ede6] dark:bg-card border-4 border-white dark:border-background rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
+              className="w-10 h-10 bg-card border-4 border-background rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
             >
               <ArrowDownUp className="w-[18px] h-[18px] text-muted-foreground" />
             </button>
