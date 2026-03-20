@@ -105,19 +105,18 @@ export function ProfileMenu({ isOpen, onClose, user }: ProfileMenuProps) {
               subtitle="Állítsd be, hogyan szeretnél értesítéseket kapni" 
             />
             <MenuItem 
-              icon={<CreditCard />} 
-              title="Fizetési módok" 
-              subtitle="A fiókhoz kapcsolt mentett kártyák és bankszámlák kezelése" 
-            />
-            <MenuItem 
               icon={<Gauge />} 
               title="Limitek" 
               subtitle="Utalási és kártyás limitek kezelése" 
+              href="/limits"
+              onClick={onClose}
             />
             <MenuItem 
               icon={<Moon />} 
               title="Nyelv és megjelenés" 
               subtitle="Testreszabhatod a nyelvi beállításokat és a használt témát" 
+              href="/appearance"
+              onClick={onClose}
             />
             <MenuItem 
               icon={<User />} 
