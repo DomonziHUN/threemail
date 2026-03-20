@@ -18,7 +18,7 @@ const faqItems = [
   {
     question: "Mit tegyek, ha gyanús tranzakciót látok?",
     answer:
-      "Azonnal zárold a kártyád a Kártyák oldalon, majd vedd fel velünk a kapcsolatot a support@threemail.hu címen.",
+      "Azonnal zárold a kártyád a Kártyák oldalon, majd vedd fel velünk a kapcsolatot a support@threemail.fun címen.",
   },
 ];
 
@@ -49,10 +49,10 @@ export default async function HelpPage() {
             </div>
             <div className="flex-1">
               <p className="font-semibold">E-mail támogatás</p>
-              <p className="text-sm text-muted-foreground">support@threemail.hu</p>
+              <p className="text-sm text-muted-foreground">support@threemail.fun</p>
             </div>
             <Button variant="outline" asChild>
-              <Link href="mailto:support@threemail.hu">Írok</Link>
+              <Link href="mailto:support@threemail.fun">Írok</Link>
             </Button>
           </div>
           <div className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-emerald-100/40 p-5">

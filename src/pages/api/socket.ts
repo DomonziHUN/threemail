@@ -72,11 +72,19 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         client.emit("system_message", welcome);
       });
 
-      client.on("chat_message", (payload: ChatPayload) => {
+      client.on("admin_join_topic", ({ topic, adminName }: { topic: string; adminName: string }) => {
+        console.log(`Admin ${adminName} joining topic: ${topic}`);
+        client.join(topic);
+        const history = chatHistory.get(topic) || [];
+        client.emit("chat_history", history);
+      });
+
+      client.on("chat_message", (payload: ChatPayload & { operator?: string }) => {
         if (!payload?.topic || !payload?.text) return;
         const entry = {
           id: randomUUID(),
           author: payload.author ?? "user",
+          operator: payload.operator,
           text: payload.text,
           topic: payload.topic,
           timestamp: new Date().toISOString(),
