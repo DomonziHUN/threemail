@@ -63,15 +63,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         if (history.length) {
           client.emit("chat_history", history);
         }
-        const welcome = {
-          id: randomUUID(),
-          author: "support",
-          operator: "Ügyfélszolgálat",
-          text: `Kapcsolódtál a(z) ${topicTitle} témához. Adj meg részleteket, segítünk!`,
-          timestamp: new Date().toISOString(),
-        };
-        chatHistory.set(topic, [...history, welcome]);
-        client.emit("system_message", welcome);
       });
 
       client.on("admin_join_topic", ({ topic, adminName }: { topic: string; adminName: string }) => {
@@ -95,20 +86,27 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         chatHistory.set(payload.topic, [...history, entry]);
         io.to(payload.topic).emit("chat_message", entry);
 
+        // Only send automatic reply on first user message
         if (entry.author === "user") {
-          setTimeout(() => {
-            const supportEntry = {
-              id: randomUUID(),
-              author: "support" as const,
-              operator: pickRandomAgent(),
-              text: generateReply(payload.text),
-              topic: payload.topic,
-              timestamp: new Date().toISOString(),
-            };
-            const updated = chatHistory.get(payload.topic) || [];
-            chatHistory.set(payload.topic, [...updated, supportEntry]);
-            io.to(payload.topic).emit("chat_message", supportEntry);
-          }, 1200 + Math.random() * 1500);
+          const userMessages = history.filter((msg: any) => msg.author === "user");
+          
+          if (userMessages.length === 0) {
+            // This is the first user message
+            setTimeout(() => {
+              const supportEntry = {
+                id: randomUUID(),
+                author: "support" as const,
+                operator: "Ügyfélszolgálat",
+                text: "Köszönjük az üzeneted! Kérlek írd le részletesen a problémádat, és egy ügyintézőnk hamarosan válaszol.",
+                topic: payload.topic,
+                timestamp: new Date().toISOString(),
+              };
+              const updated = chatHistory.get(payload.topic) || [];
+              chatHistory.set(payload.topic, [...updated, supportEntry]);
+              io.to(payload.topic).emit("chat_message", supportEntry);
+            }, 800);
+          }
+          // No automatic reply for subsequent messages - admin will respond manually
         }
       });
     });
