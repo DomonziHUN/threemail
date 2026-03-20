@@ -167,7 +167,7 @@ export function ProfileMenu({ isOpen, onClose, user }: ProfileMenuProps) {
           </MenuSection>
 
           {/* Footer infó */}
-          <div className="pt-2 pb-6 space-y-6">
+          <div className="pt-2 pb-6">
             <div className="flex items-center justify-between">
               <div>
                 <h4 className="font-bold text-[15px] mb-0.5">A tagsági számod</h4>
@@ -178,18 +178,6 @@ export function ProfileMenu({ isOpen, onClose, user }: ProfileMenuProps) {
                 className="bg-secondary/40 text-foreground font-semibold px-4 py-2 rounded-full text-sm"
               >
                 Másolás
-              </button>
-            </div>
-            
-            <div>
-              <h4 className="font-bold text-[15px] mb-0.5">Az alkalmazásod verziója</h4>
-              <p className="text-sm text-muted-foreground">v9.16.1 (1605)</p>
-            </div>
-
-            <div className="text-center pt-8 border-t border-border/40 text-sm">
-              <p className="text-muted-foreground mb-3">Módosítottuk az alkalmazás ezen területét.</p>
-              <button className="font-bold border-b-2 border-foreground uppercase tracking-wider text-xs">
-                Oszd meg velünk a véleményed
               </button>
             </div>
           </div>
