@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { VirtualCard } from "@/components/cards/virtual-card";
 import { CardActions } from "@/components/cards/card-actions";
@@ -21,6 +21,7 @@ const CARD_COLORS = [
 
 export default function CardsPage() {
   const router = useRouter();
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [cards, setCards] = useState<any[]>([]);
   const [hasAddress, setHasAddress] = useState(false);
   const [balance, setBalance] = useState(0);
@@ -53,6 +54,10 @@ export default function CardsPage() {
       setCards(data.cards || []);
       setHasAddress(data.hasAddress || false);
       setBalance(data.balance || 0);
+      // Scroll to the first (newest) card
+      setTimeout(() => {
+        scrollRef.current?.scrollTo({ left: 0, behavior: "smooth" });
+      }, 100);
     } catch (error) {
       toast.error("Hiba a kártyák betöltésekor");
     } finally {
@@ -224,7 +229,7 @@ export default function CardsPage() {
       </div>
 
       {activeCards.length > 0 ? (
-        <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 -mx-5 px-5 no-scrollbar scroll-smooth">
+        <div ref={scrollRef} className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-4 -mx-5 px-5 no-scrollbar scroll-smooth">
           {activeCards.map((card) => (
             <div key={card.id} className="min-w-[100%] snap-center shrink-0 flex flex-col gap-6 items-center">
               <VirtualCard

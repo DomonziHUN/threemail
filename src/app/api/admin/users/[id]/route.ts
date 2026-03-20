@@ -11,13 +11,37 @@ export async function PUT(request: Request, context: { params: Promise<{ id: str
     // We extract the allowed fields to update.
     const { fullName, email, phone, balanceHuf, role, kycStatus } = body;
 
+    // If balanceHuf changed, create a corresponding transaction so bonus tracking works
+    if (balanceHuf !== undefined) {
+      const currentUser = await prisma.user.findUnique({ where: { id }, select: { balanceHuf: true } });
+      if (currentUser) {
+        const diff = Number(balanceHuf) - currentUser.balanceHuf;
+        if (diff !== 0) {
+          await prisma.$transaction([
+            prisma.user.update({
+              where: { id },
+              data: { balanceHuf: Number(balanceHuf) },
+            }),
+            prisma.transaction.create({
+              data: {
+                userId: id,
+                type: diff > 0 ? "DEPOSIT" : "WITHDRAWAL",
+                amount: Math.abs(diff),
+                description: diff > 0 ? "Admin egyenleg feltöltés" : "Admin egyenleg levonás",
+                status: "COMPLETED",
+              },
+            }),
+          ]);
+        }
+      }
+    }
+
     const updatedUser = await prisma.user.update({
       where: { id },
       data: {
         ...(fullName !== undefined && { fullName }),
         ...(email !== undefined && { email }),
         ...(phone !== undefined && { phone }),
-        ...(balanceHuf !== undefined && { balanceHuf: Number(balanceHuf) }),
         ...(role !== undefined && { role }),
         ...(kycStatus !== undefined && { kycStatus }),
       },
