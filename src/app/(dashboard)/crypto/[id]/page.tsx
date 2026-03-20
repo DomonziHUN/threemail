@@ -29,7 +29,7 @@ interface CryptoHolding {
 export default function CryptoDetailPage() {
   const router = useRouter();
   const params = useParams();
-  const cryptoId = params.id as string;
+  const cryptoId = params?.id as string;
 
   const [crypto, setCrypto] = useState<CryptoDetail | null>(null);
   const [holding, setHolding] = useState<CryptoHolding | null>(null);
