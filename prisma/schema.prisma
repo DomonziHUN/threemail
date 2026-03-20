@@ -45,6 +45,8 @@ model User {
   webAuthnCredentials WebAuthnCredential[]
   webAuthnChallenges  WebAuthnChallenge[]
   limits              UserLimits?
+  cryptoHoldings      CryptoHolding[]
+  cryptoTransactions  CryptoTransaction[]
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 }
@@ -186,4 +188,31 @@ model UserLimits {
   monthlyOnlineLimit   Int      @default(30000)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+}
+
+model CryptoHolding {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  symbol        String
+  name          String
+  amount        Float
+  avgBuyPrice   Float
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([userId, symbol])
+}
+
+model CryptoTransaction {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          String
+  symbol        String
+  name          String
+  amount        Float
+  pricePerUnit  Float
+  totalEur      Float
+  createdAt     DateTime @default(now())
 }

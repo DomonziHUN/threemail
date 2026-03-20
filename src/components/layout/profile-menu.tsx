@@ -105,6 +105,13 @@ export function ProfileMenu({ isOpen, onClose, user }: ProfileMenuProps) {
               onClick={onClose}
             />
             <MenuItem 
+              icon={<ShieldCheck />} 
+              title="KYC Hitelesítés" 
+              subtitle="Személyazonosság igazolása és fiók hitelesítés"
+              href="/kyc"
+              onClick={onClose}
+            />
+            <MenuItem 
               icon={<Bell />} 
               title="Értesítések" 
               subtitle="Állítsd be, hogyan szeretnél értesítéseket kapni" 
