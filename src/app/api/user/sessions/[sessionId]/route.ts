@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { sessionId: string } }
+  { params }: { params: Promise<{ sessionId: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -21,8 +21,10 @@ export async function DELETE(
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
+    const { sessionId } = await params;
+
     const userSession = await prisma.userSession.findUnique({
-      where: { id: params.sessionId },
+      where: { id: sessionId },
     });
 
     if (!userSession || userSession.userId !== user.id) {
@@ -30,7 +32,7 @@ export async function DELETE(
     }
 
     await prisma.userSession.delete({
-      where: { id: params.sessionId },
+      where: { id: sessionId },
     });
 
     return NextResponse.json({ success: true });
