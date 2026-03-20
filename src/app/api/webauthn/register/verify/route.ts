@@ -44,16 +44,16 @@ export async function POST(req: NextRequest) {
     });
 
     if (verification.verified && verification.registrationInfo) {
-      const { credentialPublicKey, credentialID, counter } = verification.registrationInfo;
+      const { credential, credentialDeviceType, credentialBackedUp } = verification.registrationInfo;
 
       await prisma.webAuthnCredential.create({
         data: {
           userId: user.id,
-          credentialId: Buffer.from(credentialID).toString("base64"),
-          publicKey: Buffer.from(credentialPublicKey).toString("base64"),
-          counter,
-          deviceType: body.response?.authenticatorAttachment || "platform",
-          transports: body.response?.transports ? JSON.stringify(body.response.transports) : null,
+          credentialId: credential.id,
+          publicKey: Buffer.from(credential.publicKey).toString("base64"),
+          counter: credential.counter,
+          deviceType: credentialDeviceType || "platform",
+          transports: credential.transports ? JSON.stringify(credential.transports) : null,
         },
       });
 

@@ -24,13 +24,12 @@ export async function POST(req: NextRequest) {
     const options = await generateRegistrationOptions({
       rpName,
       rpID,
-      userID: new Uint8Array(Buffer.from(user.id)),
+      userID: user.id,
       userName: user.email,
       userDisplayName: user.fullName,
       attestationType: "none",
       excludeCredentials: user.webAuthnCredentials.map((cred) => ({
-        id: new Uint8Array(Buffer.from(cred.credentialId, "base64")),
-        type: "public-key",
+        id: cred.credentialId,
         transports: cred.transports ? JSON.parse(cred.transports) : undefined,
       })),
       authenticatorSelection: {

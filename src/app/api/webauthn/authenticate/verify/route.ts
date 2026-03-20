@@ -40,9 +40,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Find the credential
-    const credentialId = Buffer.from(response.id, "base64url").toString("base64");
     const credential = user.webAuthnCredentials.find(
-      (cred) => cred.credentialId === credentialId
+      (cred) => cred.credentialId === response.id
     );
 
     if (!credential) {
@@ -54,9 +53,9 @@ export async function POST(req: NextRequest) {
       expectedChallenge: challengeRecord.challenge,
       expectedOrigin: origin,
       expectedRPID: rpID,
-      authenticator: {
-        credentialID: new Uint8Array(Buffer.from(credential.credentialId, "base64")),
-        credentialPublicKey: new Uint8Array(Buffer.from(credential.publicKey, "base64")),
+      credential: {
+        id: credential.credentialId,
+        publicKey: new Uint8Array(Buffer.from(credential.publicKey, "base64")),
         counter: credential.counter,
       },
     });
