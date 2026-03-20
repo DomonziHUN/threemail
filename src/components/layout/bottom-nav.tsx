@@ -20,7 +20,7 @@ export function BottomNav() {
       <div className="mx-auto flex max-w-md items-center justify-around px-6 py-3">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname.startsWith(item.href);
+          const isActive = pathname?.startsWith(item.href) ?? false;
           return (
             <Link
               key={item.href}
