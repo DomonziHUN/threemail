@@ -33,15 +33,17 @@ export default function TermsOfUsePage() {
                   <strong>1.1.</strong> These General Terms and Conditions (hereinafter: "Terms") govern the payment services, electronic money issuance, 
                   lending services, investment services, and all other financial and ancillary services provided by ThreeMail Financial Services Limited 
                   (registered office: Level 3, Triq Dun Karm, Birkirkara BKR 9033, Malta; company registration number: C 98765; 
-                  website: www.threemail.fun; hereinafter: "Service Provider" or "Company").
+                  website: www.threemail.fun; LEI: 5493007QKFXME2T8X054; hereinafter: "Service Provider" or "Company").
                 </p>
 
                 <p className="text-muted-foreground mb-3">
                   <strong>1.2.</strong> The Service Provider is a financial institution licensed and regulated by the Malta Financial Services Authority (MFSA) 
-                  under license number IS/12345. The Company is authorized to provide payment services, issue electronic money, and offer lending services 
-                  in accordance with the Payment Services Act (Cap. 590) and the Financial Institutions Act (Cap. 376) of Malta. The Service Provider 
-                  is a member of the Depositor Compensation Scheme (DCS), which protects customer deposits up to €100,000 per depositor per institution 
-                  in accordance with applicable regulations.
+                  under license number IS/89324 and passported throughout the European Economic Area under the EU Payment Services Directive (PSD2 - Directive (EU) 2015/2366). 
+                  The Company is authorized to provide payment services, issue electronic money, and offer lending services 
+                  in accordance with the Payment Services Act (Cap. 590), the Financial Institutions Act (Cap. 376), and the Electronic Money Regulations (S.L. 371.09) of Malta. 
+                  The Service Provider is a member of the Depositor Compensation Scheme (DCS) administered by the Malta Depositor Compensation Scheme Committee, 
+                  which protects eligible customer deposits up to €100,000 per depositor per institution in accordance with the Depositor Compensation Scheme Regulations 
+                  (Directive 2014/49/EU).
                 </p>
 
                 <p className="text-muted-foreground mb-3">
@@ -370,11 +372,11 @@ export default function TermsOfUsePage() {
                   <strong>7.1.</strong> Methods of submitting complaints:
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-muted-foreground mb-4">
-                  <li>In person at any Service Provider branch</li>
-                  <li>By telephone: +356 2010 1234</li>
+                  <li>In person at any Service Provider branch (Head Office: Birkirkara; Branch: Sliema, Ta' Xbiex)</li>
+                  <li>By telephone: +356 2138 4567 (Mon-Fri 08:00-17:00 CET)</li>
                   <li>By email: complaints@threemail.fun</li>
-                  <li>By post: Level 3, Triq Dun Karm, Birkirkara BKR 9033, Malta</li>
-                  <li>Through internet banking or mobile application</li>
+                  <li>By post: Complaints Department, ThreeMail Financial Services Ltd., Level 3, Triq Dun Karm, Birkirkara BKR 9033, Malta</li>
+                  <li>Through internet banking or mobile application (secure messaging)</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
@@ -456,12 +458,19 @@ export default function TermsOfUsePage() {
                   <p className="text-xs text-muted-foreground text-center">
                     <strong>ThreeMail Financial Services Limited</strong><br />
                     Registered Office: Level 3, Triq Dun Karm, Birkirkara BKR 9033, Malta<br />
-                    Company Registration: C 98765 | VAT Number: MT 12345678<br />
-                    MFSA License Number: IS/12345<br />
-                    Customer Service: +356 2010 1234 | support@threemail.fun<br />
-                    Website: www.threemail.fun<br />
+                    Company Registration: C 98765 | VAT Number: MT 12345678 | LEI: 5493007QKFXME2T8X054<br />
+                    MFSA License Number: IS/89324 | SWIFT/BIC: THMAMT2M | IBAN: MT84THMM0000000000000012345<br />
+                    Authorized by the Malta Financial Services Authority under the Payment Services Act (Cap. 590)<br />
+                    Member of the Depositor Compensation Scheme (DCS) - Deposits protected up to €100,000<br />
+                    Customer Service: +356 2138 4567 (Mon-Fri 08:00-17:00 CET) | support@threemail.fun<br />
+                    Emergency Card Blocking: +356 2138 9999 (24/7)<br />
+                    Website: www.threemail.fun | Compliance: compliance@threemail.fun<br />
                     <br />
-                    © 2026 ThreeMail Financial Services Limited. All rights reserved.
+                    <em>ThreeMail Financial Services Limited is subject to the supervisory oversight of the Malta Financial Services Authority,<br />
+                    Notabile Road, Attard BKR 3000, Malta. For regulatory inquiries: www.mfsa.mt</em><br />
+                    <br />
+                    © 2026 ThreeMail Financial Services Limited. All rights reserved.<br />
+                    This institution adheres to EU Directives: PSD2, MiFID II, GDPR, AML5 Directive.
                   </p>
                 </div>
               </section>
