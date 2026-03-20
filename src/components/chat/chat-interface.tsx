@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { ChatTopic } from "@/lib/chat-topics";
 import { ChatWindow } from "@/components/chat/chat-window";
+import { ChatIcon } from "@/components/chat/chat-icon";
 import { cn } from "@/lib/utils";
 
 interface ChatInterfaceProps {
@@ -38,7 +39,7 @@ export function ChatInterface({ user, topics }: ChatInterfaceProps) {
           >
             <div className="flex items-center gap-3">
               <div className="rounded-2xl bg-primary/10 p-3 text-primary">
-                <topic.icon className="h-5 w-5" />
+                <ChatIcon name={topic.iconName} className="h-5 w-5" />
               </div>
               <div>
                 <p className="font-semibold">{topic.title}</p>

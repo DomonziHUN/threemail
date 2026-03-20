@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Avatar } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
+import { ChatIcon } from "@/components/chat/chat-icon";
 import { Send, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ChatTopic } from "@/lib/chat-topics";
@@ -100,7 +101,7 @@ export function ChatWindow({ user, topic }: ChatWindowProps) {
       <div className="flex items-center justify-between rounded-2xl border border-border bg-muted/30 p-4">
         <div className="flex items-center gap-3">
           <div className="rounded-2xl bg-primary/10 p-2 text-primary">
-            <topic.icon className="h-5 w-5" />
+            <ChatIcon name={topic.iconName} className="h-5 w-5" />
           </div>
           <div>
             <p className="text-sm font-semibold">{topic.title}</p>
