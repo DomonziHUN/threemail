@@ -6,6 +6,10 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
+// DEPRECATED: This component is no longer used.
+// The new live chat system is located at /chat page with Socket.IO integration.
+// See: src/components/chat/chat-window.tsx for the new implementation.
+
 interface ChatMessage {
   id: string;
   author: "user" | "support";

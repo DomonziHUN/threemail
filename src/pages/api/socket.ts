@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { Server as HTTPServer } from "http";
-import type { Socket } from "net";
-import { Server as IOServer } from "socket.io";
+import type { Socket as NetSocket } from "net";
+import { Server as IOServer, Socket as IOSocket } from "socket.io";
 import { randomUUID } from "crypto";
 
 interface ChatPayload {
@@ -10,11 +10,17 @@ interface ChatPayload {
   author?: "user" | "support";
 }
 
+interface JoinTopicPayload {
+  topic: string;
+  topicTitle: string;
+  user: { id: string; fullName: string };
+}
+
 interface ServerWithIO extends HTTPServer {
   io?: IOServer;
 }
 
-interface SocketWithServer extends Socket {
+interface SocketWithServer extends NetSocket {
   server: ServerWithIO;
 }
 
@@ -40,8 +46,8 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     });
     socket.server.io = io;
 
-    io.on("connection", (client) => {
-      client.on("join_topic", ({ topic, topicTitle, user }) => {
+    io.on("connection", (client: IOSocket) => {
+      client.on("join_topic", ({ topic, topicTitle, user }: JoinTopicPayload) => {
         client.join(topic);
         const history = chatHistory.get(topic) || [];
         if (history.length) {

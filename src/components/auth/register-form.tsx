@@ -14,7 +14,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 export function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const urlRefCode = searchParams.get("ref") || "";
+  const urlRefCode = searchParams?.get("ref") || "";
   const [isPending, startTransition] = useTransition();
   const [formError, setFormError] = useState<string | null>(null);
   const {
