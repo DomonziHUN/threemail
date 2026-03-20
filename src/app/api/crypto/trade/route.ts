@@ -29,10 +29,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const totalEur = amount * pricePerUnit;
+    const totalHuf = amount * pricePerUnit;
 
     if (type === "BUY") {
-      if (user.balanceHuf < totalEur) {
+      if (user.balanceHuf < totalHuf) {
         return NextResponse.json(
           { error: "Insufficient balance" },
           { status: 400 }
@@ -71,7 +71,7 @@ export async function POST(req: NextRequest) {
 
       await prisma.user.update({
         where: { id: user.id },
-        data: { balanceHuf: user.balanceHuf - totalEur },
+        data: { balanceHuf: user.balanceHuf - totalHuf },
       });
     } else {
       const holding = user.cryptoHoldings.find((h) => h.symbol === symbol);
@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
 
       await prisma.user.update({
         where: { id: user.id },
-        data: { balanceHuf: user.balanceHuf + totalEur },
+        data: { balanceHuf: user.balanceHuf + totalHuf },
       });
     }
 
@@ -110,7 +110,7 @@ export async function POST(req: NextRequest) {
         name,
         amount,
         pricePerUnit,
-        totalEur,
+        totalEur: totalHuf,
       },
     });
 

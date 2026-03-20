@@ -15,6 +15,15 @@ export function formatCurrency(amountHuf: number) {
   }).format(amountHuf);
 }
 
+export function formatEuro(amountEur: number) {
+  return new Intl.NumberFormat("hu-HU", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(amountEur);
+}
+
 export function formatDate(date: Date | string | number) {
   return format(date, "yyyy. MMM d.");
 }

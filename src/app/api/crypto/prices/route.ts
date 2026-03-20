@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 const COINGECKO_API = "https://api.coingecko.com/api/v3";
+const EUR_TO_HUF = 400; // EUR/HUF árfolyam
 
 const TOP_CRYPTOS = [
   { id: "bitcoin", symbol: "BTC", name: "Bitcoin" },
@@ -36,9 +37,9 @@ export async function GET() {
         id: crypto.id,
         symbol: crypto.symbol,
         name: crypto.name,
-        price: priceData?.eur || 0,
+        price: (priceData?.eur || 0) * EUR_TO_HUF,
         change24h: priceData?.eur_24h_change || 0,
-        marketCap: priceData?.eur_market_cap || 0,
+        marketCap: (priceData?.eur_market_cap || 0) * EUR_TO_HUF,
       };
     });
 
