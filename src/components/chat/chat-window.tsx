@@ -37,14 +37,19 @@ export function ChatWindow({ user, topic }: ChatWindowProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    console.log("Initializing Socket.IO client...");
     const socket = io({
       path: "/api/socket",
       transports: ["websocket", "polling"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
     socketRef.current = socket;
 
     socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
       setIsConnected(true);
       socket.emit("join_topic", {
         topic: topic.id,
@@ -53,7 +58,13 @@ export function ChatWindow({ user, topic }: ChatWindowProps) {
       });
     });
 
-    socket.on("disconnect", () => {
+    socket.on("connect_error", (error) => {
+      console.error("Socket connection error:", error);
+      setIsConnected(false);
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("Socket disconnected:", reason);
       setIsConnected(false);
     });
 

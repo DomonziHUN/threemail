@@ -7,18 +7,11 @@ export const metadata = {
 };
 
 export default async function ChatPage() {
-  const user = await requireAuth();
+  await requireAuth();
 
   return (
     <div className="py-6">
-      <ChatInterface
-        user={{
-          id: user.id,
-          fullName: user.fullName || user.name || "Felhasználó",
-          email: user.email,
-        }}
-        topics={chatTopics}
-      />
+      <ChatInterface topics={chatTopics} />
     </div>
   );
 }

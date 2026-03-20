@@ -34,20 +34,28 @@ const chatHistory = new Map<string, any[]>();
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const socket = res.socket as SocketWithServer | undefined;
-  if (!socket) {
-    res.status(500).end();
+  if (!socket?.server) {
+    res.status(500).json({ error: "Socket server not available" });
     return;
   }
 
   if (!socket.server.io) {
+    console.log("Initializing Socket.IO server...");
     const io = new IOServer(socket.server, {
       path: "/api/socket",
       transports: ["websocket", "polling"],
+      cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+      },
     });
     socket.server.io = io;
 
     io.on("connection", (client: IOSocket) => {
+      console.log("Client connected:", client.id);
+
       client.on("join_topic", ({ topic, topicTitle, user }: JoinTopicPayload) => {
+        console.log(`Client ${client.id} joining topic: ${topic}`);
         client.join(topic);
         const history = chatHistory.get(topic) || [];
         if (history.length) {

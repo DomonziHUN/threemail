@@ -1,22 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import type { ChatTopic } from "@/lib/chat-topics";
-import { ChatWindow } from "@/components/chat/chat-window";
 import { ChatIcon } from "@/components/chat/chat-icon";
-import { cn } from "@/lib/utils";
 
 interface ChatInterfaceProps {
-  user: {
-    id: string;
-    fullName: string;
-    email?: string | null;
-  };
   topics: ChatTopic[];
 }
 
-export function ChatInterface({ user, topics }: ChatInterfaceProps) {
-  const [selectedTopic, setSelectedTopic] = useState<ChatTopic | null>(null);
+export function ChatInterface({ topics }: ChatInterfaceProps) {
+  const router = useRouter();
 
   return (
     <div className="space-y-6">
@@ -31,11 +24,8 @@ export function ChatInterface({ user, topics }: ChatInterfaceProps) {
         {topics.map((topic) => (
           <button
             key={topic.id}
-            onClick={() => setSelectedTopic(topic)}
-            className={cn(
-              "rounded-2xl border p-4 text-left transition hover:border-primary hover:bg-primary/5",
-              selectedTopic?.id === topic.id && "border-primary bg-primary/5"
-            )}
+            onClick={() => router.push(`/chat/${topic.id}`)}
+            className="rounded-2xl border p-4 text-left transition hover:border-primary hover:bg-primary/5 hover:shadow-md"
           >
             <div className="flex items-center gap-3">
               <div className="rounded-2xl bg-primary/10 p-3 text-primary">
@@ -58,17 +48,13 @@ export function ChatInterface({ user, topics }: ChatInterfaceProps) {
       </div>
 
       <div className="rounded-3xl border border-border bg-card p-5 shadow-sm">
-        {selectedTopic ? (
-          <ChatWindow user={user} topic={selectedTopic} />
-        ) : (
-          <div className="space-y-3 text-sm text-muted-foreground">
-            <p>Válassz ki egy témát a fenti listából, hogy elindítsd a beszélgetést.</p>
-            <p>
-              Minden beszélgetés titkosított csatornán keresztül történik, és visszanézhető lesz a
-              Beérkezett üzenetek menüpontban.
-            </p>
-          </div>
-        )}
+        <div className="space-y-3 text-sm text-muted-foreground">
+          <p>Válassz ki egy témát a fenti listából, hogy elindítsd a beszélgetést.</p>
+          <p>
+            Minden beszélgetés titkosított csatornán keresztül történik, és visszanézhető lesz a
+            Beérkezett üzenetek menüpontban.
+          </p>
+        </div>
       </div>
     </div>
   );

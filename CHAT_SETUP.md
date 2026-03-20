@@ -13,7 +13,6 @@ npm install
 Ez telepíti a következő új csomagokat:
 - `socket.io` - Socket.IO szerver
 - `socket.io-client` - Socket.IO kliens
-- `framer-motion` - Animációk a floating chat gombhoz
 
 ### 2. Környezeti változók
 
@@ -31,6 +30,21 @@ npm start
 ```
 
 ## Működés
+
+### Új Flow (2024-03-20 frissítés)
+
+1. **Help oldal** (`/help`): "Élő chat indítása" gomb
+2. **Témaválasztó oldal** (`/chat`): 5 téma közül választhatsz
+3. **Chat ablak** (`/chat/[topicId]`): Külön oldalon nyílik meg minden téma
+4. **Vissza gomb**: Visszanavigálás a témaválasztóhoz
+
+**Fontos változások:**
+- ❌ Nincs lebegő chat gomb (eltávolítva)
+- ✅ Minden téma külön oldalon nyílik meg
+- ✅ CORS konfiguráció hozzáadva a Socket.IO szerverhez
+- ✅ Reconnection logika és hibakezelés a kliensen
+
+## Működés (régi)
 
 ### Felhasználói élmény
 
