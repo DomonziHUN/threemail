@@ -2,6 +2,7 @@
 
 import { X, Camera, Zap, Bell, HelpCircle, FileText, ShieldCheck, CreditCard, Gauge, Moon, User, Users, Info, Star, XCircle, LogOut } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { avatarInitials } from "@/lib/utils";
 import { toast } from "sonner";
@@ -13,6 +14,8 @@ interface ProfileMenuProps {
 }
 
 export function ProfileMenu({ isOpen, onClose, user }: ProfileMenuProps) {
+  const router = useRouter();
+  
   if (!isOpen) return null;
 
   const initials = avatarInitials(user?.fullName || "User");
@@ -28,13 +31,18 @@ export function ProfileMenu({ isOpen, onClose, user }: ProfileMenuProps) {
     await signOut({ callbackUrl: "/" });
   };
 
+  const handleClose = () => {
+    onClose();
+    router.push("/dashboard");
+  };
+
   return (
     <div className="fixed inset-0 z-[100] bg-background max-w-md mx-auto xl:border-x border-border/40 flex flex-col pt-safe animate-in slide-in-from-bottom-5 fade-in duration-200">
       
       {/* Header */}
       <div className="flex items-center justify-between p-4 pb-2">
         <button 
-          onClick={onClose}
+          onClick={handleClose}
           className="w-10 h-10 rounded-full bg-secondary/50 flex items-center justify-center hover:bg-secondary/70 transition-colors"
         >
           <X className="w-5 h-5 text-foreground" />
