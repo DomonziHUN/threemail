@@ -219,7 +219,7 @@ function MenuItem({
 }) {
   const inner = (
     <div className="flex gap-4">
-      <div className="flex-shrink-0 w-12 h-12 bg-white dark:bg-transparent rounded-full border border-border/50 flex items-center justify-center text-foreground shadow-sm">
+      <div className="flex-shrink-0 w-12 h-12 bg-secondary/30 rounded-full border border-border/50 flex items-center justify-center text-foreground shadow-sm">
         {icon && (
           <div className="[&>svg]:w-5 [&>svg]:h-5 [&>svg]:stroke-[1.5]">
             {icon}

@@ -355,7 +355,7 @@ export function TransferFlow() {
                 Kedvezményezett banki adatai
               </label>
               <div className="h-[1px] w-full bg-border mb-2" />
-              <div className="bg-[#f0ede6]/50 dark:bg-muted p-1 rounded-2xl flex">
+              <div className="bg-muted/50 p-1 rounded-2xl flex">
                 {(["LOCAL", "IBAN"] as const).map((t) => (
                   <button
                     key={t}
