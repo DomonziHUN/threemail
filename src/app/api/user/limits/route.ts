@@ -13,25 +13,32 @@ export async function GET(req: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
+      include: { limits: true },
     });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Return default limits (in a real app, these would be stored in database)
-    const limits = {
-      dailyTransferLimit: 10000,
-      monthlyTransferLimit: 100000,
-      dailyCardLimit: 5000,
-      monthlyCardLimit: 50000,
-      dailyAtmLimit: 2000,
-      monthlyAtmLimit: 20000,
-      dailyOnlineLimit: 3000,
-      monthlyOnlineLimit: 30000,
-    };
+    // If user doesn't have limits yet, create default ones
+    if (!user.limits) {
+      const newLimits = await prisma.userLimits.create({
+        data: {
+          userId: user.id,
+          dailyTransferLimit: 10000,
+          monthlyTransferLimit: 100000,
+          dailyCardLimit: 5000,
+          monthlyCardLimit: 50000,
+          dailyAtmLimit: 2000,
+          monthlyAtmLimit: 20000,
+          dailyOnlineLimit: 3000,
+          monthlyOnlineLimit: 30000,
+        },
+      });
+      return NextResponse.json(newLimits);
+    }
 
-    return NextResponse.json(limits);
+    return NextResponse.json(user.limits);
   } catch (error) {
     console.error("Error fetching limits:", error);
     return NextResponse.json(
@@ -51,6 +58,7 @@ export async function PUT(req: NextRequest) {
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
+      include: { limits: true },
     });
 
     if (!user) {
@@ -88,10 +96,33 @@ export async function PUT(req: NextRequest) {
       }
     }
 
-    // In a real app, save to database
-    // For now, just return success
+    // Update or create limits in database
+    const updatedLimits = await prisma.userLimits.upsert({
+      where: { userId: user.id },
+      update: {
+        dailyTransferLimit: limits.dailyTransferLimit,
+        monthlyTransferLimit: limits.monthlyTransferLimit,
+        dailyCardLimit: limits.dailyCardLimit,
+        monthlyCardLimit: limits.monthlyCardLimit,
+        dailyAtmLimit: limits.dailyAtmLimit,
+        monthlyAtmLimit: limits.monthlyAtmLimit,
+        dailyOnlineLimit: limits.dailyOnlineLimit,
+        monthlyOnlineLimit: limits.monthlyOnlineLimit,
+      },
+      create: {
+        userId: user.id,
+        dailyTransferLimit: limits.dailyTransferLimit,
+        monthlyTransferLimit: limits.monthlyTransferLimit,
+        dailyCardLimit: limits.dailyCardLimit,
+        monthlyCardLimit: limits.monthlyCardLimit,
+        dailyAtmLimit: limits.dailyAtmLimit,
+        monthlyAtmLimit: limits.monthlyAtmLimit,
+        dailyOnlineLimit: limits.dailyOnlineLimit,
+        monthlyOnlineLimit: limits.monthlyOnlineLimit,
+      },
+    });
 
-    return NextResponse.json({ success: true, limits });
+    return NextResponse.json({ success: true, limits: updatedLimits });
   } catch (error) {
     console.error("Error updating limits:", error);
     return NextResponse.json(

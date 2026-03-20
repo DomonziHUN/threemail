@@ -44,6 +44,7 @@ model User {
   sessions            UserSession[]
   webAuthnCredentials WebAuthnCredential[]
   webAuthnChallenges  WebAuthnChallenge[]
+  limits              UserLimits?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 }
@@ -169,4 +170,20 @@ model WebAuthnChallenge {
   challenge String
   expiresAt DateTime
   createdAt DateTime @default(now())
+}
+
+model UserLimits {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dailyTransferLimit   Int      @default(10000)
+  monthlyTransferLimit Int      @default(100000)
+  dailyCardLimit       Int      @default(5000)
+  monthlyCardLimit     Int      @default(50000)
+  dailyAtmLimit        Int      @default(2000)
+  monthlyAtmLimit      Int      @default(20000)
+  dailyOnlineLimit     Int      @default(3000)
+  monthlyOnlineLimit   Int      @default(30000)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }
