@@ -10,14 +10,15 @@ export const metadata = {
 };
 
 interface ChatTopicPageProps {
-  params: {
+  params: Promise<{
     topicId: string;
-  };
+  }>;
 }
 
 export default async function ChatTopicPage({ params }: ChatTopicPageProps) {
   const user = await requireAuth();
-  const topic = chatTopics.find((t) => t.id === params.topicId);
+  const { topicId } = await params;
+  const topic = chatTopics.find((t) => t.id === topicId);
 
   if (!topic) {
     notFound();
