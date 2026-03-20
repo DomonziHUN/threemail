@@ -2,7 +2,8 @@ import Link from "next/link";
 import { requireAuth } from "@/lib/auth-guard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Phone, Mail, MessageCircle, Shield, Info, BookOpen } from "lucide-react";
+import { Mail, MessageCircle, Shield, Info, BookOpen } from "lucide-react";
+import { LiveChat } from "@/components/help/live-chat";
 
 const faqItems = [
   {
@@ -45,18 +46,6 @@ export default async function HelpPage() {
         <CardContent className="grid gap-4">
           <div className="flex items-center gap-4">
             <div className="rounded-2xl bg-primary/10 p-3 text-primary">
-              <Phone className="h-5 w-5" />
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold">Telefonos ügyfélszolgálat</p>
-              <p className="text-sm text-muted-foreground">Hétfőtől péntekig 9:00 - 18:00</p>
-            </div>
-            <Button variant="outline" asChild>
-              <Link href="tel:+3615551234">Hívás</Link>
-            </Button>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="rounded-2xl bg-primary/10 p-3 text-primary">
               <Mail className="h-5 w-5" />
             </div>
             <div className="flex-1">
@@ -67,15 +56,17 @@ export default async function HelpPage() {
               <Link href="mailto:support@threemail.hu">Írok</Link>
             </Button>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="rounded-2xl bg-primary/10 p-3 text-primary">
-              <MessageCircle className="h-5 w-5" />
+          <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="rounded-full bg-primary/20 p-2 text-primary">
+                <MessageCircle className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="font-semibold">Live chat támogatás</p>
+                <p className="text-sm text-muted-foreground">Azonnali segítség 8:00 - 22:00 között</p>
+              </div>
             </div>
-            <div className="flex-1">
-              <p className="font-semibold">Chat támogatás</p>
-              <p className="text-sm text-muted-foreground">Live chat munkanapokon 10:00 - 16:00</p>
-            </div>
-            <Button disabled>Hamarosan</Button>
+            <LiveChat />
           </div>
         </CardContent>
       </Card>
