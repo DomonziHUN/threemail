@@ -202,7 +202,7 @@ export function TransferCalculator() {
         {/* CSERE INPUTOK */}
         <div className="relative">
           {/* FELSZŐ (Küldött) DOBOZ */}
-          <div className="relative bg-white dark:bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm z-10 focus-within:ring-2 focus-within:ring-[#A1E678] transition-all">
+          <div className="relative bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm z-10 focus-within:ring-2 focus-within:ring-[#A1E678] transition-all border border-border/50">
             <input
               type="number"
               value={sendAmount}
@@ -231,7 +231,7 @@ export function TransferCalculator() {
           </div>
 
           {/* ALSÓ (Érkező) DOBOZ */}
-          <div className="relative bg-white dark:bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm mt-3 z-10 focus-within:ring-2 focus-within:ring-[#A1E678] transition-all">
+          <div className="relative bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm mt-3 z-10 focus-within:ring-2 focus-within:ring-[#A1E678] transition-all border border-border/50">
             <input
               type="text"
               readOnly
@@ -247,26 +247,6 @@ export function TransferCalculator() {
               <span className="font-bold">{receiveCurrency.code}</span>
               <ChevronDown className="w-4 h-4 text-muted-foreground" />
             </button>
-          </div>
-        </div>
-
-        {/* DÍJAK RÉSZ */}
-        <div className="mt-5 border border-border/40 rounded-[1.25rem] py-4 bg-transparent">
-          <div className="flex flex-col gap-2.5 text-[0.85rem] text-center text-muted-foreground">
-            <div className="flex items-center justify-center gap-1">
-              <span>Tartalmazza a díjakat</span>
-              <Info className="w-3.5 h-3.5" />
-            </div>
-            <div className="font-bold text-foreground">
-              404 {sendCurrency.code}
-            </div>
-            
-            <div className="h-[1px] w-3/4 bg-border/40 mx-auto my-1" />
-            
-            <div className="flex items-center justify-center gap-1">
-              <span>Érkezés becsült ideje</span>
-            </div>
-            <div className="font-bold text-foreground">Másodpercek alatt</div>
           </div>
         </div>
 
