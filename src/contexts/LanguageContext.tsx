@@ -15,10 +15,8 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(defaultLocale);
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const savedLocale = localStorage.getItem('language') as Locale;
     if (savedLocale && locales[savedLocale]) {
       setLocaleState(savedLocale);
@@ -32,10 +30,6 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const translations = locales[locale];
-
-  if (!mounted) {
-    return <>{children}</>;
-  }
 
   return (
     <LanguageContext.Provider value={{ locale, setLocale, t: translations }}>
