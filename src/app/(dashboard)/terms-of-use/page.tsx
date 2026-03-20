@@ -12,456 +12,456 @@ export default function TermsOfUsePage() {
           <FileText className="w-6 h-6 text-primary" />
         </div>
         <div>
-          <h1 className="text-3xl font-bold">Általános Szerződési Feltételek és Felhasználási Szabályzat</h1>
-          <p className="text-muted-foreground">ThreeMail Bank Zrt. - Hatályos: 2026. március 20-tól</p>
+          <h1 className="text-3xl font-bold">Terms and Conditions of Service</h1>
+          <p className="text-muted-foreground">ThreeMail Financial Services Ltd. - Effective: March 20, 2026</p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Általános Szerződési Feltételek</CardTitle>
+          <CardTitle>General Terms and Conditions</CardTitle>
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[700px] pr-4">
             <div className="space-y-6 text-sm leading-relaxed">
               
-              {/* 1. ÁLTALÁNOS RENDELKEZÉSEK */}
+              {/* 1. GENERAL PROVISIONS */}
               <section>
-                <h3 className="text-lg font-semibold mb-3">1. ÁLTALÁNOS RENDELKEZÉSEK ÉS FOGALMAK</h3>
+                <h3 className="text-lg font-semibold mb-3">1. GENERAL PROVISIONS AND DEFINITIONS</h3>
                 
                 <p className="text-muted-foreground mb-3">
-                  <strong>1.1.</strong> Jelen Általános Szerződési Feltételek (a továbbiakban: ÁSZF) a ThreeMail Bank Zártkörűen Működő Részvénytársaság 
-                  (székhely: 1051 Budapest, Szabadság tér 7., cégjegyzékszám: 01-10-041234, adószám: 10412345-2-41, a továbbiakban: Szolgáltató vagy Bank) 
-                  által nyújtott pénzforgalmi szolgáltatásokra, elektronikus pénzkibocsátásra, hitelnyújtásra, befektetési szolgáltatásokra, 
-                  valamint minden egyéb, a Szolgáltató által kínált pénzügyi és kiegészítő szolgáltatásra vonatkoznak.
+                  <strong>1.1.</strong> These General Terms and Conditions (hereinafter: "Terms") govern the payment services, electronic money issuance, 
+                  lending services, investment services, and all other financial and ancillary services provided by ThreeMail Financial Services Limited 
+                  (registered office: Level 3, Triq Dun Karm, Birkirkara BKR 9033, Malta; company registration number: C 98765; 
+                  website: www.threemail.fun; hereinafter: "Service Provider" or "Company").
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>1.2.</strong> A Szolgáltató a Magyar Nemzeti Bank (MNB) felügyelete alatt működő hitelintézet, amely rendelkezik 
-                  a pénzforgalmi szolgáltatás nyújtásához, elektronikus pénz kibocsátásához, valamint hitelnyújtáshoz szükséges engedélyekkel. 
-                  Az MNB nyilvántartási száma: H-EN-I-1234/2020. A Szolgáltató tagja az Országos Betétbiztosítási Alapnak (OBA), 
-                  amely biztosítja az ügyfelek betéteinek védelmét a hatályos jogszabályok szerint, jelenleg személyenként és hitelintézetenként 
-                  100.000 eurónak megfelelő forintösszegig.
+                  <strong>1.2.</strong> The Service Provider is a financial institution licensed and regulated by the Malta Financial Services Authority (MFSA) 
+                  under license number IS/12345. The Company is authorized to provide payment services, issue electronic money, and offer lending services 
+                  in accordance with the Payment Services Act (Cap. 590) and the Financial Institutions Act (Cap. 376) of Malta. The Service Provider 
+                  is a member of the Depositor Compensation Scheme (DCS), which protects customer deposits up to €100,000 per depositor per institution 
+                  in accordance with applicable regulations.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>1.3.</strong> Jelen ÁSZF hatálya kiterjed minden olyan természetes és jogi személyre, valamint jogi személyiséggel 
-                  nem rendelkező szervezetre (a továbbiakban együttesen: Ügyfél vagy Felhasználó), aki/amely a Szolgáltató által nyújtott 
-                  szolgáltatásokat igénybe veszi, függetlenül attól, hogy a szolgáltatás igénybevétele személyesen, telefonon, interneten 
-                  keresztül vagy bármely más elektronikus csatornán történik.
+                  <strong>1.3.</strong> These Terms apply to all natural persons, legal entities, and organizations without legal personality 
+                  (hereinafter collectively: "Customer" or "User") who use the services provided by the Service Provider, regardless of whether 
+                  the service is accessed in person, by telephone, via the internet, or through any other electronic channel.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>1.4.</strong> Az ÁSZF-ben használt fogalmak értelmezése a pénzforgalmi szolgáltatás nyújtásáról szóló 2009. évi LXXXV. törvény 
-                  (Pft.), a hitelintézetekről és a pénzügyi vállalkozásokról szóló 2013. évi CCXXXVII. törvény (Hpt.), valamint a vonatkozó 
-                  európai uniós rendeletek és irányelvek alapján történik.
+                  <strong>1.4.</strong> The definitions used in these Terms are interpreted in accordance with the Payment Services Act (Cap. 590), 
+                  the Financial Institutions Act (Cap. 376), the Electronic Money Regulations, and applicable European Union regulations and directives, 
+                  including the Payment Services Directive 2 (PSD2) and the General Data Protection Regulation (GDPR).
                 </p>
 
                 <div className="bg-muted/30 p-4 rounded-lg mt-3">
-                  <p className="text-xs font-semibold mb-2">Fogalommagyarázat:</p>
+                  <p className="text-xs font-semibold mb-2">Key Definitions:</p>
                   <ul className="list-disc list-inside space-y-1 text-xs text-muted-foreground">
-                    <li><strong>Fizetési számla:</strong> Az Ügyfél nevére megnyitott, pénzforgalmi műveletek lebonyolítására szolgáló számla</li>
-                    <li><strong>Elektronikus pénz:</strong> Elektronikusan tárolt monetáris érték, amely pénzügyi követelést testesít meg</li>
-                    <li><strong>Azonosító:</strong> A fizetési számla egyedi azonosítására használt betű-, szám- vagy szimbólumkombináció (IBAN)</li>
-                    <li><strong>Fizetési megbízás:</strong> Az Ügyfél által a Szolgáltatónak adott utasítás fizetési művelet végrehajtására</li>
-                    <li><strong>Hitelesítés:</strong> A fizetési eszköz használatának jogosságát ellenőrző folyamat</li>
-                    <li><strong>Erős ügyfél-hitelesítés (SCA):</strong> Legalább két független elemre épülő hitelesítési eljárás</li>
-                    <li><strong>Referencia-árfolyam:</strong> A devizaváltási műveletekhez alkalmazott árfolyam</li>
-                    <li><strong>Munkanapon:</strong> A Szolgáltató üzleti tevékenységének végzéséhez szükséges nap (hétfő-péntek, kivéve munkaszüneti napok)</li>
+                    <li><strong>Payment Account:</strong> An account opened in the Customer's name for the execution of payment transactions</li>
+                    <li><strong>Electronic Money:</strong> Electronically stored monetary value representing a claim against the issuer</li>
+                    <li><strong>Identifier:</strong> A unique combination of letters, numbers, or symbols used to identify a payment account (IBAN)</li>
+                    <li><strong>Payment Order:</strong> An instruction from the Customer to the Service Provider to execute a payment transaction</li>
+                    <li><strong>Authentication:</strong> A procedure to verify the legitimacy of the use of a payment instrument</li>
+                    <li><strong>Strong Customer Authentication (SCA):</strong> Authentication based on at least two independent elements</li>
+                    <li><strong>Reference Exchange Rate:</strong> The exchange rate applied by the Service Provider for currency conversion</li>
+                    <li><strong>Business Day:</strong> A day on which the Service Provider is open for business (Monday-Friday, excluding public holidays)</li>
                   </ul>
                 </div>
               </section>
 
-              {/* 2. SZOLGÁLTATÁSOK KÖRE */}
+              {/* 2. SCOPE OF SERVICES */}
               <section>
-                <h3 className="text-lg font-semibold mb-3">2. A SZOLGÁLTATÓ ÁLTAL NYÚJTOTT SZOLGÁLTATÁSOK KÖRE</h3>
+                <h3 className="text-lg font-semibold mb-3">2. SCOPE OF SERVICES PROVIDED</h3>
                 
                 <p className="text-muted-foreground mb-3">
-                  <strong>2.1. Pénzforgalmi szolgáltatások:</strong>
+                  <strong>2.1. Payment Services:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Fizetési számla vezetése forintban és devizában</li>
-                  <li>Készpénz-befizetési és készpénz-felvételi szolgáltatás</li>
-                  <li>Belföldi és nemzetközi átutalások végrehajtása (SEPA, SWIFT)</li>
-                  <li>Beszedési megbízások kezelése és végrehajtása</li>
-                  <li>Csoportos átutalások feldolgozása</li>
-                  <li>Állandó megbízások kezelése</li>
-                  <li>Elektronikus fizetési megoldások (bankkártya, mobil fizetés)</li>
-                  <li>Valós idejű fizetések (azonnali átutalás)</li>
+                  <li>Payment account management in EUR and other currencies</li>
+                  <li>Cash deposit and withdrawal services</li>
+                  <li>Domestic and international credit transfers (SEPA, SWIFT)</li>
+                  <li>Direct debit processing and execution</li>
+                  <li>Batch payment processing</li>
+                  <li>Standing order management</li>
+                  <li>Electronic payment solutions (bank cards, mobile payments)</li>
+                  <li>Instant payment services (real-time transfers)</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>2.2. Bankkártya szolgáltatások:</strong>
+                  <strong>2.2. Card Services:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Betéti (debit) kártyák kibocsátása és kezelése</li>
-                  <li>Hitelkártyák kibocsátása és kezelése</li>
-                  <li>Virtuális kártyák létrehozása online vásárlásokhoz</li>
-                  <li>Érintésmentes fizetési funkció (contactless)</li>
-                  <li>Mobil fizetési megoldások (Apple Pay, Google Pay)</li>
-                  <li>Kártyabiztosítási szolgáltatások</li>
-                  <li>Kártyahasználat korlátozásának beállítása</li>
+                  <li>Issuance and management of debit cards</li>
+                  <li>Issuance and management of credit cards</li>
+                  <li>Virtual card creation for online purchases</li>
+                  <li>Contactless payment functionality</li>
+                  <li>Mobile payment solutions (Apple Pay, Google Pay)</li>
+                  <li>Card insurance services</li>
+                  <li>Card usage limit configuration</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>2.3. Hitelezési szolgáltatások:</strong>
+                  <strong>2.3. Lending Services:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Folyószámlahitel nyújtása</li>
-                  <li>Személyi kölcsönök és fogyasztási hitelek</li>
-                  <li>Jelzáloghitelek lakáscélú felhasználásra</li>
-                  <li>Vállalkozási hitelek és forgóeszköz-hitelek</li>
-                  <li>Lízing és faktoring szolgáltatások</li>
-                  <li>Hitelkeret-emelési lehetőségek</li>
+                  <li>Overdraft facilities</li>
+                  <li>Personal loans and consumer credit</li>
+                  <li>Mortgage loans for residential purposes</li>
+                  <li>Business loans and working capital financing</li>
+                  <li>Leasing and factoring services</li>
+                  <li>Credit limit increase options</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>2.4. Befektetési és megtakarítási szolgáltatások:</strong>
+                  <strong>2.4. Investment and Savings Services:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Lekötött betétek különböző futamidőkkel</li>
-                  <li>Takarékbetéti számlák</li>
-                  <li>Értékpapír-számlák vezetése</li>
-                  <li>Befektetési alapok közvetítése</li>
-                  <li>Állampapírok értékesítése</li>
-                  <li>Nyugdíj-előtakarékossági számlák</li>
+                  <li>Fixed-term deposits with various maturities</li>
+                  <li>Savings accounts</li>
+                  <li>Securities account management</li>
+                  <li>Investment fund distribution</li>
+                  <li>Government bond sales</li>
+                  <li>Pension savings accounts</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>2.5. Elektronikus banki szolgáltatások:</strong>
+                  <strong>2.5. Digital Banking Services:</strong>
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Internetes banki felület (web banking)</li>
-                  <li>Mobilalkalmazás (mobile banking)</li>
-                  <li>Telefonos ügyfélszolgálat és telefonos banki szolgáltatás</li>
-                  <li>SMS és push értesítések</li>
-                  <li>Elektronikus számlakivonatok</li>
-                  <li>Biometrikus hitelesítési lehetőségek (ujjlenyomat, arcfelismerés)</li>
+                  <li>Internet banking platform (web banking)</li>
+                  <li>Mobile application (mobile banking)</li>
+                  <li>Telephone customer service and phone banking</li>
+                  <li>SMS and push notifications</li>
+                  <li>Electronic account statements</li>
+                  <li>Biometric authentication options (fingerprint, facial recognition)</li>
                 </ul>
               </section>
 
-              {/* 3. SZERZŐDÉS LÉTREJÖTTE */}
+              {/* 3. CONTRACT FORMATION */}
               <section>
-                <h3 className="text-lg font-semibold mb-3">3. A SZERZŐDÉS LÉTREJÖTTE, MÓDOSÍTÁSA ÉS MEGSZŰNÉSE</h3>
+                <h3 className="text-lg font-semibold mb-3">3. CONTRACT FORMATION, AMENDMENT, AND TERMINATION</h3>
                 
                 <p className="text-muted-foreground mb-3">
-                  <strong>3.1.</strong> A Szolgáltató és az Ügyfél közötti szerződés a Szolgáltató által elfogadott számlanyitási kérelem alapján jön létre. 
-                  A szerződés létrejöttéhez szükséges az Ügyfél személyazonosságának és lakcímének igazolása, valamint a pénzmosás és terrorizmus 
-                  finanszírozása megelőzéséről és megakadályozásáról szóló jogszabályok szerinti ügyfél-átvilágítás elvégzése.
+                  <strong>3.1.</strong> The contract between the Service Provider and the Customer is formed upon acceptance of the account opening 
+                  application by the Service Provider. Contract formation requires verification of the Customer's identity and address, as well as 
+                  completion of customer due diligence in accordance with anti-money laundering and counter-terrorism financing regulations.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>3.2.</strong> A számlanyitáshoz szükséges dokumentumok természetes személyek esetében:
+                  <strong>3.2.</strong> Documents required for account opening for natural persons:
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-muted-foreground mb-4">
-                  <li>Érvényes személyazonosító okmány (személyi igazolvány, útlevél vagy vezetői engedély)</li>
-                  <li>Lakcímet igazoló hatósági igazolvány vagy egyéb hiteles dokumentum</li>
-                  <li>Adóazonosító jel (adószám)</li>
-                  <li>Telefonos és e-mail elérhetőség</li>
-                  <li>Jövedelemigazolás (bizonyos szolgáltatások esetében)</li>
+                  <li>Valid identity document (passport, national ID card, or driver's license)</li>
+                  <li>Proof of address (utility bill, bank statement, or government-issued document)</li>
+                  <li>Tax identification number (TIN)</li>
+                  <li>Telephone and email contact details</li>
+                  <li>Proof of income (for certain services)</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>3.3.</strong> Jogi személyek és egyéni vállalkozók esetében további dokumentumok szükségesek:
+                  <strong>3.3.</strong> Additional documents required for legal entities and sole traders:
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-muted-foreground mb-4">
-                  <li>Cégkivonat vagy egyéni vállalkozói igazolvány</li>
-                  <li>Aláírási címpéldány vagy aláírás-minta</li>
-                  <li>Képviseletre jogosult személyek azonosító okmányai</li>
-                  <li>Társasági szerződés vagy alapító okirat</li>
-                  <li>Adószám és statisztikai számjel</li>
-                  <li>Tényleges tulajdonosra vonatkozó nyilatkozat</li>
+                  <li>Certificate of incorporation or business registration</li>
+                  <li>Authorized signatory specimen or signature sample</li>
+                  <li>Identity documents of authorized representatives</li>
+                  <li>Articles of association or memorandum of association</li>
+                  <li>Tax identification number and VAT registration</li>
+                  <li>Ultimate beneficial owner (UBO) declaration</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>3.4.</strong> A Szolgáltató fenntartja a jogot, hogy a számlanyitási kérelmet indoklás nélkül elutasítsa, különösen akkor, 
-                  ha az Ügyfél nem felel meg a jogszabályi követelményeknek, vagy a Szolgáltató kockázatkezelési politikája alapján az üzleti kapcsolat 
-                  kockázatosnak minősül.
+                  <strong>3.4.</strong> The Service Provider reserves the right to reject an account opening application without providing reasons, 
+                  particularly if the Customer does not meet regulatory requirements or if the business relationship is deemed high-risk according 
+                  to the Service Provider's risk management policy.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>3.5.</strong> A szerződés módosítása:
+                  <strong>3.5.</strong> Amendment of Terms:
                 </p>
                 <p className="text-muted-foreground mb-3 ml-4">
-                  A Szolgáltató jogosult a jelen ÁSZF-et, valamint a Hirdetményekben közzétett kondíciókat egyoldalúan módosítani. 
-                  A módosításról a Szolgáltató az Ügyfelet legalább 60 nappal a hatálybalépés előtt értesíti. Az Ügyfél a módosítás 
-                  hatálybalépéséig jogosult a szerződést díjmentesen felmondani. Amennyiben az Ügyfél a módosítás hatálybalépéséig 
-                  nem mondja fel a szerződést, úgy a módosítást elfogadottnak kell tekinteni.
+                  The Service Provider may unilaterally amend these Terms and the pricing published in the Tariff Schedule. The Service Provider 
+                  will notify the Customer at least 60 days before the amendments take effect. The Customer may terminate the contract free of 
+                  charge before the amendments take effect. If the Customer does not terminate the contract before the effective date, 
+                  the amendments shall be deemed accepted.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>3.6.</strong> A szerződés megszűnése:
+                  <strong>3.6.</strong> Contract Termination:
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Az Ügyfél vagy a Szolgáltató rendes felmondásával (30 napos felmondási idő)</li>
-                  <li>Azonnali hatályú felmondással súlyos szerződésszegés esetén</li>
-                  <li>Az Ügyfél halálával vagy jogutód nélküli megszűnésével</li>
-                  <li>Közös megegyezéssel</li>
-                  <li>Jogszabályban meghatározott egyéb esetekben</li>
+                  <li>Ordinary termination by the Customer or Service Provider (30 days' notice period)</li>
+                  <li>Immediate termination in case of material breach of contract</li>
+                  <li>Death of the Customer or dissolution without succession</li>
+                  <li>Mutual agreement</li>
+                  <li>Other cases specified by law</li>
                 </ul>
               </section>
 
-              {/* 4. DÍJAK ÉS KÖLTSÉGEK */}
+              {/* 4. FEES AND CHARGES */}
               <section>
-                <h3 className="text-lg font-semibold mb-3">4. DÍJAK, KÖLTSÉGEK ÉS KAMATOK</h3>
+                <h3 className="text-lg font-semibold mb-3">4. FEES, CHARGES, AND INTEREST RATES</h3>
                 
                 <p className="text-muted-foreground mb-3">
-                  <strong>4.1.</strong> A Szolgáltató által nyújtott szolgáltatások díjait, költségeit és kamatait a Szolgáltató Hirdetménye tartalmazza, 
-                  amely a Szolgáltató fiókjaiban, honlapján és mobilalkalmazásában elérhető. A Hirdetmény a jelen ÁSZF elválaszthatatlan részét képezi.
+                  <strong>4.1.</strong> The fees, charges, and interest rates for services provided by the Service Provider are set out in the 
+                  Tariff Schedule, which is available at the Service Provider's branches, website (www.threemail.fun), and mobile application. 
+                  The Tariff Schedule forms an integral part of these Terms.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>4.2.</strong> A számlavezetési díjak típusai:
+                  <strong>4.2.</strong> Types of account maintenance fees:
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Havi számlavezetési díj (csomagtól függően 0-2990 Ft)</li>
-                  <li>Tranzakciós díjak (átutalás, készpénzfelvétel, stb.)</li>
-                  <li>Bankkártya éves díja (0-15000 Ft kártyatípustól függően)</li>
-                  <li>SMS értesítési díj (0-300 Ft/hó)</li>
-                  <li>Devizaváltási díj (0,5-2% a tranzakció értékétől függően)</li>
-                  <li>Készpénzfelvételi díj ATM-ből (0-1% min. 300 Ft)</li>
+                  <li>Monthly account maintenance fee (€0-€25 depending on package)</li>
+                  <li>Transaction fees (transfers, cash withdrawals, etc.)</li>
+                  <li>Annual card fee (€0-€150 depending on card type)</li>
+                  <li>SMS notification fee (€0-€3/month)</li>
+                  <li>Foreign exchange fee (0.5-2% of transaction value)</li>
+                  <li>ATM withdrawal fee (0-1%, minimum €3)</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>4.3.</strong> Hitelkamat és THM (Teljes Hiteldíj Mutató):
+                  <strong>4.3.</strong> Loan Interest and APR (Annual Percentage Rate):
                 </p>
                 <p className="text-muted-foreground mb-3 ml-4">
-                  A hitelek kamata lehet fix vagy változó. A változó kamatláb a jegybanki alapkamat, a BUBOR vagy más referencia-kamatláb 
-                  alapján kerül meghatározásra. A THM tartalmazza a hitel teljes költségét, beleértve a kamatot, kezelési költséget, 
-                  folyósítási jutalékot és minden egyéb, a hitellel kapcsolatos díjat. A THM pontos mértékét a hitelszerződés tartalmazza.
+                  Loan interest rates may be fixed or variable. Variable rates are determined based on the central bank base rate, EURIBOR, 
+                  or other reference rates. The APR includes the total cost of credit, including interest, processing fees, arrangement fees, 
+                  and all other charges related to the loan. The exact APR is specified in the loan agreement.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>4.4.</strong> Betéti kamatok:
+                  <strong>4.4.</strong> Deposit Interest Rates:
                 </p>
                 <p className="text-muted-foreground mb-3 ml-4">
-                  A betéti számlákra fizetett kamatok mértéke a betét típusától, összegétől és futamidejétől függ. A kamat lehet fix vagy változó. 
-                  A kamat jóváírása történhet havonta, negyedévente, félévente vagy a futamidő végén. A betéti kamatokra 15% személyi jövedelemadó 
-                  és 13% szociális hozzájárulási adó vonatkozik, amelyet a Szolgáltató levonja és befizeti az állami adóhatósághoz.
+                  Interest rates paid on deposit accounts depend on the type of deposit, amount, and term. Interest may be fixed or variable. 
+                  Interest is credited monthly, quarterly, semi-annually, or at maturity. Deposit interest is subject to applicable withholding 
+                  tax in accordance with Maltese tax legislation, which the Service Provider deducts and remits to the tax authorities.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>4.5.</strong> Díjmentes szolgáltatások:
+                  <strong>4.5.</strong> Fee-free services:
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-muted-foreground mb-4">
-                  <li>Elektronikus számlakivonat</li>
-                  <li>Internetes és mobilbanki szolgáltatás használata</li>
-                  <li>Saját ATM hálózatban történő készpénzfelvétel (havi limitig)</li>
-                  <li>Belföldi forint átutalások elektronikus csatornán (havi limitig)</li>
-                  <li>Értesítések e-mailben és mobilalkalmazásban</li>
+                  <li>Electronic account statements</li>
+                  <li>Internet and mobile banking usage</li>
+                  <li>Cash withdrawals at own ATM network (up to monthly limit)</li>
+                  <li>Domestic EUR transfers via electronic channels (up to monthly limit)</li>
+                  <li>Email and mobile app notifications</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>4.6.</strong> Devizaműveletek árfolyama:
+                  <strong>4.6.</strong> Foreign Exchange Rates:
                 </p>
                 <p className="text-muted-foreground mb-3 ml-4">
-                  A devizaműveleteknél alkalmazott árfolyamot a Szolgáltató napi rendszerességgel határozza meg és teszi közzé a honlapján. 
-                  Az árfolyam tartalmazza a Szolgáltató haszonkulcsát. Nagyobb összegű devizaműveletek esetén egyedi árfolyam kérhető.
+                  Exchange rates for foreign currency transactions are determined and published daily by the Service Provider on its website. 
+                  The exchange rate includes the Service Provider's margin. Individual rates may be negotiated for large-value transactions.
                 </p>
               </section>
 
-              {/* 5. ADATVÉDELEM */}
+              {/* 5. DATA PROTECTION */}
               <section>
-                <h3 className="text-lg font-semibold mb-3">5. ADATVÉDELEM ÉS ADATKEZELÉS</h3>
+                <h3 className="text-lg font-semibold mb-3">5. DATA PROTECTION AND PRIVACY</h3>
                 
                 <p className="text-muted-foreground mb-3">
-                  <strong>5.1.</strong> A Szolgáltató az Ügyfél személyes adatait az Európai Unió Általános Adatvédelmi Rendeletének (GDPR), 
-                  valamint a magyar adatvédelmi jogszabályoknak megfelelően kezeli. A részletes adatkezelési tájékoztatót a Szolgáltató 
-                  Adatvédelmi Szabályzata tartalmazza.
+                  <strong>5.1.</strong> The Service Provider processes Customer personal data in accordance with the European Union General Data 
+                  Protection Regulation (GDPR) and Maltese data protection legislation. Detailed information on data processing is provided in 
+                  the Service Provider's Privacy Policy.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>5.2.</strong> A Szolgáltató által kezelt személyes adatok köre:
+                  <strong>5.2.</strong> Categories of personal data processed:
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-muted-foreground mb-4">
-                  <li>Azonosító adatok (név, születési hely és idő, anyja neve)</li>
-                  <li>Lakcím és tartózkodási hely</li>
-                  <li>Elérhetőségi adatok (telefon, e-mail)</li>
-                  <li>Azonosító okmányok adatai</li>
-                  <li>Adóazonosító jel, TAJ szám</li>
-                  <li>Bankszámlaszám, tranzakciós adatok</li>
-                  <li>Jövedelmi és vagyoni adatok</li>
-                  <li>Biometrikus adatok (ujjlenyomat, arcfelismerés - csak hozzájárulás esetén)</li>
+                  <li>Identification data (name, date and place of birth, parent's name)</li>
+                  <li>Address and residence information</li>
+                  <li>Contact details (telephone, email)</li>
+                  <li>Identity document information</li>
+                  <li>Tax identification number, social security number</li>
+                  <li>Bank account number, transaction data</li>
+                  <li>Income and asset information</li>
+                  <li>Biometric data (fingerprint, facial recognition - with consent only)</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>5.3.</strong> Az adatkezelés jogalapja:
+                  <strong>5.3.</strong> Legal basis for data processing:
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Szerződés teljesítése (számlavezetés, tranzakciók végrehajtása)</li>
-                  <li>Jogszabályi kötelezettség (pénzmosás elleni szabályok, adózási kötelezettségek)</li>
-                  <li>Jogos érdek (kockázatkezelés, csalásmegelőzés)</li>
-                  <li>Hozzájárulás (marketing célú megkeresések, biometrikus adatok kezelése)</li>
+                  <li>Contract performance (account management, transaction execution)</li>
+                  <li>Legal obligation (anti-money laundering regulations, tax obligations)</li>
+                  <li>Legitimate interest (risk management, fraud prevention)</li>
+                  <li>Consent (marketing communications, biometric data processing)</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>5.4.</strong> Az Ügyfél jogai:
+                  <strong>5.4.</strong> Customer Rights:
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Hozzáférési jog: tájékoztatás kérése a kezelt adatokról</li>
-                  <li>Helyesbítéshez való jog: pontatlan adatok javítása</li>
-                  <li>Törléshez való jog: adatok törlésének kérése (bizonyos esetekben)</li>
-                  <li>Adatkezelés korlátozásához való jog</li>
-                  <li>Adathordozhatósághoz való jog: adatok másolata strukturált formátumban</li>
-                  <li>Tiltakozáshoz való jog: jogos érdeken alapuló adatkezelés ellen</li>
-                  <li>Panasztételhez való jog: Nemzeti Adatvédelmi és Információszabadság Hatóságnál</li>
+                  <li>Right of access: request information about processed data</li>
+                  <li>Right to rectification: correction of inaccurate data</li>
+                  <li>Right to erasure: request deletion of data (in certain cases)</li>
+                  <li>Right to restriction of processing</li>
+                  <li>Right to data portability: receive data in structured format</li>
+                  <li>Right to object: to processing based on legitimate interest</li>
+                  <li>Right to lodge a complaint: with the Office of the Information and Data Protection Commissioner</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>5.5.</strong> Adatbiztonság:
+                  <strong>5.5.</strong> Data Security:
                 </p>
                 <p className="text-muted-foreground mb-3 ml-4">
-                  A Szolgáltató megfelelő technikai és szervezési intézkedésekkel biztosítja az adatok biztonságát, beleértve a titkosítást, 
-                  hozzáférés-korlátozást, rendszeres biztonsági auditokat és munkatársak képzését. Az adatokat 256 bites AES titkosítással védjük, 
-                  és a szervereinket folyamatosan monitorozzuk.
+                  The Service Provider implements appropriate technical and organizational measures to ensure data security, including encryption, 
+                  access controls, regular security audits, and staff training. Data is protected using 256-bit AES encryption, and servers are 
+                  continuously monitored for security threats.
                 </p>
               </section>
 
-              {/* 6. FELELŐSSÉG */}
+              {/* 6. LIABILITY */}
               <section>
-                <h3 className="text-lg font-semibold mb-3">6. FELELŐSSÉGI SZABÁLYOK</h3>
+                <h3 className="text-lg font-semibold mb-3">6. LIABILITY PROVISIONS</h3>
                 
                 <p className="text-muted-foreground mb-3">
-                  <strong>6.1.</strong> A Szolgáltató felelőssége:
+                  <strong>6.1.</strong> Service Provider's Liability:
                 </p>
                 <p className="text-muted-foreground mb-3 ml-4">
-                  A Szolgáltató felelős a szerződésszerű szolgáltatásnyújtásért, a fizetési műveletek pontos és határidőben történő végrehajtásáért, 
-                  valamint az Ügyfél adatainak biztonságos kezeléséért. A Szolgáltató köteles megtéríteni az Ügyfélnek okozott kárt, ha az 
-                  a Szolgáltató szerződésszegéséből vagy jogszabálysértéséből ered.
+                  The Service Provider is liable for proper service delivery, accurate and timely execution of payment transactions, and secure 
+                  handling of Customer data. The Service Provider shall compensate the Customer for damages resulting from breach of contract 
+                  or violation of applicable laws.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>6.2.</strong> A Szolgáltató mentesül a felelősség alól:
+                  <strong>6.2.</strong> Exemption from Liability:
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>Vis maior (elháríthatatlan külső ok) esetén</li>
-                  <li>Ha a kárt az Ügyfél szándékos vagy súlyosan gondatlan magatartása okozta</li>
-                  <li>Ha a kárt jogszabály vagy hatósági intézkedés okozta</li>
-                  <li>Ha az Ügyfél nem tett eleget tájékoztatási vagy együttműködési kötelezettségének</li>
+                  <li>Force majeure (unforeseeable external circumstances)</li>
+                  <li>Damage caused by the Customer's intentional or grossly negligent conduct</li>
+                  <li>Damage caused by legal provisions or regulatory actions</li>
+                  <li>Customer's failure to fulfill information or cooperation obligations</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>6.3.</strong> Az Ügyfél felelőssége:
+                  <strong>6.3.</strong> Customer's Liability:
                 </p>
                 <ul className="list-disc list-inside space-y-2 ml-4 text-muted-foreground mb-4">
-                  <li>A fizetési eszköz (bankkártya, jelszó, biometrikus azonosító) biztonságos megőrzése</li>
-                  <li>A fizetési eszköz elvesztésének vagy jogosulatlan használatának azonnali bejelentése</li>
-                  <li>A számlakivonatok rendszeres ellenőrzése és a hibák haladéktalan jelzése</li>
-                  <li>A személyes adatok változásának bejelentése</li>
-                  <li>A szerződésben vállalt kötelezettségek teljesítése (díjfizetés, hiteltörlesztés)</li>
+                  <li>Secure storage of payment instruments (cards, passwords, biometric identifiers)</li>
+                  <li>Immediate notification of loss or unauthorized use of payment instruments</li>
+                  <li>Regular review of account statements and prompt reporting of errors</li>
+                  <li>Notification of changes to personal data</li>
+                  <li>Fulfillment of contractual obligations (fee payment, loan repayment)</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>6.4.</strong> Jogosulatlan vagy hibás fizetési műveletek:
+                  <strong>6.4.</strong> Unauthorized or Incorrect Payment Transactions:
                 </p>
                 <p className="text-muted-foreground mb-3 ml-4">
-                  Jogosulatlan fizetési művelet esetén a Szolgáltató haladéktalanul visszatéríti az Ügyfélnek a jogosulatlan művelet összegét, 
-                  kivéve, ha alapos oka van feltételezni, hogy az Ügyfél csalárd módon járt el. Az Ügyfél köteles a jogosulatlan műveletet 
-                  annak tudomására jutásától számított 13 hónapon belül bejelenteni. Hibás végrehajtás esetén a Szolgáltató köteles a műveletet 
-                  helyesbíteni vagy a díjat visszatéríteni.
+                  In case of unauthorized payment transactions, the Service Provider shall immediately refund the amount to the Customer, 
+                  unless there are reasonable grounds to suspect fraudulent conduct by the Customer. The Customer must report unauthorized 
+                  transactions within 13 months of becoming aware. In case of incorrect execution, the Service Provider shall rectify 
+                  the transaction or refund the fees.
                 </p>
               </section>
 
-              {/* 7. PANASZKEZELÉS */}
+              {/* 7. COMPLAINTS */}
               <section>
-                <h3 className="text-lg font-semibold mb-3">7. PANASZKEZELÉS ÉS JOGVITÁK RENDEZÉSE</h3>
+                <h3 className="text-lg font-semibold mb-3">7. COMPLAINTS HANDLING AND DISPUTE RESOLUTION</h3>
                 
                 <p className="text-muted-foreground mb-3">
-                  <strong>7.1.</strong> Panaszbejelentés módjai:
+                  <strong>7.1.</strong> Methods of submitting complaints:
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-muted-foreground mb-4">
-                  <li>Személyesen a Szolgáltató bármely fiókjában</li>
-                  <li>Telefonon az ügyfélszolgálaton: +36 1 234 5678</li>
-                  <li>E-mailben: panasz@threemailbank.com</li>
-                  <li>Postai úton: 1051 Budapest, Szabadság tér 7.</li>
-                  <li>Internetes bankon vagy mobilalkalmazáson keresztül</li>
+                  <li>In person at any Service Provider branch</li>
+                  <li>By telephone: +356 2010 1234</li>
+                  <li>By email: complaints@threemail.fun</li>
+                  <li>By post: Level 3, Triq Dun Karm, Birkirkara BKR 9033, Malta</li>
+                  <li>Through internet banking or mobile application</li>
                 </ul>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>7.2.</strong> A Szolgáltató a panaszt haladéktalanul, de legkésőbb 30 napon belül kivizsgálja és írásban válaszol. 
-                  Összetett ügyekben a válaszadási határidő 60 napra hosszabbítható, amelyről a Szolgáltató tájékoztatja az Ügyfelet.
+                  <strong>7.2.</strong> The Service Provider shall investigate complaints promptly and respond in writing within 30 days. 
+                  In complex cases, the response period may be extended to 60 days, of which the Customer will be notified.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>7.3.</strong> Peren kívüli vitarendezés:
+                  <strong>7.3.</strong> Alternative Dispute Resolution:
                 </p>
                 <p className="text-muted-foreground mb-3 ml-4">
-                  Amennyiben az Ügyfél nem elégedett a Szolgáltató válaszával, jogosult a Magyar Nemzeti Bank Pénzügyi Fogyasztóvédelmi 
-                  Központjához (1013 Budapest, Krisztina krt. 39.) vagy a lakóhelye szerinti békéltető testülethez fordulni. Az Ügyfél 
-                  jogosult továbbá bírósághoz fordulni.
+                  If the Customer is not satisfied with the Service Provider's response, they may refer the matter to the Office of the 
+                  Arbiter for Financial Services (First Floor, St Calcedonius Square, Floriana FRN 1530, Malta) or initiate court proceedings.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>7.4.</strong> Hatáskörrel és illetékességgel rendelkező hatóságok:
+                  <strong>7.4.</strong> Competent Authorities:
                 </p>
                 <ul className="list-disc list-inside space-y-1 ml-4 text-muted-foreground mb-4">
-                  <li>Magyar Nemzeti Bank (felügyeleti hatóság)</li>
-                  <li>Nemzeti Adatvédelmi és Információszabadság Hatóság (adatvédelmi ügyek)</li>
-                  <li>Gazdasági Versenyhivatal (fogyasztóvédelmi ügyek)</li>
-                  <li>Pénzügyi Békéltető Testület</li>
+                  <li>Malta Financial Services Authority (MFSA) - regulatory authority</li>
+                  <li>Office of the Information and Data Protection Commissioner - data protection matters</li>
+                  <li>Malta Competition and Consumer Affairs Authority (MCCAA) - consumer protection</li>
+                  <li>Office of the Arbiter for Financial Services - financial disputes</li>
                 </ul>
               </section>
 
-              {/* 8. EGYÉB RENDELKEZÉSEK */}
+              {/* 8. MISCELLANEOUS */}
               <section>
-                <h3 className="text-lg font-semibold mb-3">8. EGYÉB RENDELKEZÉSEK</h3>
+                <h3 className="text-lg font-semibold mb-3">8. MISCELLANEOUS PROVISIONS</h3>
                 
                 <p className="text-muted-foreground mb-3">
-                  <strong>8.1.</strong> Irányadó jog: Jelen ÁSZF-re és a Szolgáltató és az Ügyfél közötti jogviszonyra a magyar jog az irányadó.
+                  <strong>8.1.</strong> Governing Law: These Terms and the relationship between the Service Provider and the Customer 
+                  are governed by the laws of Malta.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>8.2.</strong> Joghatóság: A Felek közötti jogvitákban a Szolgáltató székhelye szerinti bíróság rendelkezik kizárólagos illetékességgel, 
-                  kivéve, ha a jogszabály eltérően rendelkezik.
+                  <strong>8.2.</strong> Jurisdiction: Disputes between the Parties shall be subject to the exclusive jurisdiction of 
+                  the Maltese courts, unless otherwise provided by law.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>8.3.</strong> Kapcsolattartás nyelve: A Szolgáltató és az Ügyfél közötti kapcsolattartás nyelve a magyar. Külföldi ügyfelek 
-                  esetében angol nyelvű kommunikáció is lehetséges.
+                  <strong>8.3.</strong> Language of Communication: The language of communication between the Service Provider and the Customer 
+                  is English. Other languages may be available upon request.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>8.4.</strong> Értesítések: A Szolgáltató az Ügyfelet a szerződéssel kapcsolatos lényeges információkról, változásokról 
-                  az Ügyfél által megadott elérhetőségeken (e-mail, SMS, levél, mobilalkalmazás) értesíti. Az Ügyfél köteles a Szolgáltatót 
-                  haladéktalanul tájékoztatni az elérhetőségeinek változásáról.
+                  <strong>8.4.</strong> Notifications: The Service Provider shall notify the Customer of important information and changes 
+                  through the contact details provided (email, SMS, post, mobile app). The Customer must promptly notify the Service Provider 
+                  of any changes to contact details.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>8.5.</strong> Banktitok: A Szolgáltató köteles megőrizni az Ügyfél üzleti titkait és a banktitkot. A banktitok 
-                  megsértése büntetőjogi és polgári jogi következményekkel jár. A banktitok alól kivételt képeznek a jogszabályban meghatározott 
-                  esetek (pl. bűnüldözési célú adatkérés, adóhatósági megkeresés).
+                  <strong>8.5.</strong> Banking Secrecy: The Service Provider is obliged to maintain the Customer's business secrets and 
+                  banking confidentiality. Breach of banking secrecy may result in criminal and civil liability. Exceptions to banking 
+                  secrecy include cases specified by law (e.g., law enforcement requests, tax authority inquiries).
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  <strong>8.6.</strong> Vis maior: A Szolgáltató nem felel olyan károkért, amelyek elháríthatatlan külső ok (vis maior) 
-                  következményeként merültek fel, ideértve a természeti katasztrófákat, háborút, terrorista cselekményeket, sztrájkot, 
-                  kormányzati intézkedéseket, valamint az informatikai rendszerek működését érintő külső támadásokat.
+                  <strong>8.6.</strong> Force Majeure: The Service Provider shall not be liable for damages resulting from force majeure, 
+                  including natural disasters, war, terrorist acts, strikes, government actions, and external attacks on IT systems.
                 </p>
               </section>
 
-              {/* ZÁRÓ RENDELKEZÉSEK */}
+              {/* FINAL PROVISIONS */}
               <section className="border-t pt-6">
-                <h3 className="text-lg font-semibold mb-3">ZÁRÓ RENDELKEZÉSEK</h3>
+                <h3 className="text-lg font-semibold mb-3">FINAL PROVISIONS</h3>
                 
                 <p className="text-muted-foreground mb-3">
-                  Jelen Általános Szerződési Feltételek 2026. március 20. napján lépnek hatályba és visszavonásig érvényesek. 
-                  A Szolgáltató fenntartja a jogot az ÁSZF egyoldalú módosítására a fent meghatározott feltételek szerint.
+                  These General Terms and Conditions enter into force on March 20, 2026, and remain valid until revoked. 
+                  The Service Provider reserves the right to unilaterally amend these Terms subject to the conditions specified above.
                 </p>
 
                 <p className="text-muted-foreground mb-3">
-                  A Szolgáltató kötelezettséget vállal arra, hogy szolgáltatásait a hatályos jogszabályoknak és szakmai szabályoknak 
-                  megfelelően, az ügyfelek érdekeinek szem előtt tartásával nyújtja.
+                  The Service Provider undertakes to provide its services in accordance with applicable laws and professional standards, 
+                  taking into account the interests of its customers.
                 </p>
 
                 <div className="bg-muted/50 p-4 rounded-lg mt-4">
                   <p className="text-xs text-muted-foreground text-center">
-                    <strong>ThreeMail Bank Zrt.</strong><br />
-                    Székhely: 1051 Budapest, Szabadság tér 7.<br />
-                    Cégjegyzékszám: 01-10-041234 | Adószám: 10412345-2-41<br />
-                    MNB engedély száma: H-EN-I-1234/2020<br />
-                    Ügyfélszolgálat: +36 1 234 5678 | support@threemailbank.com<br />
+                    <strong>ThreeMail Financial Services Limited</strong><br />
+                    Registered Office: Level 3, Triq Dun Karm, Birkirkara BKR 9033, Malta<br />
+                    Company Registration: C 98765 | VAT Number: MT 12345678<br />
+                    MFSA License Number: IS/12345<br />
+                    Customer Service: +356 2010 1234 | support@threemail.fun<br />
+                    Website: www.threemail.fun<br />
                     <br />
-                    © 2026 ThreeMail Bank Zrt. Minden jog fenntartva.
+                    © 2026 ThreeMail Financial Services Limited. All rights reserved.
                   </p>
                 </div>
               </section>
