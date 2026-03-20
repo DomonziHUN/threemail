@@ -202,7 +202,7 @@ export function TransferCalculator() {
         {/* CSERE INPUTOK */}
         <div className="relative">
           {/* FELSZŐ (Küldött) DOBOZ */}
-          <div className="relative bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm z-10 focus-within:ring-2 focus-within:ring-[#A1E678] transition-all border border-border/50">
+          <div className="relative bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm focus-within:ring-2 focus-within:ring-[#A1E678] transition-all border border-border/50">
             <input
               type="number"
               value={sendAmount}
@@ -221,7 +221,7 @@ export function TransferCalculator() {
           </div>
 
           {/* SWAP GOMB (Pozícionálva a két doboz közé) */}
-          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-20">
+          <div className="absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10">
             <button 
               onClick={handleSwapCurrencies}
               className="w-10 h-10 bg-card border-4 border-background rounded-full flex items-center justify-center shadow-sm hover:scale-105 transition-transform"
@@ -231,7 +231,7 @@ export function TransferCalculator() {
           </div>
 
           {/* ALSÓ (Érkező) DOBOZ */}
-          <div className="relative bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm mt-3 z-10 focus-within:ring-2 focus-within:ring-[#A1E678] transition-all border border-border/50">
+          <div className="relative bg-background rounded-[1.25rem] p-3 flex items-center justify-between shadow-sm mt-3 focus-within:ring-2 focus-within:ring-[#A1E678] transition-all border border-border/50">
             <input
               type="text"
               readOnly
