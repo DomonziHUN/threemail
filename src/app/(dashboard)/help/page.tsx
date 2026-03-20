@@ -3,7 +3,6 @@ import { requireAuth } from "@/lib/auth-guard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Mail, MessageCircle, Shield, Info, BookOpen } from "lucide-react";
-import { LiveChat } from "@/components/help/live-chat";
 
 const faqItems = [
   {
@@ -43,7 +42,7 @@ export default async function HelpPage() {
         <CardHeader>
           <CardTitle>Kapcsolatfelvétel</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4">
+        <CardContent className="space-y-4">
           <div className="flex items-center gap-4">
             <div className="rounded-2xl bg-primary/10 p-3 text-primary">
               <Mail className="h-5 w-5" />
@@ -56,17 +55,29 @@ export default async function HelpPage() {
               <Link href="mailto:support@threemail.hu">Írok</Link>
             </Button>
           </div>
-          <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="rounded-full bg-primary/20 p-2 text-primary">
+          <div className="flex flex-col gap-3 rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-emerald-100/40 p-5">
+            <div className="flex items-center gap-3">
+              <div className="rounded-full bg-white p-3 text-primary shadow">
                 <MessageCircle className="h-5 w-5" />
               </div>
               <div>
                 <p className="font-semibold">Live chat támogatás</p>
-                <p className="text-sm text-muted-foreground">Azonnali segítség 8:00 - 22:00 között</p>
+                <p className="text-sm text-muted-foreground">
+                  Válaszd ki a témát, és azonnal kapcsolunk egy ügyintézőt.
+                </p>
               </div>
             </div>
-            <LiveChat />
+            <div className="flex flex-wrap gap-2 text-xs">
+              <span className="rounded-full bg-white/70 px-3 py-1 font-medium text-primary">Személyes adatok</span>
+              <span className="rounded-full bg-white/70 px-3 py-1 font-medium text-primary">Tranzakciók</span>
+              <span className="rounded-full bg-white/70 px-3 py-1 font-medium text-primary">Meghívások</span>
+              <span className="rounded-full bg-white/70 px-3 py-1 font-medium text-primary">Átváltás</span>
+            </div>
+            <div>
+              <Button asChild className="w-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90">
+                <Link href="/chat">Élő chat indítása</Link>
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
