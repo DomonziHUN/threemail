@@ -30,7 +30,19 @@ export function LoginForm() {
   const onSubmit = handleSubmit((values) => {
     setFormError(null);
     startTransition(async () => {
-      // First check if user has biometric enabled
+      // First, validate password with credentials
+      const passwordCheckResult = await signIn("credentials", {
+        redirect: false,
+        email: values.email,
+        password: values.password,
+      });
+
+      if (passwordCheckResult?.error) {
+        setFormError("Hibás e-mail vagy jelszó");
+        return;
+      }
+
+      // Password is correct, now check if user has biometric enabled
       const biometricCheckRes = await fetch("/api/user/biometric-status", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -44,7 +56,7 @@ export function LoginForm() {
         try {
           // Check browser support
           if (!window.PublicKeyCredential) {
-            setFormError("A böngésző nem támogatja a biometrikus hitelesítést");
+            setFormError("A böngésző nem támogatja a biometrikus hitelesítést. Kérlek, használj másik böngészőt vagy eszközt.");
             return;
           }
 
@@ -80,41 +92,19 @@ export function LoginForm() {
             return;
           }
 
-          // Biometric verified, now sign in
-          const result = await signIn("credentials", {
-            redirect: false,
-            email: values.email,
-            password: values.password,
-          });
-
-          if (result?.error) {
-            setFormError("Hibás e-mail vagy jelszó");
-            return;
-          }
-
+          // Biometric verified, allow login
           router.push("/dashboard");
           router.refresh();
         } catch (error: any) {
           console.error("Biometric authentication error:", error);
           if (error.name === "NotAllowedError") {
-            setFormError("Biometrikus hitelesítés megszakítva");
+            setFormError("Biometrikus hitelesítés megszakítva. A bejelentkezéshez szükséges az ujjlenyomat/Face ID.");
           } else {
             setFormError("Hiba a biometrikus hitelesítés során");
           }
         }
       } else {
-        // No biometric, normal login
-        const result = await signIn("credentials", {
-          redirect: false,
-          email: values.email,
-          password: values.password,
-        });
-
-        if (result?.error) {
-          setFormError("Hibás e-mail vagy jelszó");
-          return;
-        }
-
+        // No biometric, allow normal login (password already validated)
         router.push("/dashboard");
         router.refresh();
       }
