@@ -40,6 +40,8 @@ model User {
   referralEntries  Referral[] @relation("ReferralReferrer")
   referredEntries  Referral[] @relation("ReferralReferred")
   notifications    Notification[]
+  securitySettings SecuritySettings?
+  sessions         UserSession[]
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 }
@@ -114,4 +116,34 @@ model Notification {
   category  String   @default("INFO")
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
+}
+
+model SecuritySettings {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  twoFactorEnabled     Boolean  @default(false)
+  twoFactorSecret      String?
+  biometricEnabled     Boolean  @default(false)
+  emailNotifications   Boolean  @default(true)
+  smsNotifications     Boolean  @default(true)
+  loginAlerts          Boolean  @default(true)
+  transactionAlerts    Boolean  @default(true)
+  marketingEmails      Boolean  @default(false)
+  dataSharing          Boolean  @default(false)
+  activityTracking     Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+}
+
+model UserSession {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device       String
+  location     String
+  ipAddress    String
+  userAgent    String
+  lastActive   DateTime @default(now())
+  createdAt    DateTime @default(now())
 }

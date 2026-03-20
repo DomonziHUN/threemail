@@ -95,7 +95,9 @@ export function ProfileMenu({ isOpen, onClose, user }: ProfileMenuProps) {
             <MenuItem 
               icon={<ShieldCheck />} 
               title="Biztonság és adatvédelem" 
-              subtitle="Módosítsd a biztonsági és adatvédelmi beállításaidat" 
+              subtitle="Módosítsd a biztonsági és adatvédelmi beállításaidat"
+              href="/security"
+              onClick={onClose}
             />
             <MenuItem 
               icon={<Bell />} 
