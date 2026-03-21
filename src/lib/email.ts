@@ -27,55 +27,179 @@ export async function sendVerificationEmail(email: string, token: string) {
   const mailOptions = {
     from: process.env.SMTP_FROM,
     to: email,
-    subject: "Erősítsd meg az email címed - ThreeMail",
+    subject: "Email cím megerősítése - ThreeMail",
     html: `
       <!DOCTYPE html>
       <html>
         <head>
           <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <style>
-            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-            .button { display: inline-block; padding: 12px 30px; background: #667eea; color: white; text-decoration: none; border-radius: 5px; margin: 20px 0; }
-            .footer { text-align: center; margin-top: 20px; color: #666; font-size: 12px; }
+            body { 
+              margin: 0; 
+              padding: 0; 
+              font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+              background-color: #f5f5f5;
+            }
+            .container { 
+              max-width: 600px; 
+              margin: 40px auto; 
+              background: white;
+              border-radius: 8px;
+              overflow: hidden;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            .header { 
+              background: linear-gradient(135deg, #10b981 0%, #059669 100%); 
+              padding: 40px 30px;
+              text-align: center;
+            }
+            .logo {
+              color: white;
+              font-size: 28px;
+              font-weight: 700;
+              letter-spacing: -0.5px;
+              margin: 0;
+            }
+            .content { 
+              padding: 40px 30px;
+              color: #1a1a1a;
+              line-height: 1.6;
+            }
+            .greeting {
+              font-size: 18px;
+              font-weight: 600;
+              margin-bottom: 20px;
+              color: #0a0a0a;
+            }
+            .text {
+              font-size: 15px;
+              color: #2a2a2a;
+              margin-bottom: 16px;
+            }
+            .button-container {
+              text-align: center;
+              margin: 35px 0;
+            }
+            .button { 
+              display: inline-block; 
+              padding: 14px 40px; 
+              background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+              color: white;
+              text-decoration: none; 
+              border-radius: 6px;
+              font-weight: 600;
+              font-size: 15px;
+              transition: transform 0.2s;
+            }
+            .button:hover {
+              transform: translateY(-1px);
+            }
+            .link-section {
+              background: #f9fafb;
+              padding: 20px;
+              border-radius: 6px;
+              margin: 25px 0;
+              border: 1px solid #e5e7eb;
+            }
+            .link-label {
+              font-size: 13px;
+              color: #4b5563;
+              margin-bottom: 8px;
+            }
+            .link-url {
+              word-break: break-all;
+              color: #10b981;
+              font-size: 13px;
+              font-family: monospace;
+            }
+            .security-note {
+              background: #f0fdf4;
+              border-left: 4px solid #10b981;
+              padding: 15px;
+              margin: 25px 0;
+              font-size: 14px;
+              color: #166534;
+            }
+            .footer { 
+              background: #1a1a1a;
+              padding: 30px;
+              text-align: center;
+              border-top: 1px solid #2a2a2a;
+            }
+            .footer-text {
+              color: #9ca3af;
+              font-size: 13px;
+              margin: 5px 0;
+            }
+            .footer-link {
+              color: #10b981;
+              text-decoration: none;
+            }
           </style>
         </head>
         <body>
           <div class="container">
             <div class="header">
-              <h1>🎉 Üdvözlünk a ThreeMail-nél!</h1>
+              <h1 class="logo">ThreeMail</h1>
             </div>
             <div class="content">
-              <p>Szia!</p>
-              <p>Köszönjük, hogy regisztráltál a ThreeMail-nél. Kérjük, erősítsd meg az email címedet az alábbi gombra kattintva:</p>
-              <div style="text-align: center;">
+              <div class="greeting">Tisztelt Ügyfelünk!</div>
+              
+              <p class="text">
+                Köszönjük, hogy a ThreeMail digitális banki szolgáltatását választotta. 
+                A regisztráció befejezéséhez kérjük, erősítse meg email címét.
+              </p>
+
+              <div class="button-container">
                 <a href="${verificationUrl}" class="button">Email cím megerősítése</a>
               </div>
-              <p>Vagy másold be ezt a linket a böngésződbe:</p>
-              <p style="word-break: break-all; color: #667eea;">${verificationUrl}</p>
-              <p>Ha nem te regisztráltál, kérjük, hagyd figyelmen kívül ezt az emailt.</p>
-              <p>Üdvözlettel,<br>A ThreeMail csapata</p>
+
+              <div class="link-section">
+                <div class="link-label">Vagy másolja be az alábbi linket a böngészőjébe:</div>
+                <div class="link-url">${verificationUrl}</div>
+              </div>
+
+              <div class="security-note">
+                <strong>Biztonsági tájékoztatás:</strong> Ha Ön nem regisztrált a ThreeMail szolgáltatásra, 
+                kérjük, hagyja figyelmen kívül ezt az emailt. Fiókja biztonságban van.
+              </div>
+
+              <p class="text" style="margin-top: 30px;">
+                Tisztelettel,<br>
+                <strong>ThreeMail Ügyfélszolgálat</strong>
+              </p>
             </div>
             <div class="footer">
-              <p>&copy; ${new Date().getFullYear()} ThreeMail. Minden jog fenntartva.</p>
+              <p class="footer-text">&copy; ${new Date().getFullYear()} ThreeMail. Minden jog fenntartva.</p>
+              <p class="footer-text">
+                <a href="${process.env.NEXTAUTH_URL}" class="footer-link">threemail.fun</a>
+              </p>
             </div>
           </div>
         </body>
       </html>
     `,
     text: `
-Üdvözlünk a ThreeMail-nél!
+ThreeMail - Email cím megerősítése
 
-Köszönjük, hogy regisztráltál. Kérjük, erősítsd meg az email címedet az alábbi linkre kattintva:
+Tisztelt Ügyfelünk!
+
+Köszönjük, hogy a ThreeMail digitális banki szolgáltatását választotta. 
+A regisztráció befejezéséhez kérjük, erősítse meg email címét az alábbi linken:
 
 ${verificationUrl}
 
-Ha nem te regisztráltál, kérjük, hagyd figyelmen kívül ezt az emailt.
+BIZTONSÁGI TÁJÉKOZTATÁS:
+Ha Ön nem regisztrált a ThreeMail szolgáltatásra, kérjük, hagyja figyelmen kívül ezt az emailt. 
+Fiókja biztonságban van.
 
-Üdvözlettel,
-A ThreeMail csapata
+Tisztelettel,
+ThreeMail Ügyfélszolgálat
+
+---
+© ${new Date().getFullYear()} ThreeMail. Minden jog fenntartva.
+threemail.fun
     `,
   };
 
