@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Bell, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { avatarInitials } from "@/lib/utils";
@@ -15,6 +16,11 @@ interface HeaderProps {
 export function Header({ user, referralBonus = 0 }: HeaderProps) {
   const [showNotifications, setShowNotifications] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setIsProfileOpen(false);
+  }, [pathname]);
   const initials = avatarInitials(user?.fullName || "User");
 
   return (
