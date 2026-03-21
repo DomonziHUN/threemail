@@ -19,10 +19,20 @@ export default function ReferralsPage() {
   const fetchReferrals = async () => {
     try {
       const res = await fetch("/api/referrals");
+      if (!res.ok) {
+        throw new Error("Failed to fetch referrals");
+      }
       const result = await res.json();
       setData(result);
     } catch (error) {
+      console.error("Referrals fetch error:", error);
       toast.error("Hiba a meghívók betöltésekor");
+      setData({
+        referralCode: "",
+        inviteUrl: "",
+        stats: { total: 0, active: 0, bonus: 0 },
+        referrals: []
+      });
     }
   };
 
@@ -174,15 +184,15 @@ export default function ReferralsPage() {
       </Card>
 
       <div className="space-y-3">
-        <CopyField label="Meghívókód" value={data.referralCode} />
-        <CopyField label="Meghívó link" value={data.inviteUrl} />
+        <CopyField label="Meghívókód" value={data?.referralCode || ""} />
+        <CopyField label="Meghívó link" value={data?.inviteUrl || ""} />
       </div>
 
       <div className="grid grid-cols-3 gap-3">
         <Card>
           <CardHeader className="pb-3">
             <Users2 className="h-5 w-5 text-muted-foreground mb-2" />
-            <CardTitle className="text-2xl font-bold">{data.stats.total}/10</CardTitle>
+            <CardTitle className="text-2xl font-bold">{data?.stats?.total || 0}/10</CardTitle>
           </CardHeader>
           <CardContent className="pb-4">
             <p className="text-xs text-muted-foreground">Összes meghívott</p>
@@ -191,7 +201,7 @@ export default function ReferralsPage() {
         <Card>
           <CardHeader className="pb-3">
             <UserCheck className="h-5 w-5 text-primary mb-2" />
-            <CardTitle className="text-2xl font-bold">{data.stats.active}</CardTitle>
+            <CardTitle className="text-2xl font-bold">{data?.stats?.active || 0}</CardTitle>
           </CardHeader>
           <CardContent className="pb-4">
             <p className="text-xs text-muted-foreground">Aktív</p>
@@ -201,7 +211,7 @@ export default function ReferralsPage() {
           <CardHeader className="pb-3">
             <Gift className="h-5 w-5 text-primary mb-2" />
             <CardTitle className="text-2xl font-bold">
-              {data.stats.bonus.toLocaleString('hu-HU')}
+              {(data?.stats?.bonus || 0).toLocaleString('hu-HU')}
             </CardTitle>
           </CardHeader>
           <CardContent className="pb-4">
@@ -210,7 +220,7 @@ export default function ReferralsPage() {
         </Card>
       </div>
 
-      {data.referrals.length > 0 && (
+      {data?.referrals && data.referrals.length > 0 && (
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">Meghívottak</h2>
           <div className="divide-y divide-border rounded-2xl border border-border bg-card">
