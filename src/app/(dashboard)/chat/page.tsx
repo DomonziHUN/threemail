@@ -3,7 +3,7 @@ import { ChatInterface } from "@/components/chat/chat-interface";
 import { chatTopics } from "@/lib/chat-topics";
 
 export const metadata = {
-  title: "Live Chat | ThreeMail Bank",
+  title: "Live Chat | Threemail",
 };
 
 export default async function ChatPage() {

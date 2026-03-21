@@ -7,7 +7,7 @@ import { TransactionList } from "@/components/dashboard/transaction-list";
 import { TransferCalculator } from "@/components/dashboard/transfer-calculator";
 
 export const metadata = {
-  title: "Dashboard | ThreeMail Bank",
+  title: "Dashboard | Threemail",
 };
 
 export default async function DashboardPage() {

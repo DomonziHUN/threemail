@@ -2,7 +2,7 @@ import { requireAuth } from "@/lib/auth-guard";
 import { NotificationList } from "@/components/notifications/notification-list";
 
 export const metadata = {
-  title: "Beérkezett üzenetek | ThreeMail Bank",
+  title: "Beérkezett üzenetek | Threemail",
 };
 
 export default async function InboxPage() {

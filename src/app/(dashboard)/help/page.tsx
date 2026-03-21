@@ -23,7 +23,7 @@ const faqItems = [
 ];
 
 export const metadata = {
-  title: "Segítség | ThreeMail Bank",
+  title: "Segítség | Threemail",
 };
 
 export default async function HelpPage() {

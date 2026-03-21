@@ -5,7 +5,7 @@ import { BANK_ACCOUNT_NUMBER, BANK_BENEFICIARY_NAME } from "@/lib/constants";
 import { AlertCircle } from "lucide-react";
 
 export const metadata = {
-  title: "Pénz hozzáadása | ThreeMail Bank",
+  title: "Pénz hozzáadása | Threemail",
 };
 
 export default async function AddMoneyPage() {

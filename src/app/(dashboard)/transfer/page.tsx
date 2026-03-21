@@ -2,7 +2,7 @@ import { requireAuth } from "@/lib/auth-guard";
 import { TransferFlow } from "@/components/transfer/transfer-flow";
 
 export const metadata = {
-  title: "Utalás | ThreeMail Bank",
+  title: "Utalás | Threemail",
 };
 
 export default async function TransferPage() {

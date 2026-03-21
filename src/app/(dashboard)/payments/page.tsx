@@ -1,7 +1,7 @@
 import { Clock } from "lucide-react";
 
 export const metadata = {
-  title: "Fizetések | ThreeMail Bank",
+  title: "Fizetések | Threemail",
 };
 
 export default function PaymentsPage() {

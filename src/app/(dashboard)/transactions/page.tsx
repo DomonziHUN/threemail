@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { TransactionItem } from "@/components/dashboard/transaction-item";
 
 export const metadata = {
-  title: "Tranzakciók | ThreeMail Bank",
+  title: "Tranzakciók | Threemail",
 };
 
 export default async function TransactionsPage() {

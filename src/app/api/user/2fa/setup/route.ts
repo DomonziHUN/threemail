@@ -22,8 +22,8 @@ export async function POST(req: NextRequest) {
     }
 
     const secret = speakeasy.generateSecret({
-      name: `ThreeMail (${user.email})`,
-      issuer: "ThreeMail Bank",
+      name: `Threemail (${user.email})`,
+      issuer: "Threemail",
     });
 
     let settings = user.securitySettings;

@@ -235,9 +235,12 @@ export async function PUT(
       // ─── Referral Operations ───
       case "createReferral": {
         const { referredEmail, fakeName, bonusAmount: newBonusAmount, status: newRefStatus, completedAt } = body;
+        console.log("createReferral - completedAt received:", completedAt);
 
         // If fakeName is provided, create a fake referral entry (no real user needed)
         if (fakeName) {
+          const parsedDate = completedAt ? new Date(completedAt) : null;
+          console.log("createReferral - parsed date:", parsedDate);
           const referral = await prisma.referral.create({
             data: {
               referrerId: id,
@@ -245,7 +248,7 @@ export async function PUT(
               fakeEmail: referredEmail || null,
               bonusAmount: Number(newBonusAmount) || 0,
               status: newRefStatus || "REGISTERED",
-              completedAt: completedAt ? new Date(completedAt) : null,
+              completedAt: parsedDate,
             },
           });
           return NextResponse.json({ success: true, referral });

@@ -20,7 +20,7 @@ const notoEmoji = Noto_Color_Emoji({
 });
 
 export const metadata: Metadata = {
-  title: "ThreeMail Bank",
+  title: "Threemail",
   description:
     "Digitális banki alkalmazás regisztrációval, egyenleggel és virtuális kártyákkal",
   metadataBase: new URL("https://threemail.fun"),

@@ -4,7 +4,7 @@ import { KycStepper } from "@/components/kyc/kyc-stepper";
 import { ShieldCheck, Clock, XCircle } from "lucide-react";
 
 export const metadata = {
-  title: "Hitelesítés (KYC) | ThreeMail Bank",
+  title: "Hitelesítés (KYC) | Threemail",
 };
 
 export default async function KycPage() {

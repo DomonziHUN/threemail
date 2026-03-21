@@ -9,7 +9,7 @@ import { Download } from "lucide-react";
 import { TransactionItem } from "@/components/dashboard/transaction-item";
 
 export const metadata = {
-  title: "Kivonatok és kimutatások | ThreeMail Bank",
+  title: "Kivonatok és kimutatások | Threemail",
 };
 
 export default async function StatementsPage() {

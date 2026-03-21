@@ -3,7 +3,7 @@ import { ServerPanel } from "@/components/admin/server-panel";
 import { UsersTable } from "@/components/admin/users-table";
 
 export const metadata = {
-  title: "Admin Vezérlőpult | ThreeMail Bank",
+  title: "Admin Vezérlőpult | Threemail",
 };
 
 export default async function AdminPage() {
