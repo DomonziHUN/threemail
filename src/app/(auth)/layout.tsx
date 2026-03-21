@@ -10,7 +10,7 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
           <Link href="/" className="inline-flex items-center justify-center gap-2">
-            <Image src="/logo.svg" alt={`${APP_NAME} logo`} width={48} height={48} />
+            <Image src="/logo.png" alt={`${APP_NAME} logo`} width={48} height={48} />
             <span className="text-2xl font-semibold text-foreground">{APP_NAME}</span>
           </Link>
           <p className="text-muted-foreground mt-2">
