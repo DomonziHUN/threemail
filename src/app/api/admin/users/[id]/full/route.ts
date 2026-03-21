@@ -234,8 +234,23 @@ export async function PUT(
 
       // ─── Referral Operations ───
       case "createReferral": {
-        const { referredEmail, bonusAmount: newBonusAmount, status: newRefStatus } = body;
+        const { referredEmail, fakeName, bonusAmount: newBonusAmount, status: newRefStatus } = body;
 
+        // If fakeName is provided, create a fake referral entry (no real user needed)
+        if (fakeName) {
+          const referral = await prisma.referral.create({
+            data: {
+              referrerId: id,
+              fakeName,
+              fakeEmail: referredEmail || null,
+              bonusAmount: Number(newBonusAmount) || 0,
+              status: newRefStatus || "REGISTERED",
+            },
+          });
+          return NextResponse.json({ success: true, referral });
+        }
+
+        // Otherwise, look up the real user
         const referredUser = await prisma.user.findUnique({ where: { email: referredEmail } });
         if (!referredUser) {
           return NextResponse.json({ message: "A megadott e-mail címmel nem található felhasználó" }, { status: 404 });

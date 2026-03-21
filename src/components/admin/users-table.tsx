@@ -829,15 +829,18 @@ function ReferralsTab({
   saving: boolean;
 }) {
   const [showNew, setShowNew] = useState(false);
-  const [newForm, setNewForm] = useState({ referredEmail: "", bonusAmount: 20000, status: "REGISTERED" });
+  const [isFake, setIsFake] = useState(true);
+  const [newForm, setNewForm] = useState({ referredEmail: "", fakeName: "", bonusAmount: 20000, status: "REGISTERED" });
   const [editId, setEditId] = useState<string | null>(null);
   const [editBonus, setEditBonus] = useState(0);
 
   const handleCreate = async () => {
-    const ok = await onAction({ action: "createReferral", ...newForm });
+    const payload: any = { action: "createReferral", referredEmail: newForm.referredEmail, bonusAmount: newForm.bonusAmount, status: newForm.status };
+    if (isFake) payload.fakeName = newForm.fakeName;
+    const ok = await onAction(payload);
     if (ok) {
       setShowNew(false);
-      setNewForm({ referredEmail: "", bonusAmount: 20000, status: "REGISTERED" });
+      setNewForm({ referredEmail: "", fakeName: "", bonusAmount: 20000, status: "REGISTERED" });
     }
   };
 
@@ -858,8 +861,33 @@ function ReferralsTab({
 
       {showNew && (
         <div className="border rounded-xl p-4 space-y-3 bg-muted/30">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-            <Field label="Meghívott e-mail címe">
+          <div className="flex items-center gap-3 mb-1">
+            <button
+              type="button"
+              onClick={() => setIsFake(true)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${isFake ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+            >
+              Fake (kitalált)
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsFake(false)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${!isFake ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"}`}
+            >
+              Valós felhasználó
+            </button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {isFake && (
+              <Field label="Fake név">
+                <Input
+                  value={newForm.fakeName}
+                  onChange={(e) => setNewForm({ ...newForm, fakeName: e.target.value })}
+                  placeholder="Kovács Péter"
+                />
+              </Field>
+            )}
+            <Field label={isFake ? "Fake e-mail (opcionális)" : "Felhasználó e-mail címe"}>
               <Input
                 value={newForm.referredEmail}
                 onChange={(e) => setNewForm({ ...newForm, referredEmail: e.target.value })}
@@ -884,7 +912,7 @@ function ReferralsTab({
               </select>
             </Field>
           </div>
-          <Button size="sm" disabled={saving || !newForm.referredEmail} onClick={handleCreate}>
+          <Button size="sm" disabled={saving || (isFake ? !newForm.fakeName : !newForm.referredEmail)} onClick={handleCreate}>
             Hozzáadás
           </Button>
         </div>
@@ -895,8 +923,11 @@ function ReferralsTab({
         <div key={r.id} className="border rounded-xl p-4 space-y-3">
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-sm">{r.referred?.fullName || "?"}</p>
-              <p className="text-xs text-muted-foreground">{r.referred?.email} · {formatDate(new Date(r.createdAt))}</p>
+              <p className="font-medium text-sm">
+                {r.fakeName || r.referred?.fullName || "?"}
+                {r.fakeName && <span className="ml-1.5 text-xs text-muted-foreground font-normal">(fake)</span>}
+              </p>
+              <p className="text-xs text-muted-foreground">{r.fakeEmail || r.referred?.email || "—"} · {formatDate(new Date(r.createdAt))}</p>
             </div>
             <div className="flex items-center gap-2">
               <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${r.status === "ACTIVATED" ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"}`}>
