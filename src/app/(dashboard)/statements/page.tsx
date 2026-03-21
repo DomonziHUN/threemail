@@ -6,6 +6,7 @@ import { formatCurrency } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Download } from "lucide-react";
+import { TransactionItem } from "@/components/dashboard/transaction-item";
 
 export const metadata = {
   title: "Kivonatok és kimutatások | ThreeMail Bank",
@@ -67,23 +68,9 @@ export default async function StatementsPage() {
                 <Download className="h-4 w-4 mr-2" /> Kivonat
               </Button>
             </CardHeader>
-            <CardContent className="space-y-3">
+            <CardContent className="divide-y divide-border">
               {list.map((tx) => (
-                <div key={tx.id} className="flex items-center justify-between text-sm">
-                  <div>
-                    <p className="font-medium">{tx.description}</p>
-                    <p className="text-muted-foreground">
-                      {format(tx.createdAt, "yyyy.MM.dd HH:mm", { locale: hu })}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className={`font-semibold ${tx.type === "DEPOSIT" || tx.type === "TRANSFER_IN" ? "text-primary" : ""}`}>
-                      {tx.type === "DEPOSIT" || tx.type === "TRANSFER_IN" ? "+" : "-"}
-                      {formatCurrency(Math.abs(tx.amount))}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{tx.status}</p>
-                  </div>
-                </div>
+                <TransactionItem key={tx.id} transaction={tx} />
               ))}
             </CardContent>
           </Card>

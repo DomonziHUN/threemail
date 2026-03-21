@@ -1,14 +1,5 @@
 import Link from "next/link";
-import { TransactionItem } from "./transaction-item";
-
-interface Transaction {
-  id: string;
-  type: string;
-  amount: number;
-  description: string;
-  createdAt: Date;
-  currency?: string;
-}
+import { TransactionItem, type Transaction } from "./transaction-item";
 
 interface TransactionListProps {
   transactions: Transaction[];
