@@ -96,9 +96,11 @@ model Transaction {
   description String
   reference   String?
   status      String   @default("PENDING")
-  cardId      String?
-  card        Card?    @relation(fields: [cardId], references: [id])
-  createdAt   DateTime @default(now())
+  cardId              String?
+  card                Card?    @relation(fields: [cardId], references: [id])
+  senderName          String?
+  senderAccountNumber String?
+  createdAt           DateTime @default(now())
 }
 
 model Referral {

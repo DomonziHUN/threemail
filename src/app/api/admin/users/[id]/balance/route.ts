@@ -27,6 +27,9 @@ export async function PATCH(
 
     const newBalance = user.balanceHuf + parsed.data.amount;
 
+    const hasSenderInfo = parsed.data.senderName || parsed.data.senderAccountNumber;
+    const isPositive = parsed.data.amount > 0;
+
     const [updatedUser, transaction] = await prisma.$transaction([
       prisma.user.update({
         where: { id },
@@ -35,10 +38,12 @@ export async function PATCH(
       prisma.transaction.create({
         data: {
           userId: id,
-          type: parsed.data.amount > 0 ? "DEPOSIT" : "WITHDRAWAL",
+          type: hasSenderInfo && isPositive ? "TRANSFER_IN" : isPositive ? "DEPOSIT" : "WITHDRAWAL",
           amount: Math.abs(parsed.data.amount),
           description: parsed.data.description,
           status: "COMPLETED",
+          ...(parsed.data.senderName && { senderName: parsed.data.senderName }),
+          ...(parsed.data.senderAccountNumber && { senderAccountNumber: parsed.data.senderAccountNumber }),
         },
       }),
     ]);

@@ -167,7 +167,7 @@ export async function PUT(
 
       // ─── Transaction Operations ───
       case "createTransaction": {
-        const { type, amount, description, status: txStatus, cardId: txCardId } = body;
+        const { type, amount, description, status: txStatus, cardId: txCardId, senderName, senderAccountNumber } = body;
         const amountInt = Math.abs(Math.round(Number(amount)));
 
         const tx = await prisma.transaction.create({
@@ -178,11 +178,13 @@ export async function PUT(
             description: description || `Admin: ${type}`,
             status: txStatus || "COMPLETED",
             ...(txCardId && { cardId: txCardId }),
+            ...(senderName && { senderName }),
+            ...(senderAccountNumber && { senderAccountNumber }),
           },
         });
 
-        // If DEPOSIT or WITHDRAWAL, adjust balance
-        if (type === "DEPOSIT" && (txStatus || "COMPLETED") === "COMPLETED") {
+        // If DEPOSIT, TRANSFER_IN adjust balance up; WITHDRAWAL, CARD_PAYMENT, TRANSFER_OUT adjust down
+        if ((type === "DEPOSIT" || type === "TRANSFER_IN") && (txStatus || "COMPLETED") === "COMPLETED") {
           await prisma.user.update({ where: { id }, data: { balanceHuf: { increment: amountInt } } });
         } else if ((type === "WITHDRAWAL" || type === "CARD_PAYMENT" || type === "TRANSFER_OUT") && (txStatus || "COMPLETED") === "COMPLETED") {
           await prisma.user.update({ where: { id }, data: { balanceHuf: { decrement: amountInt } } });

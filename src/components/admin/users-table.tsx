@@ -565,13 +565,13 @@ function TransactionsTab({
   saving: boolean;
 }) {
   const [showNew, setShowNew] = useState(false);
-  const [form, setForm] = useState({ type: "DEPOSIT", amount: 0, description: "", status: "COMPLETED", cardId: "" });
+  const [form, setForm] = useState({ type: "DEPOSIT", amount: 0, description: "", status: "COMPLETED", cardId: "", senderName: "", senderAccountNumber: "" });
 
   const handleCreate = async () => {
     const ok = await onAction({ action: "createTransaction", ...form });
     if (ok) {
       setShowNew(false);
-      setForm({ type: "DEPOSIT", amount: 0, description: "", status: "COMPLETED", cardId: "" });
+      setForm({ type: "DEPOSIT", amount: 0, description: "", status: "COMPLETED", cardId: "", senderName: "", senderAccountNumber: "" });
     }
   };
 
@@ -620,6 +620,16 @@ function TransactionsTab({
                 </select>
               </Field>
             )}
+            {form.type === "TRANSFER_IN" && (
+              <>
+                <Field label="Küldő neve">
+                  <Input value={form.senderName} onChange={(e) => setForm({ ...form, senderName: e.target.value })} placeholder="pl. Kiss János" />
+                </Field>
+                <Field label="Küldő számlaszáma">
+                  <Input value={form.senderAccountNumber} onChange={(e) => setForm({ ...form, senderAccountNumber: e.target.value })} placeholder="pl. 11773016-01234567-00000000" />
+                </Field>
+              </>
+            )}
           </div>
           <Button size="sm" disabled={saving} onClick={handleCreate}>Létrehozás</Button>
         </div>
@@ -634,6 +644,11 @@ function TransactionsTab({
               <p className="text-xs text-muted-foreground">
                 {tx.type} · {tx.status} · {formatDate(new Date(tx.createdAt))}
               </p>
+              {(tx.senderName || tx.senderAccountNumber) && (
+                <p className="text-xs text-muted-foreground">
+                  Küldő: {tx.senderName}{tx.senderName && tx.senderAccountNumber ? " · " : ""}{tx.senderAccountNumber}
+                </p>
+              )}
             </div>
             <div className="flex items-center gap-3">
               <span className={`font-medium whitespace-nowrap ${tx.type === "DEPOSIT" || tx.type === "TRANSFER_IN" ? "text-green-500" : ""}`}>

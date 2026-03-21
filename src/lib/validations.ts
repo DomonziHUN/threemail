@@ -55,4 +55,6 @@ export const cardControlsSchema = z.object({
 export const adminBalanceUpdateSchema = z.object({
   amount: z.number().int(),
   description: z.string().min(3),
+  senderName: z.string().optional(),
+  senderAccountNumber: z.string().optional(),
 });
