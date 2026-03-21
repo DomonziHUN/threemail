@@ -113,7 +113,7 @@ export default function ReferralsPage() {
               </div>
             </div>
             
-            {welcomeData.status === "COMPLETED" && (
+            {welcomeData.status === "ACTIVATED" && (
               <div className="mt-5 p-3 bg-primary text-primary-foreground rounded-xl text-center text-sm font-bold shadow-lg animate-in fade-in zoom-in duration-500">
                 Gratulálunk! A 20.000 Ft bónusz jóváírásra került! 🎉
               </div>
