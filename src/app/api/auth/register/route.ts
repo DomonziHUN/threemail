@@ -102,11 +102,9 @@ export async function POST(request: Request) {
       });
     }
 
-    try {
-      await sendVerificationEmail(user.email, verificationToken);
-    } catch (emailError) {
+    sendVerificationEmail(user.email, verificationToken).catch((emailError) => {
       console.error("Email sending failed:", emailError);
-    }
+    });
 
     return NextResponse.json({ 
       success: true,
