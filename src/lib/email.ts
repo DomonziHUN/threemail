@@ -25,9 +25,15 @@ export async function sendVerificationEmail(email: string, token: string) {
   const verificationUrl = `${process.env.NEXTAUTH_URL}/verify-email?token=${token}`;
 
   const mailOptions = {
-    from: process.env.SMTP_FROM,
+    from: `ThreeMail <${process.env.SMTP_FROM}>`,
     to: email,
+    replyTo: process.env.SMTP_FROM,
     subject: "Email cím megerősítése - ThreeMail",
+    headers: {
+      'X-Mailer': 'ThreeMail Banking System',
+      'X-Priority': '1',
+      'Importance': 'high',
+    },
     html: `
       <!DOCTYPE html>
       <html>
