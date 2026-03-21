@@ -11,6 +11,7 @@ import { useTransition, useState } from "react";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { signIn } from "next-auth/react";
 
 export function RegisterForm() {
   const router = useRouter();
@@ -50,8 +51,21 @@ export function RegisterForm() {
           throw new Error(data.message ?? "Sikertelen regisztráció");
         }
 
-        toast.success("Sikeres regisztráció, bejelentkezhetsz!");
-        router.push("/login");
+        const data = await response.json();
+        
+        const signInResult = await signIn("credentials", {
+          email: values.email,
+          password: values.password,
+          redirect: false,
+        });
+
+        if (signInResult?.error) {
+          toast.success("Sikeres regisztráció! Megerősítő emailt küldtünk.");
+          router.push("/login");
+        } else {
+          toast.success("Sikeres regisztráció! Megerősítő emailt küldtünk a címedre.");
+          router.push("/dashboard");
+        }
       } catch (error) {
         setFormError((error as Error).message);
       }

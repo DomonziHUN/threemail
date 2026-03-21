@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { randomBytes } from "crypto";
 import { prisma } from "@/lib/prisma";
 import {
   generateReferralCode,
@@ -11,6 +12,7 @@ import {
 } from "@/lib/generate";
 import { registerSchema } from "@/lib/validations";
 import { encryptCardData } from "@/lib/crypto";
+import { sendVerificationEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   try {
@@ -52,6 +54,7 @@ export async function POST(request: Request) {
     }
 
     const passwordHash = await bcrypt.hash(data.password, 12);
+    const verificationToken = randomBytes(32).toString("hex");
 
     const [referralCode, paymentReference] = await Promise.all([
       generateReferralCode(),
@@ -73,6 +76,7 @@ export async function POST(request: Request) {
         referralCode,
         paymentReference,
         referredById: referredBy?.id,
+        emailVerificationToken: verificationToken,
       },
     });
 
@@ -98,7 +102,19 @@ export async function POST(request: Request) {
       });
     }
 
-    return NextResponse.json({ success: true });
+    try {
+      await sendVerificationEmail(user.email, verificationToken);
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError);
+    }
+
+    return NextResponse.json({ 
+      success: true,
+      user: {
+        email: user.email,
+        id: user.id,
+      }
+    });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ message: "Ismeretlen hiba" }, { status: 500 });

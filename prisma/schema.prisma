@@ -26,6 +26,9 @@ model User {
   city             String?
   street           String?
   zipCode          String?
+  emailVerified    Boolean   @default(false)
+  emailVerificationToken String?
+  addressLocked    Boolean   @default(false)
   balanceHuf       Int       @default(0)
   referralCode     String    @unique
   paymentReference String    @unique

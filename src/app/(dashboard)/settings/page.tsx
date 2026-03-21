@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { signOut } from "next-auth/react";
-import { LogOut, ShieldAlert } from "lucide-react";
+import { LogOut, ShieldAlert, CheckCircle2, AlertCircle, Mail } from "lucide-react";
 import Link from "next/link";
 
 export default function SettingsPage() {
@@ -141,7 +141,45 @@ export default function SettingsPage() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">E-mail cím</Label>
-              <Input id="email" value={profile?.email} disabled />
+              <div className="relative">
+                <Input id="email" value={profile?.email} disabled />
+                {profile?.emailVerified ? (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 text-green-600">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span className="text-xs font-medium">Megerősítve</span>
+                  </div>
+                ) : (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 text-orange-600">
+                    <AlertCircle className="h-4 w-4" />
+                    <span className="text-xs font-medium">Nincs megerősítve</span>
+                  </div>
+                )}
+              </div>
+              {!profile?.emailVerified && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="w-full mt-2"
+                  onClick={async () => {
+                    try {
+                      const res = await fetch("/api/auth/resend-verification", {
+                        method: "POST",
+                      });
+                      if (res.ok) {
+                        toast.success("Megerősítő email újraküldve!");
+                      } else {
+                        toast.error("Hiba történt az email küldése során");
+                      }
+                    } catch (error) {
+                      toast.error("Hiba történt");
+                    }
+                  }}
+                >
+                  <Mail className="h-4 w-4 mr-2" />
+                  Megerősítő email újraküldése
+                </Button>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Telefonszám</Label>
@@ -149,23 +187,58 @@ export default function SettingsPage() {
             </div>
 
             <div className="pt-4 mt-2 border-t">
-              <h3 className="font-semibold text-sm mb-3">Szállítási cím (Fizikai kártyához)</h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold text-sm">Szállítási cím (Fizikai kártyához)</h3>
+                {profile?.addressLocked && (
+                  <span className="text-xs text-muted-foreground flex items-center gap-1">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Lezárva
+                  </span>
+                )}
+              </div>
+              {profile?.addressLocked && (
+                <div className="bg-blue-50 border border-blue-200 rounded-md p-3 mb-4">
+                  <p className="text-xs text-blue-800">
+                    ℹ️ A lakcím adatok már nem módosíthatók biztonsági okokból.
+                  </p>
+                </div>
+              )}
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="country">Ország</Label>
-                  <Input id="country" {...profileForm.register("country")} />
+                  <Input 
+                    id="country" 
+                    {...profileForm.register("country")} 
+                    disabled={profile?.addressLocked}
+                    className={profile?.addressLocked ? "bg-muted cursor-not-allowed" : ""}
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="zipCode">Irányítószám</Label>
-                  <Input id="zipCode" {...profileForm.register("zipCode")} />
+                  <Input 
+                    id="zipCode" 
+                    {...profileForm.register("zipCode")} 
+                    disabled={profile?.addressLocked}
+                    className={profile?.addressLocked ? "bg-muted cursor-not-allowed" : ""}
+                  />
                 </div>
                 <div className="space-y-2 col-span-2">
                   <Label htmlFor="city">Város</Label>
-                  <Input id="city" {...profileForm.register("city")} />
+                  <Input 
+                    id="city" 
+                    {...profileForm.register("city")} 
+                    disabled={profile?.addressLocked}
+                    className={profile?.addressLocked ? "bg-muted cursor-not-allowed" : ""}
+                  />
                 </div>
                 <div className="space-y-2 col-span-2">
                   <Label htmlFor="street">Utca és házszám</Label>
-                  <Input id="street" {...profileForm.register("street")} />
+                  <Input 
+                    id="street" 
+                    {...profileForm.register("street")} 
+                    disabled={profile?.addressLocked}
+                    className={profile?.addressLocked ? "bg-muted cursor-not-allowed" : ""}
+                  />
                 </div>
               </div>
             </div>
