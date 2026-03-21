@@ -6,7 +6,7 @@ export const metadata = {
 };
 
 export default async function InboxPage() {
-  const user = await requireAuth();
+  await requireAuth();
 
   return (
     <div className="space-y-6 py-6">
@@ -17,7 +17,7 @@ export default async function InboxPage() {
         </p>
       </div>
 
-      <NotificationList userId={user.id} />
+      <NotificationList />
     </div>
   );
 }

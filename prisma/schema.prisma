@@ -43,6 +43,8 @@ model User {
   referralEntries  Referral[] @relation("ReferralReferrer")
   referredEntries  Referral[] @relation("ReferralReferred")
   notifications       Notification[]
+  sentPaymentRequests     PaymentRequest[] @relation("PaymentRequestRequester")
+  receivedPaymentRequests PaymentRequest[] @relation("PaymentRequestRecipient")
   securitySettings    SecuritySettings?
   sessions            UserSession[]
   webAuthnCredentials WebAuthnCredential[]
@@ -52,6 +54,23 @@ model User {
   cryptoTransactions  CryptoTransaction[]
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+}
+
+model PaymentRequest {
+  id              String    @id @default(cuid())
+  requesterId     String
+  requester       User      @relation("PaymentRequestRequester", fields: [requesterId], references: [id], onDelete: Cascade)
+  recipientId     String?
+  recipient       User?     @relation("PaymentRequestRecipient", fields: [recipientId], references: [id], onDelete: SetNull)
+  recipientHandle String
+  amount          Int
+  note            String?
+  status          String    @default("PENDING")
+  respondedAt     DateTime?
+  createdAt       DateTime  @default(now())
+
+  @@index([recipientId, status])
+  @@index([requesterId, createdAt])
 }
 
 model KycDocument {

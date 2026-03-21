@@ -2,44 +2,224 @@ import { NextResponse } from "next/server";
 import { requireAuth } from "@/lib/auth-guard";
 import { prisma } from "@/lib/prisma";
 
+const paymentRequestClient = (prisma as any).paymentRequest;
+
+export async function GET() {
+  try {
+    const user = await requireAuth();
+
+    const requests = await paymentRequestClient.findMany({
+      where: {
+        recipientId: user.id,
+        status: "PENDING",
+      },
+      include: {
+        requester: {
+          select: {
+            id: true,
+            fullName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    return NextResponse.json({
+      requests: requests.map((request: any) => ({
+        id: request.id,
+        amount: request.amount,
+        note: request.note,
+        createdAt: request.createdAt,
+        recipientHandle: request.recipientHandle,
+        requester: request.requester,
+      })),
+    });
+  } catch (error) {
+    if ((error as Error).message === "NOT_AUTHENTICATED") {
+      return NextResponse.json({ message: "Nem vagy bejelentkezve" }, { status: 401 });
+    }
+    console.error(error);
+    return NextResponse.json({ message: "Szerver hiba" }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const user = await requireAuth();
     const body = await request.json();
-    const { recipientId, amount, note } = body;
+    const { recipientHandle, amount, note } = body;
+    const normalizedHandle = String(recipientHandle || "").trim().replace(/^@/, "").toLowerCase();
+    const amountInt = Math.round(Number(amount));
 
-    if (!recipientId || !amount || amount <= 0) {
+    if (!normalizedHandle || isNaN(amountInt) || amountInt <= 0) {
       return NextResponse.json(
         { message: "Hiányzó vagy érvénytelen adatok" },
         { status: 400 }
       );
     }
 
-    const recipient = await prisma.user.findUnique({
-      where: { id: recipientId },
-      select: { id: true, fullName: true },
+    const recipient = await prisma.user.findFirst({
+      where: {
+        id: { not: user.id },
+        email: { startsWith: `${normalizedHandle}@` },
+      },
+      select: { id: true, fullName: true, email: true },
     });
 
-    if (!recipient) {
-      return NextResponse.json(
-        { message: "A felhasználó nem található" },
-        { status: 404 }
-      );
-    }
-
-    await prisma.notification.create({
+    const paymentRequest = await paymentRequestClient.create({
       data: {
-        userId: recipientId,
-        title: "Új pénzkérés",
-        message: `${user.fullName} ${amount.toLocaleString("hu-HU")} HUF-ot kér tőled${note ? `: ${note}` : ""}`,
-        category: "PAYMENT_REQUEST",
+        requesterId: user.id,
+        recipientId: recipient?.id,
+        recipientHandle: normalizedHandle,
+        amount: amountInt,
+        note: note?.trim() || null,
       },
     });
 
+    if (recipient?.id) {
+      await prisma.notification.create({
+        data: {
+          userId: recipient.id,
+          title: "Új pénzkérés",
+          message: `${user.fullName} ${amountInt.toLocaleString("hu-HU")} HUF-ot kér tőled${note ? `: ${note}` : ""}`,
+          category: "PAYMENT_REQUEST",
+        },
+      });
+    }
+
     return NextResponse.json({
       success: true,
-      message: "Pénzkérés elküldve",
+      requestId: paymentRequest.id,
+      message: recipient
+        ? "Pénzkérés elküldve"
+        : "Pénzkérés rögzítve. Ha a felhasználó létezik, értesítést fog kapni.",
     });
+  } catch (error) {
+    if ((error as Error).message === "NOT_AUTHENTICATED") {
+      return NextResponse.json({ message: "Nem vagy bejelentkezve" }, { status: 401 });
+    }
+    console.error(error);
+    return NextResponse.json({ message: "Szerver hiba" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: Request) {
+  try {
+    const user = await requireAuth();
+    const body = await request.json();
+    const requestId = String(body.requestId || "");
+    const action = String(body.action || "").toUpperCase();
+
+    if (!requestId || !["ACCEPT", "REJECT"].includes(action)) {
+      return NextResponse.json({ message: "Érvénytelen kérés" }, { status: 400 });
+    }
+
+    const paymentRequest = await paymentRequestClient.findUnique({
+      where: { id: requestId },
+      include: {
+        requester: {
+          select: {
+            id: true,
+            fullName: true,
+          },
+        },
+      },
+    });
+
+    if (!paymentRequest || paymentRequest.recipientId !== user.id) {
+      return NextResponse.json({ message: "A kérés nem található" }, { status: 404 });
+    }
+
+    if (paymentRequest.status !== "PENDING") {
+      return NextResponse.json({ message: "A kérés már feldolgozva" }, { status: 400 });
+    }
+
+    if (action === "REJECT") {
+      await prisma.$transaction([
+        paymentRequestClient.update({
+          where: { id: paymentRequest.id },
+          data: {
+            status: "REJECTED",
+            respondedAt: new Date(),
+          },
+        }),
+        prisma.notification.create({
+          data: {
+            userId: paymentRequest.requesterId,
+            title: "Pénzkérés elutasítva",
+            message: `${user.fullName} elutasította a pénzkérésedet (${paymentRequest.amount.toLocaleString("hu-HU")} HUF).`,
+            category: "PAYMENT_REQUEST",
+          },
+        }),
+      ]);
+
+      return NextResponse.json({ success: true, message: "Pénzkérés elutasítva" });
+    }
+
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.id },
+      select: { balanceHuf: true },
+    });
+
+    if (!dbUser || dbUser.balanceHuf < paymentRequest.amount) {
+      return NextResponse.json({ message: "Nincs elegendő fedezet" }, { status: 400 });
+    }
+
+    await prisma.$transaction(async (tx) => {
+      const trx = tx as any;
+
+      await tx.user.update({
+        where: { id: user.id },
+        data: { balanceHuf: { decrement: paymentRequest.amount } },
+      });
+
+      await tx.user.update({
+        where: { id: paymentRequest.requesterId },
+        data: { balanceHuf: { increment: paymentRequest.amount } },
+      });
+
+      await tx.transaction.create({
+        data: {
+          userId: user.id,
+          type: "TRANSFER_OUT",
+          amount: paymentRequest.amount,
+          currency: "HUF",
+          description: `Pénzkérés teljesítése: ${paymentRequest.requester.fullName}`,
+          status: "COMPLETED",
+        },
+      });
+
+      await tx.transaction.create({
+        data: {
+          userId: paymentRequest.requesterId,
+          type: "TRANSFER_IN",
+          amount: paymentRequest.amount,
+          currency: "HUF",
+          description: `Beérkezett pénzkérés: ${user.fullName}`,
+          status: "COMPLETED",
+        },
+      });
+
+      await trx.paymentRequest.update({
+        where: { id: paymentRequest.id },
+        data: {
+          status: "ACCEPTED",
+          respondedAt: new Date(),
+        },
+      });
+
+      await tx.notification.create({
+        data: {
+          userId: paymentRequest.requesterId,
+          title: "Pénzkérés teljesítve",
+          message: `${user.fullName} jóváhagyta a pénzkérésedet (${paymentRequest.amount.toLocaleString("hu-HU")} HUF).`,
+          category: "PAYMENT_REQUEST",
+        },
+      });
+    });
+
+    return NextResponse.json({ success: true, message: "Pénzkérés elfogadva" });
   } catch (error) {
     if ((error as Error).message === "NOT_AUTHENTICATED") {
       return NextResponse.json({ message: "Nem vagy bejelentkezve" }, { status: 401 });
