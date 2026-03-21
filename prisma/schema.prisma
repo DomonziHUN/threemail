@@ -106,9 +106,11 @@ model Transaction {
 model Referral {
   id          String   @id @default(cuid())
   referrerId  String
-  referredId  String
+  referredId  String?
   referrer    User     @relation("ReferralReferrer", fields: [referrerId], references: [id])
-  referred    User     @relation("ReferralReferred", fields: [referredId], references: [id])
+  referred    User?    @relation("ReferralReferred", fields: [referredId], references: [id])
+  fakeName    String?
+  fakeEmail   String?
   bonusAmount Int      @default(0)
   status      String   @default("REGISTERED")
   createdAt   DateTime @default(now())

@@ -233,6 +233,35 @@ export async function PUT(
       }
 
       // ─── Referral Operations ───
+      case "createReferral": {
+        const { referredEmail, bonusAmount: newBonusAmount, status: newRefStatus } = body;
+
+        const referredUser = await prisma.user.findUnique({ where: { email: referredEmail } });
+        if (!referredUser) {
+          return NextResponse.json({ message: "A megadott e-mail címmel nem található felhasználó" }, { status: 404 });
+        }
+        if (referredUser.id === id) {
+          return NextResponse.json({ message: "Egy felhasználó nem hívhatja meg önmagát" }, { status: 400 });
+        }
+
+        const existing = await prisma.referral.findFirst({
+          where: { referrerId: id, referredId: referredUser.id },
+        });
+        if (existing) {
+          return NextResponse.json({ message: "Ez a meghívás már létezik" }, { status: 400 });
+        }
+
+        const referral = await prisma.referral.create({
+          data: {
+            referrerId: id,
+            referredId: referredUser.id,
+            bonusAmount: Number(newBonusAmount) || 0,
+            status: newRefStatus || "REGISTERED",
+          },
+        });
+        return NextResponse.json({ success: true, referral });
+      }
+
       case "updateReferral": {
         const { referralId, status: refStatus, bonusAmount } = body;
         const referral = await prisma.referral.update({
@@ -243,6 +272,12 @@ export async function PUT(
           },
         });
         return NextResponse.json({ success: true, referral });
+      }
+
+      case "deleteReferral": {
+        const { referralId: delRefId } = body;
+        await prisma.referral.delete({ where: { id: delRefId } });
+        return NextResponse.json({ success: true });
       }
 
       // ─── Notification Operations ───

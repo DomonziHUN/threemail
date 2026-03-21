@@ -828,32 +828,136 @@ function ReferralsTab({
   onAction: (b: any) => Promise<boolean>;
   saving: boolean;
 }) {
+  const [showNew, setShowNew] = useState(false);
+  const [newForm, setNewForm] = useState({ referredEmail: "", bonusAmount: 20000, status: "REGISTERED" });
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editBonus, setEditBonus] = useState(0);
+
+  const handleCreate = async () => {
+    const ok = await onAction({ action: "createReferral", ...newForm });
+    if (ok) {
+      setShowNew(false);
+      setNewForm({ referredEmail: "", bonusAmount: 20000, status: "REGISTERED" });
+    }
+  };
+
+  const handleUpdateBonus = async (referralId: string) => {
+    const ok = await onAction({ action: "updateReferral", referralId, bonusAmount: editBonus });
+    if (ok) setEditId(null);
+  };
+
   return (
     <div className="space-y-6">
-      <SectionLabel>Meghívottak (akiket ő hívott meg): {entries.length}</SectionLabel>
-      {entries.length === 0 && <p className="text-sm text-muted-foreground">Nincs meghívott.</p>}
-      {entries.map((r: any) => (
-        <div key={r.id} className="border rounded-xl p-4 flex items-center justify-between">
-          <div>
-            <p className="font-medium text-sm">{r.referred?.fullName || "?"}</p>
-            <p className="text-xs text-muted-foreground">{r.referred?.email} · {formatDate(new Date(r.createdAt))}</p>
+      <div className="flex items-center justify-between">
+        <SectionLabel>Meghívottak (akiket ő hívott meg): {entries.length}</SectionLabel>
+        <Button size="sm" variant="outline" onClick={() => setShowNew((v) => !v)}>
+          {showNew ? <X className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
+          <span className="ml-1">{showNew ? "Mégse" : "Új meghívott"}</span>
+        </Button>
+      </div>
+
+      {showNew && (
+        <div className="border rounded-xl p-4 space-y-3 bg-muted/30">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <Field label="Meghívott e-mail címe">
+              <Input
+                value={newForm.referredEmail}
+                onChange={(e) => setNewForm({ ...newForm, referredEmail: e.target.value })}
+                placeholder="pelda@email.hu"
+              />
+            </Field>
+            <Field label="Bónusz összeg (HUF)">
+              <Input
+                type="number"
+                value={newForm.bonusAmount}
+                onChange={(e) => setNewForm({ ...newForm, bonusAmount: Number(e.target.value) })}
+              />
+            </Field>
+            <Field label="Státusz">
+              <select
+                className={SELECT_CLASS}
+                value={newForm.status}
+                onChange={(e) => setNewForm({ ...newForm, status: e.target.value })}
+              >
+                <option value="REGISTERED">Regisztrált</option>
+                <option value="ACTIVATED">Teljesített</option>
+              </select>
+            </Field>
           </div>
-          <div className="flex items-center gap-3">
-            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${r.status === "ACTIVATED" ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"}`}>
-              {r.status}
-            </span>
-            <span className="text-sm font-medium">{formatCurrency(r.bonusAmount)}</span>
-            {r.status !== "ACTIVATED" && (
+          <Button size="sm" disabled={saving || !newForm.referredEmail} onClick={handleCreate}>
+            Hozzáadás
+          </Button>
+        </div>
+      )}
+
+      {entries.length === 0 && !showNew && <p className="text-sm text-muted-foreground">Nincs meghívott.</p>}
+      {entries.map((r: any) => (
+        <div key={r.id} className="border rounded-xl p-4 space-y-3">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium text-sm">{r.referred?.fullName || "?"}</p>
+              <p className="text-xs text-muted-foreground">{r.referred?.email} · {formatDate(new Date(r.createdAt))}</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${r.status === "ACTIVATED" ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"}`}>
+                {r.status === "ACTIVATED" ? "Teljesített" : "Regisztrált"}
+              </span>
+              <span className="text-sm font-medium">{formatCurrency(r.bonusAmount)}</span>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 pt-1 border-t">
+            {editId === r.id ? (
+              <>
+                <Input
+                  type="number"
+                  className="w-32 h-8 text-sm"
+                  value={editBonus}
+                  onChange={(e) => setEditBonus(Number(e.target.value))}
+                />
+                <Button size="sm" variant="outline" disabled={saving} onClick={() => handleUpdateBonus(r.id)}>
+                  Mentés
+                </Button>
+                <Button size="sm" variant="ghost" onClick={() => setEditId(null)}>
+                  Mégse
+                </Button>
+              </>
+            ) : (
+              <Button size="sm" variant="outline" onClick={() => { setEditId(r.id); setEditBonus(r.bonusAmount); }}>
+                Bónusz módosítás
+              </Button>
+            )}
+
+            {r.status !== "ACTIVATED" ? (
               <Button
                 size="sm"
                 variant="outline"
                 disabled={saving}
-                onClick={() => onAction({ action: "updateReferral", referralId: r.id, status: "ACTIVATED", bonusAmount: 20000 })}
+                onClick={() => onAction({ action: "updateReferral", referralId: r.id, status: "ACTIVATED" })}
               >
                 <CheckCircle2 className="h-3.5 w-3.5 mr-1" />
-                Aktiválás
+                Teljesítés
+              </Button>
+            ) : (
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={saving}
+                onClick={() => onAction({ action: "updateReferral", referralId: r.id, status: "REGISTERED" })}
+              >
+                Visszavonás
               </Button>
             )}
+
+            <Button
+              size="sm"
+              variant="ghost"
+              className="text-destructive hover:text-destructive"
+              disabled={saving}
+              onClick={() => { if (confirm("Biztosan törlöd ezt a meghívást?")) onAction({ action: "deleteReferral", referralId: r.id }); }}
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+            </Button>
           </div>
         </div>
       ))}
@@ -869,7 +973,7 @@ function ReferralsTab({
               <p className="text-xs text-muted-foreground">{r.referrer?.email}</p>
             </div>
             <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${r.status === "ACTIVATED" ? "bg-green-500/10 text-green-500" : "bg-yellow-500/10 text-yellow-500"}`}>
-              {r.status}
+              {r.status === "ACTIVATED" ? "Teljesített" : "Regisztrált"}
             </span>
           </div>
         ))
