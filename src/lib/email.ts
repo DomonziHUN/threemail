@@ -16,8 +16,7 @@ const transporter = nodemailer.createTransport({
   maxConnections: 5,
   maxMessages: 100,
   tls: {
-    ciphers: 'SSLv3',
-    rejectUnauthorized: false,
+    minVersion: "TLSv1.2",
   },
 });
 
@@ -30,9 +29,7 @@ export async function sendVerificationEmail(email: string, token: string) {
     replyTo: process.env.SMTP_FROM,
     subject: "Email cím megerősítése - ThreeMail",
     headers: {
-      'X-Mailer': 'ThreeMail Banking System',
-      'X-Priority': '1',
-      'Importance': 'high',
+      "X-Mailer": "ThreeMail",
     },
     html: `
       <!DOCTYPE html>

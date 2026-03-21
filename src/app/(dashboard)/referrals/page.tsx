@@ -71,7 +71,7 @@ export default function ReferralsPage() {
               Üdvözlő Bónusz Kihívás
             </CardTitle>
             <p className="text-sm text-muted-foreground leading-snug">
-              Teljesítsd az alábbi 4 lépést a 20.000 Ft-os meghívási bónuszodért!
+              Teljesítsd az alábbi 5 lépést a 20.000 Ft-os meghívási bónuszodért!
             </p>
           </CardHeader>
           <CardContent className="relative z-10">
@@ -111,6 +111,18 @@ export default function ReferralsPage() {
                 </div>
                 <p className={`text-sm font-medium ${welcomeData.tasks.purchase.completed ? "" : "opacity-80"}`}>Vásárolj bármelyik kártyáddal 1x</p>
               </div>
+
+              <div className="flex items-center gap-3">
+                <div className={`h-6 w-6 flex-shrink-0 rounded-full flex items-center justify-center text-xs font-bold ${welcomeData.tasks.inviteUser.completed ? "bg-primary text-white" : "bg-muted text-muted-foreground"}`}>
+                  {welcomeData.tasks.inviteUser.completed ? "✓" : "5"}
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm font-medium ${welcomeData.tasks.inviteUser.completed ? "" : "opacity-80"}`}>Hívj meg legalább 1 felhasználót</p>
+                  {!welcomeData.tasks.inviteUser.completed && (
+                    <p className="text-xs text-muted-foreground mt-1">{welcomeData.tasks.inviteUser.current} / {welcomeData.tasks.inviteUser.required}</p>
+                  )}
+                </div>
+              </div>
             </div>
             
             {welcomeData.status === "ACTIVATED" && (
@@ -143,7 +155,7 @@ export default function ReferralsPage() {
           <div>
             <h3 className="font-semibold text-sm mb-2 flex items-center gap-2">
               <span className="bg-primary text-primary-foreground rounded-full w-6 h-6 flex items-center justify-center text-xs">2</span>
-              A meghívottnak teljesítenie kell 4 lépést
+              A meghívottnak teljesítenie kell 5 lépést
             </h3>
             <div className="ml-8 space-y-2 text-sm text-muted-foreground">
               <div className="flex items-start gap-2">
@@ -162,6 +174,10 @@ export default function ReferralsPage() {
                 <span className="text-primary mt-0.5">•</span>
                 <span><strong>Vásárol 1 alkalommal</strong> a virtuális vagy fizikai kártyájával</span>
               </div>
+              <div className="flex items-start gap-2">
+                <span className="text-primary mt-0.5">•</span>
+                <span><strong>Meghív legalább 1 felhasználót</strong></span>
+              </div>
             </div>
           </div>
 
@@ -171,7 +187,7 @@ export default function ReferralsPage() {
               Mindketten megkapjátok a bónuszt!
             </h3>
             <p className="text-sm text-muted-foreground ml-8">
-              Ha a meghívott teljesítette mind a 4 lépést, <strong>mindketten kaptok 20.000 Ft (50 EUR) bónuszt</strong> az egyenlegetekre!
+              Ha a meghívott teljesítette mind az 5 lépést, <strong>mindketten kaptok 20.000 Ft (50 EUR) bónuszt</strong> az egyenlegetekre!
             </p>
           </div>
 

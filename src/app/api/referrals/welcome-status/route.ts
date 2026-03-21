@@ -46,7 +46,13 @@ export async function GET() {
     });
     const hasPurchase = !!purchase;
 
-    const allCompleted = hasTopup && hasPhysicalCard && hasKyc && hasPurchase;
+    // 5. Invite at least 1 user
+    const invitedCount = await prisma.referral.count({
+      where: { referrerId: user.id },
+    });
+    const hasInvitedUser = invitedCount >= 1;
+
+    const allCompleted = hasTopup && hasPhysicalCard && hasKyc && hasPurchase && hasInvitedUser;
 
     // Payout logic
     if (allCompleted && referral.status !== "ACTIVATED" && referral.referredId) {
@@ -73,7 +79,8 @@ export async function GET() {
         topup: { completed: hasTopup, current: totalDeposited, required: 20000 },
         physicalCard: { completed: hasPhysicalCard },
         kyc: { completed: hasKyc },
-        purchase: { completed: hasPurchase }
+        purchase: { completed: hasPurchase },
+        inviteUser: { completed: hasInvitedUser, current: invitedCount, required: 1 }
       }
     });
 

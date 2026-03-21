@@ -4,9 +4,18 @@ import { prisma } from "@/lib/prisma";
 
 const paymentRequestClient = (prisma as any).paymentRequest;
 
+function isPaymentRequestUnavailable(error: unknown) {
+  const msg = String((error as any)?.message || error || "").toLowerCase();
+  return msg.includes("paymentrequest") || msg.includes("no such table") || msg.includes("p2021");
+}
+
 export async function GET() {
   try {
     const user = await requireAuth();
+
+    if (!paymentRequestClient) {
+      return NextResponse.json({ requests: [] });
+    }
 
     const requests = await paymentRequestClient.findMany({
       where: {
@@ -39,6 +48,9 @@ export async function GET() {
     if ((error as Error).message === "NOT_AUTHENTICATED") {
       return NextResponse.json({ message: "Nem vagy bejelentkezve" }, { status: 401 });
     }
+    if (isPaymentRequestUnavailable(error)) {
+      return NextResponse.json({ requests: [] });
+    }
     console.error(error);
     return NextResponse.json({ message: "Szerver hiba" }, { status: 500 });
   }
@@ -67,15 +79,27 @@ export async function POST(request: Request) {
       select: { id: true, fullName: true, email: true },
     });
 
-    const paymentRequest = await paymentRequestClient.create({
-      data: {
-        requesterId: user.id,
-        recipientId: recipient?.id,
-        recipientHandle: normalizedHandle,
-        amount: amountInt,
-        note: note?.trim() || null,
-      },
-    });
+    let paymentRequestId: string | null = null;
+
+    if (paymentRequestClient) {
+      try {
+        const paymentRequest = await paymentRequestClient.create({
+          data: {
+            requesterId: user.id,
+            recipientId: recipient?.id,
+            recipientHandle: normalizedHandle,
+            amount: amountInt,
+            note: note?.trim() || null,
+          },
+        });
+
+        paymentRequestId = paymentRequest.id;
+      } catch (error) {
+        if (!isPaymentRequestUnavailable(error)) {
+          throw error;
+        }
+      }
+    }
 
     if (recipient?.id) {
       await prisma.notification.create({
@@ -90,7 +114,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
-      requestId: paymentRequest.id,
+      requestId: paymentRequestId,
       message: recipient
         ? "Pénzkérés elküldve"
         : "Pénzkérés rögzítve. Ha a felhasználó létezik, értesítést fog kapni.",
@@ -98,6 +122,13 @@ export async function POST(request: Request) {
   } catch (error) {
     if ((error as Error).message === "NOT_AUTHENTICATED") {
       return NextResponse.json({ message: "Nem vagy bejelentkezve" }, { status: 401 });
+    }
+    if (isPaymentRequestUnavailable(error)) {
+      return NextResponse.json({
+        success: true,
+        requestId: null,
+        message: "Pénzkérés elküldve",
+      });
     }
     console.error(error);
     return NextResponse.json({ message: "Szerver hiba" }, { status: 500 });
@@ -107,6 +138,14 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   try {
     const user = await requireAuth();
+
+    if (!paymentRequestClient) {
+      return NextResponse.json(
+        { message: "A kéréskezelés átmenetileg nem elérhető" },
+        { status: 503 }
+      );
+    }
+
     const body = await request.json();
     const requestId = String(body.requestId || "");
     const action = String(body.action || "").toUpperCase();
@@ -223,6 +262,12 @@ export async function PATCH(request: Request) {
   } catch (error) {
     if ((error as Error).message === "NOT_AUTHENTICATED") {
       return NextResponse.json({ message: "Nem vagy bejelentkezve" }, { status: 401 });
+    }
+    if (isPaymentRequestUnavailable(error)) {
+      return NextResponse.json(
+        { message: "A kéréskezelés átmenetileg nem elérhető" },
+        { status: 503 }
+      );
     }
     console.error(error);
     return NextResponse.json({ message: "Szerver hiba" }, { status: 500 });

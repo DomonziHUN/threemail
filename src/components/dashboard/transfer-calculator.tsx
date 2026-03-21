@@ -147,14 +147,14 @@ export function TransferCalculator() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full min-w-0">
       <h2 className="text-[1.35rem] font-bold tracking-tight mb-4 px-2 text-foreground">Utalás kalkulátor</h2>
       
       <div className="bg-card border border-border/50 rounded-[2rem] p-5 shadow-sm">
         
         {/* Realtime Chart Container */}
-        <div className="mb-2 relative">
-          <div className="h-[120px] w-full">
+        <div className="mb-2 relative min-w-0">
+          <div className="h-[120px] w-full min-w-0">
             {chartData.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData} margin={{ top: 15, right: 30, left: 0, bottom: 5 }}>
