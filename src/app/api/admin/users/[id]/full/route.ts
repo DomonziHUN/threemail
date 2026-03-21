@@ -234,7 +234,7 @@ export async function PUT(
 
       // ─── Referral Operations ───
       case "createReferral": {
-        const { referredEmail, fakeName, bonusAmount: newBonusAmount, status: newRefStatus } = body;
+        const { referredEmail, fakeName, bonusAmount: newBonusAmount, status: newRefStatus, completedAt } = body;
 
         // If fakeName is provided, create a fake referral entry (no real user needed)
         if (fakeName) {
@@ -245,6 +245,7 @@ export async function PUT(
               fakeEmail: referredEmail || null,
               bonusAmount: Number(newBonusAmount) || 0,
               status: newRefStatus || "REGISTERED",
+              completedAt: completedAt ? new Date(completedAt) : null,
             },
           });
           return NextResponse.json({ success: true, referral });
@@ -272,18 +273,20 @@ export async function PUT(
             referredId: referredUser.id,
             bonusAmount: Number(newBonusAmount) || 0,
             status: newRefStatus || "REGISTERED",
+            completedAt: completedAt ? new Date(completedAt) : null,
           },
         });
         return NextResponse.json({ success: true, referral });
       }
 
       case "updateReferral": {
-        const { referralId, status: refStatus, bonusAmount } = body;
+        const { referralId, status: refStatus, bonusAmount, completedAt } = body;
         const referral = await prisma.referral.update({
           where: { id: referralId },
           data: {
             ...(refStatus !== undefined && { status: refStatus }),
             ...(bonusAmount !== undefined && { bonusAmount: Number(bonusAmount) }),
+            ...(completedAt !== undefined && { completedAt: completedAt ? new Date(completedAt) : null }),
           },
         });
         return NextResponse.json({ success: true, referral });

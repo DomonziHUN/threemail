@@ -830,22 +830,26 @@ function ReferralsTab({
 }) {
   const [showNew, setShowNew] = useState(false);
   const [isFake, setIsFake] = useState(true);
-  const [newForm, setNewForm] = useState({ referredEmail: "", fakeName: "", bonusAmount: 20000, status: "REGISTERED" });
+  const [newForm, setNewForm] = useState({ referredEmail: "", fakeName: "", bonusAmount: 20000, status: "REGISTERED", completedAt: "" });
   const [editId, setEditId] = useState<string | null>(null);
   const [editBonus, setEditBonus] = useState(0);
+  const [editDate, setEditDate] = useState("");
 
   const handleCreate = async () => {
     const payload: any = { action: "createReferral", referredEmail: newForm.referredEmail, bonusAmount: newForm.bonusAmount, status: newForm.status };
     if (isFake) payload.fakeName = newForm.fakeName;
+    if (newForm.completedAt) payload.completedAt = newForm.completedAt;
     const ok = await onAction(payload);
     if (ok) {
       setShowNew(false);
-      setNewForm({ referredEmail: "", fakeName: "", bonusAmount: 20000, status: "REGISTERED" });
+      setNewForm({ referredEmail: "", fakeName: "", bonusAmount: 20000, status: "REGISTERED", completedAt: "" });
     }
   };
 
   const handleUpdateBonus = async (referralId: string) => {
-    const ok = await onAction({ action: "updateReferral", referralId, bonusAmount: editBonus });
+    const payload: any = { action: "updateReferral", referralId, bonusAmount: editBonus };
+    if (editDate) payload.completedAt = editDate;
+    const ok = await onAction(payload);
     if (ok) setEditId(null);
   };
 
@@ -911,6 +915,13 @@ function ReferralsTab({
                 <option value="ACTIVATED">Teljesített</option>
               </select>
             </Field>
+            <Field label="Teljesítés dátuma (opcionális)">
+              <Input
+                type="datetime-local"
+                value={newForm.completedAt}
+                onChange={(e) => setNewForm({ ...newForm, completedAt: e.target.value })}
+              />
+            </Field>
           </div>
           <Button size="sm" disabled={saving || (isFake ? !newForm.fakeName : !newForm.referredEmail)} onClick={handleCreate}>
             Hozzáadás
@@ -944,6 +955,14 @@ function ReferralsTab({
                   className="w-32 h-8 text-sm"
                   value={editBonus}
                   onChange={(e) => setEditBonus(Number(e.target.value))}
+                  placeholder="Bónusz"
+                />
+                <Input
+                  type="datetime-local"
+                  className="w-48 h-8 text-sm"
+                  value={editDate}
+                  onChange={(e) => setEditDate(e.target.value)}
+                  placeholder="Teljesítés dátuma"
                 />
                 <Button size="sm" variant="outline" disabled={saving} onClick={() => handleUpdateBonus(r.id)}>
                   Mentés
@@ -953,8 +972,12 @@ function ReferralsTab({
                 </Button>
               </>
             ) : (
-              <Button size="sm" variant="outline" onClick={() => { setEditId(r.id); setEditBonus(r.bonusAmount); }}>
-                Bónusz módosítás
+              <Button size="sm" variant="outline" onClick={() => { 
+                setEditId(r.id); 
+                setEditBonus(r.bonusAmount); 
+                setEditDate(r.completedAt ? new Date(r.completedAt).toISOString().slice(0, 16) : "");
+              }}>
+                Bónusz/Dátum módosítás
               </Button>
             )}
 
