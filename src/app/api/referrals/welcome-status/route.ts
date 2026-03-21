@@ -49,7 +49,7 @@ export async function GET() {
     const allCompleted = hasTopup && hasPhysicalCard && hasKyc && hasPurchase;
 
     // Payout logic
-    if (allCompleted && referral.status !== "ACTIVATED") {
+    if (allCompleted && referral.status !== "ACTIVATED" && referral.referredId) {
       await prisma.$transaction([
         prisma.user.update({
           where: { id: referral.referrerId },

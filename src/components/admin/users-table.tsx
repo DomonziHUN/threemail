@@ -925,7 +925,6 @@ function ReferralsTab({
             <div>
               <p className="font-medium text-sm">
                 {r.fakeName || r.referred?.fullName || "?"}
-                {r.fakeName && <span className="ml-1.5 text-xs text-muted-foreground font-normal">(fake)</span>}
               </p>
               <p className="text-xs text-muted-foreground">{r.fakeEmail || r.referred?.email || "—"} · {formatDate(new Date(r.createdAt))}</p>
             </div>
