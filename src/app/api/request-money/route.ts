@@ -101,6 +101,20 @@ export async function POST(request: Request) {
       }
     }
 
+    if (paymentRequestId) {
+      await prisma.transaction.create({
+        data: {
+          userId: user.id,
+          type: "TRANSFER_IN",
+          amount: amountInt,
+          currency: "HUF",
+          description: `Kiküldött pénzkérés: @${normalizedHandle}`,
+          reference: `PAYREQ:${paymentRequestId}`,
+          status: "PENDING",
+        },
+      });
+    }
+
     if (recipient?.id) {
       await prisma.notification.create({
         data: {
@@ -183,6 +197,14 @@ export async function PATCH(request: Request) {
             respondedAt: new Date(),
           },
         }),
+        prisma.transaction.updateMany({
+          where: {
+            userId: paymentRequest.requesterId,
+            reference: `PAYREQ:${paymentRequest.id}`,
+            status: "PENDING",
+          },
+          data: { status: "FAILED" },
+        }),
         prisma.notification.create({
           data: {
             userId: paymentRequest.requesterId,
@@ -229,16 +251,31 @@ export async function PATCH(request: Request) {
         },
       });
 
-      await tx.transaction.create({
-        data: {
+      const requesterPending = await tx.transaction.updateMany({
+        where: {
           userId: paymentRequest.requesterId,
-          type: "TRANSFER_IN",
-          amount: paymentRequest.amount,
-          currency: "HUF",
-          description: `Beérkezett pénzkérés: ${user.fullName}`,
+          reference: `PAYREQ:${paymentRequest.id}`,
+          status: "PENDING",
+        },
+        data: {
           status: "COMPLETED",
+          description: `Beérkezett pénzkérés: ${user.fullName}`,
         },
       });
+
+      if (requesterPending.count === 0) {
+        await tx.transaction.create({
+          data: {
+            userId: paymentRequest.requesterId,
+            type: "TRANSFER_IN",
+            amount: paymentRequest.amount,
+            currency: "HUF",
+            description: `Beérkezett pénzkérés: ${user.fullName}`,
+            reference: `PAYREQ:${paymentRequest.id}`,
+            status: "COMPLETED",
+          },
+        });
+      }
 
       await trx.paymentRequest.update({
         where: { id: paymentRequest.id },
