@@ -44,7 +44,7 @@ export async function GET() {
       referrals: referrals.map((r: any) => ({
         id: r.id,
         name: maskName(r.fakeName || r.referred?.fullName || "Ismeretlen"),
-        createdAt: r.referred?.createdAt || r.createdAt,
+        createdAt: r.completedAt || r.referred?.createdAt || r.createdAt,
         status: r.status,
         bonusAmount: r.bonusAmount,
       })),

@@ -201,7 +201,7 @@ export default function ReferralsPage() {
           <CardHeader className="pb-3">
             <Gift className="h-5 w-5 text-primary mb-2" />
             <CardTitle className="text-2xl font-bold">
-              {formatCurrency(data.stats.bonus)}
+              {data.stats.bonus.toLocaleString('hu-HU')}
             </CardTitle>
           </CardHeader>
           <CardContent className="pb-4">
