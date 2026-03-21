@@ -51,20 +51,20 @@ export function RegisterForm() {
           throw new Error(data.message ?? "Sikertelen regisztráció");
         }
 
-        const data = await response.json();
+        toast.success("Sikeres regisztráció! Megerősítő emailt küldtünk a címedre.");
         
         const signInResult = await signIn("credentials", {
-          email: values.email,
+          email: values.email.toLowerCase(),
           password: values.password,
           redirect: false,
+          callbackUrl: "/dashboard",
         });
 
-        if (signInResult?.error) {
-          toast.success("Sikeres regisztráció! Megerősítő emailt küldtünk.");
-          router.push("/login");
-        } else {
-          toast.success("Sikeres regisztráció! Megerősítő emailt küldtünk a címedre.");
+        if (signInResult?.ok) {
           router.push("/dashboard");
+          router.refresh();
+        } else {
+          router.push("/login");
         }
       } catch (error) {
         setFormError((error as Error).message);

@@ -24,6 +24,16 @@ export const metadata: Metadata = {
   description:
     "Digitális banki alkalmazás regisztrációval, egyenleggel és virtuális kártyákkal",
   metadataBase: new URL("https://threemail.fun"),
+  icons: {
+    icon: [
+      { url: "/icon.png" },
+      { url: "/icon.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-icon.png" },
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
 };
 
 export default function RootLayout({
