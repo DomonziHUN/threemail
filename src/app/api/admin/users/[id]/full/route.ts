@@ -2,6 +2,16 @@ import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth-guard";
 import { prisma } from "@/lib/prisma";
 
+function parseReferralMaxInvites(value: unknown) {
+  const parsed = Number(value);
+
+  if (!Number.isInteger(parsed) || parsed < 0 || parsed > 1000) {
+    return null;
+  }
+
+  return parsed;
+}
+
 export async function GET(
   _request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -89,7 +99,18 @@ export async function PUT(
     switch (action) {
       // ─── Profile Update ───
       case "updateProfile": {
-        const { fullName, email, phone, role, kycStatus, country, city, street, zipCode, adminNote } = body;
+        const { fullName, email, phone, role, kycStatus, country, city, street, zipCode, adminNote, referralMaxInvites } = body;
+
+        let parsedReferralMaxInvites: number | undefined;
+        if (referralMaxInvites !== undefined) {
+          parsedReferralMaxInvites = parseReferralMaxInvites(referralMaxInvites) ?? undefined;
+          if (parsedReferralMaxInvites === undefined) {
+            return NextResponse.json(
+              { message: "A meghívási maximum 0 és 1000 közötti egész szám lehet" },
+              { status: 400 }
+            );
+          }
+        }
 
         // Handle balance separately to create transaction
         if (body.balanceHuf !== undefined) {
@@ -113,19 +134,25 @@ export async function PUT(
           }
         }
 
+        const updateData: any = {
+          ...(fullName !== undefined && { fullName }),
+          ...(email !== undefined && { email: email.toLowerCase() }),
+          ...(phone !== undefined && { phone }),
+          ...(role !== undefined && { role }),
+          ...(kycStatus !== undefined && { kycStatus }),
+          ...(country !== undefined && { country }),
+          ...(city !== undefined && { city }),
+          ...(street !== undefined && { street }),
+          ...(zipCode !== undefined && { zipCode }),
+        };
+
+        if (parsedReferralMaxInvites !== undefined) {
+          updateData.referralMaxInvites = parsedReferralMaxInvites;
+        }
+
         const updatedUser = await prisma.user.update({
           where: { id },
-          data: {
-            ...(fullName !== undefined && { fullName }),
-            ...(email !== undefined && { email: email.toLowerCase() }),
-            ...(phone !== undefined && { phone }),
-            ...(role !== undefined && { role }),
-            ...(kycStatus !== undefined && { kycStatus }),
-            ...(country !== undefined && { country }),
-            ...(city !== undefined && { city }),
-            ...(street !== undefined && { street }),
-            ...(zipCode !== undefined && { zipCode }),
-          },
+          data: updateData,
         });
 
         if (kycStatus !== undefined) {
@@ -236,6 +263,25 @@ export async function PUT(
       case "createReferral": {
         const { referredEmail, fakeName, bonusAmount: newBonusAmount, status: newRefStatus, completedAt } = body;
         console.log("createReferral - completedAt received:", completedAt);
+
+        const referrer = await prisma.user.findUnique({ where: { id } });
+        if (!referrer) {
+          return NextResponse.json({ message: "Felhasználó nem található" }, { status: 404 });
+        }
+
+        const referrerMaxInvites = Number((referrer as any).referralMaxInvites ?? 10);
+
+        const currentReferralsCount = await prisma.referral.count({
+          where: { referrerId: id },
+        });
+        if (currentReferralsCount >= referrerMaxInvites) {
+          return NextResponse.json(
+            {
+              message: `A felhasználó elérte a maximum meghívási limitet (${referrerMaxInvites})`,
+            },
+            { status: 400 }
+          );
+        }
 
         // If fakeName is provided, create a fake referral entry (no real user needed)
         if (fakeName) {

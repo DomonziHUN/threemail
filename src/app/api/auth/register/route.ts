@@ -51,6 +51,18 @@ export async function POST(request: Request) {
           { status: 400 }
         );
       }
+
+      const referralMaxInvites = Number((referredBy as any).referralMaxInvites ?? 10);
+      const referralCount = await prisma.referral.count({
+        where: { referrerId: referredBy.id },
+      });
+
+      if (referralCount >= referralMaxInvites) {
+        return NextResponse.json(
+          { message: "A megadott meghívókód elérte a maximum meghívási limitet" },
+          { status: 400 }
+        );
+      }
     }
 
     const passwordHash = await bcrypt.hash(data.password, 12);

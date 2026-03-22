@@ -11,6 +11,7 @@ export default function ReferralsPage() {
   const [data, setData] = useState<any>(null);
   const [welcomeData, setWelcomeData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const inviteMax = data?.stats?.max ?? 10;
 
   useEffect(() => {
     Promise.all([fetchReferrals(), fetchWelcomeStatus()]).finally(() => setLoading(false));
@@ -193,7 +194,7 @@ export default function ReferralsPage() {
 
           <div className="bg-primary/10 border border-primary/20 rounded-lg p-3 mt-4">
             <p className="text-xs text-muted-foreground">
-              <strong>Fontos:</strong> Maximum 10 ismerőst hívhatsz meg. A bónusz automatikusan jóváírásra kerül, amikor a meghívott teljesítette az összes feltételt.
+              <strong>Fontos:</strong> Maximum {inviteMax} ismerőst hívhatsz meg. A bónusz automatikusan jóváírásra kerül, amikor a meghívott teljesítette az összes feltételt.
             </p>
           </div>
         </CardContent>
@@ -208,7 +209,7 @@ export default function ReferralsPage() {
         <Card>
           <CardHeader className="pb-3">
             <Users2 className="h-5 w-5 text-muted-foreground mb-2" />
-            <CardTitle className="text-2xl font-bold">{data?.stats?.total || 0}/10</CardTitle>
+            <CardTitle className="text-2xl font-bold">{data?.stats?.total || 0}/{inviteMax}</CardTitle>
           </CardHeader>
           <CardContent className="pb-4">
             <p className="text-xs text-muted-foreground">Összes meghívott</p>

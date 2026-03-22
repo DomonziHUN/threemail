@@ -8,7 +8,6 @@ export async function GET() {
     const user = await requireAuth();
     const dbUser = await prisma.user.findUnique({
       where: { id: user.id },
-      select: { referralCode: true },
     });
 
     if (!dbUser) {
@@ -33,11 +32,14 @@ export async function GET() {
     const activeReferrals = referrals.filter((r: any) => r.status === "ACTIVATED").length;
     const totalBonus = referrals.reduce((sum: number, r: any) => sum + r.bonusAmount, 0);
 
+    const referralMaxInvites = Number((dbUser as any).referralMaxInvites ?? 10);
+
     return NextResponse.json({
       referralCode: dbUser.referralCode,
       inviteUrl: `${INVITE_URL_BASE}?ref=${dbUser.referralCode}`,
       stats: {
         total: totalReferrals,
+        max: referralMaxInvites,
         active: activeReferrals,
         bonus: totalBonus,
       },

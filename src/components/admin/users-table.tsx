@@ -346,6 +346,7 @@ function ProfileTab({ user, onSave, saving }: { user: any; onSave: (b: any) => P
     city: user.city || "",
     street: user.street || "",
     zipCode: user.zipCode || "",
+    referralMaxInvites: user.referralMaxInvites ?? 10,
   });
 
   const set = (k: string, v: any) => setForm((p) => ({ ...p, [k]: v }));
@@ -378,6 +379,15 @@ function ProfileTab({ user, onSave, saving }: { user: any; onSave: (b: any) => P
             <option value="APPROVED">Jóváhagyva</option>
             <option value="REJECTED">Elutasítva</option>
           </select>
+        </Field>
+        <Field label="Max meghívott (0-1000)">
+          <Input
+            type="number"
+            min={0}
+            max={1000}
+            value={form.referralMaxInvites}
+            onChange={(e) => set("referralMaxInvites", Number(e.target.value))}
+          />
         </Field>
       </div>
 

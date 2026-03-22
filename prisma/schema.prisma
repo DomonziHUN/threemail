@@ -31,6 +31,7 @@ model User {
   addressLocked    Boolean   @default(false)
   balanceHuf       Int       @default(0)
   referralCode     String    @unique
+  referralMaxInvites Int     @default(10)
   paymentReference String    @unique
   referredById     String?
   referredBy       User?     @relation("UserReferrals", fields: [referredById], references: [id])
